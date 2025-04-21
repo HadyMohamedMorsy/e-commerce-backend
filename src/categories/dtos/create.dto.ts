@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
+import { User } from "src/users/user.entity";
 
 export class CategoryDto {
   @IsString()
@@ -9,4 +10,6 @@ export class CategoryDto {
   @IsString()
   @IsOptional()
   description?: string;
+
+  createdBy: User;
 }

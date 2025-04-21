@@ -1,6 +1,6 @@
 // src/shared/base-crud.service.ts
 import { NotFoundException } from "@nestjs/common";
-import { Repository } from "typeorm";
+import { Repository, SelectQueryBuilder } from "typeorm";
 import { APIFeaturesService } from "../filters/filter.service";
 import { ICrudService } from "../interfaces/crud-service.interface";
 
@@ -17,14 +17,12 @@ export abstract class BaseCrudService<T, CreateDto, UpdateDto>
       .setRepository(this.repository.target)
       .buildQuery(filterData);
 
+    this.queryRelation(queryBuilder);
+
     const filteredRecord = await queryBuilder.getMany();
     const totalRecords = await queryBuilder.getCount();
 
-    return {
-      data: filteredRecord,
-      recordsFiltered: filteredRecord.length,
-      totalRecords: +totalRecords,
-    };
+    return this.response(filteredRecord, totalRecords);
   }
 
   public async findOne(id: number): Promise<T> {
@@ -48,5 +46,17 @@ export abstract class BaseCrudService<T, CreateDto, UpdateDto>
   public async delete(id: number) {
     await this.repository.delete(id);
     return { deleted: true, id };
+  }
+
+  public async response(data: any[], totalRecords: number) {
+    return {
+      data,
+      recordsFiltered: data.length,
+      totalRecords: +totalRecords,
+    };
+  }
+
+  queryRelation(queryBuilder?: SelectQueryBuilder<any>) {
+    queryBuilder.leftJoin("e.createdBy", "ec").addSelect(["ec.id", "ec.firstName", "ec.lastName"]);
   }
 }

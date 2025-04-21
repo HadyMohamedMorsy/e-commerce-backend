@@ -1,7 +1,8 @@
-import { forwardRef, Module } from "@nestjs/common";
+import { forwardRef, MiddlewareConsumer, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthModule } from "src/auth/auth.module";
 import { FilterDateModule } from "src/shared/filters/filter-date.module";
+import { PasswordMiddleware } from "./middleware/password.middleware";
 import { UserController } from "./user.controller";
 import { User } from "./user.entity";
 import { UserService } from "./user.service";
@@ -11,4 +12,8 @@ import { UserService } from "./user.service";
   providers: [UserService],
   exports: [UserService],
 })
-export class UsersModule {}
+export class UserModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(PasswordMiddleware).forRoutes("user/store", "user/update");
+  }
+}

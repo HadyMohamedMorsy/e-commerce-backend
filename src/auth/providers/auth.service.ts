@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, forwardRef } from "@nestjs/common";
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { SignInProvider } from "./sign-in.provider";
 
 import { UserService } from "src/users/user.service";
@@ -23,11 +23,5 @@ export class AuthService {
 
   public async refreshToken(refreshToken: { refreshToken: string }) {
     return await this.signInProvider.refreshToken(refreshToken);
-  }
-
-  async getUserPermissions(userId: number) {
-    const user = await this.usersService.findOneById(userId);
-    if (!user) throw new BadRequestException("User Is Not Exist");
-    return user.permission;
   }
 }

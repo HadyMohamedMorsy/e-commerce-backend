@@ -1,11 +1,13 @@
 import { IsEnum, IsOptional, IsString } from "class-validator";
+import { FaqList } from "src/shared/enum/global-enum";
+import { User } from "src/users/user.entity";
 
 export class FaqDto {
   @IsOptional()
-  @IsEnum(["Product", "All"], {
+  @IsEnum(FaqList, {
     message: 'Questionable type must be either "Product" or "All"',
   })
-  select_questionable_type?: "Product" | "All" = "All";
+  select_questionable_type: FaqList;
 
   @IsOptional()
   @IsString()
@@ -14,4 +16,6 @@ export class FaqDto {
   @IsOptional()
   @IsString()
   answer?: string | null;
+
+  createdBy: User;
 }

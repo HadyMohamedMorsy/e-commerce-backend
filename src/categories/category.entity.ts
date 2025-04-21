@@ -1,9 +1,11 @@
 // src/categories/category.entity.ts
+import { User } from "src/users/user.entity";
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -29,6 +31,9 @@ export class Category {
 
   @OneToMany(() => SubCategory, subCategory => subCategory.category)
   subCategories: SubCategory[];
+
+  @ManyToOne(() => User)
+  createdBy: User;
 
   @CreateDateColumn({
     name: "created_at",

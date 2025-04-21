@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpCode, Post } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
 import { SubCategoryDto } from "./dtos/create.dto";
 import { PatchSubCategoryDto } from "./dtos/patch.dto";
 import { SubCategoryService } from "./sub-category.service";
@@ -14,13 +14,19 @@ export class SubCategoryController {
   }
 
   @Post("/store")
-  public create(@Body() createDto: SubCategoryDto) {
-    return this.service.create(createDto);
+  public create(@Body() createDto: SubCategoryDto, @Req() req: Request) {
+    return this.service.create({
+      ...createDto,
+      createdBy: req["createdBy"],
+    });
   }
 
   @Post("/update")
-  public async update(@Body() update: PatchSubCategoryDto) {
-    return await this.service.update(update);
+  public async update(@Body() update: PatchSubCategoryDto, @Req() req: Request) {
+    return await this.service.update({
+      ...update,
+      createdBy: req["createdBy"],
+    });
   }
 
   @Delete("/delete")

@@ -19,7 +19,6 @@ export class UserMiddleware implements NestMiddleware {
     }
 
     req["createdBy"] = user;
-    req["userData"] = user;
 
     next();
   }

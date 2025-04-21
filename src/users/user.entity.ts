@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -34,10 +35,11 @@ export class User {
     type: "varchar",
     length: 96,
     nullable: true,
+    unique: true,
   })
   username: string;
 
-  @Column({ type: "enum", enum: Role, default: Role.OPERATION_MANAGER })
+  @Column({ type: "enum", enum: Role, default: Role.SUPER_ADMIN })
   role: Role;
 
   @Column({ unique: true, length: 11, name: "phone_number" })
@@ -65,10 +67,13 @@ export class User {
   password: string;
 
   @Column({ type: "enum", enum: UserStatus, nullable: true })
-  status: UserStatus;
+  type: UserStatus;
 
   @OneToMany(() => Address, address => address.user)
   addresses: Address[];
+
+  @ManyToOne(() => User)
+  createdBy: User;
 
   @CreateDateColumn({
     type: "timestamp",

@@ -1,19 +1,16 @@
-import { Type } from "class-transformer";
 import {
-  ArrayNotEmpty,
-  IsArray,
   IsEmail,
   IsEnum,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsString,
   Matches,
   MaxLength,
   MinLength,
-  ValidateNested,
+  ValidateIf,
 } from "class-validator";
-import { Permission, Role } from "src/shared/enum/global-enum";
+import { Role, UserStatus } from "src/shared/enum/global-enum";
+import { User } from "../user.entity";
 import { Match } from "./custom/match-password";
 
 export class UserDto {
@@ -29,6 +26,12 @@ export class UserDto {
   @MaxLength(96)
   lastName?: string;
 
+  @IsString()
+  @IsOptional()
+  @MinLength(3)
+  @MaxLength(96)
+  fullName?: string;
+
   @IsEmail()
   @IsNotEmpty()
   @MaxLength(96)
@@ -40,21 +43,19 @@ export class UserDto {
   @MaxLength(96)
   username: string;
 
+  @IsEnum(UserStatus, { message: "Type must be either customer or user" })
+  type: UserStatus;
+
+  @ValidateIf(o => o.type !== UserStatus.CUSTOMER)
   @IsEnum(Role, {
     message:
-      "Role must be one of the following: general-manager, operation-manager, community-officer, accountant",
+      "Role must be one of: general-manager, operation-manager, community-officer, accountant",
   })
-  role: Role;
-
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => ResourcePermissionDto)
-  @IsOptional()
-  permission: ResourcePermissionDto[];
+  role?: Role;
 
   @IsString()
   @MaxLength(11)
-  phone: string;
+  phoneNumber: string;
 
   @IsString()
   @IsNotEmpty()
@@ -75,26 +76,5 @@ export class UserDto {
   @Match("password", { message: "Password confirmation must match password" })
   password_confirmation: string;
 
-  @IsNumber()
-  @IsNotEmpty()
-  @Type(() => Number)
-  annual_start: number;
-
-  @IsNumber()
-  @IsNotEmpty()
-  @Type(() => Number)
-  annual_increase: number;
-}
-
-export class ResourcePermissionDto {
-  @IsString()
-  resource: string;
-
-  @IsArray()
-  @ArrayNotEmpty()
-  @IsEnum(Permission, {
-    each: true,
-    message: "Each permission must be one of: create, update, delete, view",
-  })
-  actions: Permission[];
+  createdBy: User;
 }

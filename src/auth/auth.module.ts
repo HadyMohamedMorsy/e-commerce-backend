@@ -2,7 +2,7 @@ import { Global, Module, forwardRef } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 
 import { JwtModule } from "@nestjs/jwt";
-import { UsersModule } from "src/users/users.module";
+import { UserModule } from "src/users/users.module";
 import { AuthController } from "./auth.controller";
 import jwtConfig from "./config/jwt.config";
 import { AuthService } from "./providers/auth.service";
@@ -26,7 +26,7 @@ import { SignInProvider } from "./providers/sign-in.provider";
     RefreshTokensProvider,
   ],
   imports: [
-    forwardRef(() => UsersModule),
+    forwardRef(() => UserModule),
     ConfigModule.forFeature(jwtConfig),
     JwtModule.registerAsync(jwtConfig.asProvider()),
   ],

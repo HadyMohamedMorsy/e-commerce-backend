@@ -1,4 +1,5 @@
 // src/categories/category.entity.ts
+import { User } from "src/users/user.entity";
 import {
   Column,
   CreateDateColumn,
@@ -29,6 +30,9 @@ export class SubCategory {
 
   @ManyToOne(() => Category, category => category.subCategories)
   category: Category;
+
+  @ManyToOne(() => User)
+  createdBy: User;
 
   @CreateDateColumn({
     name: "created_at",

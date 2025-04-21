@@ -40,7 +40,6 @@ export class GenerateTokensProvider {
       // Generate Access Token with Email
       this.signToken<Partial<ActiveUserData>>(user.id, this.jwtConfiguration.accessTokenTtl, {
         email: user.email,
-        permission: user.permission,
         id: user.id,
       }),
 

@@ -18,7 +18,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
     let message: string = exception.message;
 
-    // Check if the exception is a BadRequestException (validation errors)
     if (exception instanceof BadRequestException) {
       const responseBody = exception.getResponse();
 
@@ -29,8 +28,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
     }
 
-    // Return the custom response
-    response.status(status).json({
+    return response.status(status).json({
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,

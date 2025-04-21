@@ -3,15 +3,15 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { BaseCrudService } from "src/shared/base/base-crud";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
-import { Repository } from "typeorm";
+import { Repository, SelectQueryBuilder } from "typeorm";
 import { Contact } from "./contact.entity";
-import { CreateContactDto } from "./dtos/create-contact.dto";
-import { UpdateContactDto } from "./dtos/update-contact.dto";
+import { ContactDto } from "./dtos/create.dto";
+import { PatchContactDto } from "./dtos/patch.dto";
 
 @Injectable()
 export class ContactsService
-  extends BaseCrudService<Contact, CreateContactDto, UpdateContactDto>
-  implements ICrudService<Contact, CreateContactDto, UpdateContactDto>
+  extends BaseCrudService<Contact, ContactDto, PatchContactDto>
+  implements ICrudService<Contact, ContactDto, PatchContactDto>
 {
   constructor(
     apiFeaturesService: APIFeaturesService,
@@ -20,4 +20,7 @@ export class ContactsService
   ) {
     super(repository, apiFeaturesService);
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  override queryRelation(queryBuilder?: SelectQueryBuilder<any>) {}
 }

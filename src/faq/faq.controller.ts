@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpCode, Post } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
 import { FaqDto } from "./dtos/create.dto";
 import { PatchFaqDto } from "./dtos/patch.dto";
 import { FaqsService } from "./faq.service";
@@ -14,13 +14,19 @@ export class FaqController {
   }
 
   @Post("/store")
-  public create(@Body() createDto: FaqDto) {
-    return this.service.create(createDto);
+  public create(@Body() createDto: FaqDto, @Req() req: Request) {
+    return this.service.create({
+      ...createDto,
+      createdBy: req["createdBy"],
+    });
   }
 
   @Post("/update")
-  public async update(@Body() update: PatchFaqDto) {
-    return await this.service.update(update);
+  public async update(@Body() update: PatchFaqDto, @Req() req: Request) {
+    return await this.service.update({
+      ...update,
+      createdBy: req["createdBy"],
+    });
   }
 
   @Delete("/delete")

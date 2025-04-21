@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { BaseCrudService } from "src/shared/base/base-crud";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
@@ -18,5 +18,21 @@ export class UserService
     repository: Repository<User>,
   ) {
     super(repository, apiFeaturesService);
+  }
+
+  public async findOneById(id: number): Promise<User> {
+    const user = await this.repository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException(`${user} not found`);
+    }
+    return user;
+  }
+
+  public async findOneByEmail(email: string) {
+    const user = await this.repository.findOne({ where: { email } });
+    if (!user) {
+      throw new UnauthorizedException(`${email} not found`);
+    }
+    return user;
   }
 }
