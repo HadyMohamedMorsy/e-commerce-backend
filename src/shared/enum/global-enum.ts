@@ -27,6 +27,11 @@ export enum FaqList {
   All = "All",
 }
 
+export enum Weight {
+  Item = "item",
+  Weight = "Weight",
+}
+
 export enum Role {
   CEO = "CEO",
   ANALYST = "ANALYST",

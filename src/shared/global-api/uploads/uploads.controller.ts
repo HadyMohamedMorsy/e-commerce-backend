@@ -3,10 +3,10 @@ import {
   HttpStatus,
   ParseFilePipeBuilder,
   Post,
-  UploadedFile,
+  UploadedFiles, // Changed from UploadedFile
   UseInterceptors,
 } from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express";
+import { FilesInterceptor } from "@nestjs/platform-express";
 import { UploadsService } from "./uploads.service";
 
 @Controller("global-media")
@@ -14,22 +14,22 @@ export class UploadsController {
   constructor(private readonly fileUploadService: UploadsService) {}
 
   @Post("upload")
-  @UseInterceptors(FileInterceptor("file"))
-  uploadFile(
-    @UploadedFile(
+  @UseInterceptors(FilesInterceptor("files[]"))
+  uploadFiles(
+    @UploadedFiles(
       new ParseFilePipeBuilder()
         .addFileTypeValidator({
-          fileType: /^(image\/jpeg|image\/png)$/,
+          fileType: /^(image\/jpe?g|image\/png|application\/pdf)$/i,
         })
         .addMaxSizeValidator({
-          maxSize: 307200, // 300 KB = 307200 bytes
+          maxSize: 307200,
         })
         .build({
           errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
         }),
     )
-    file: Express.Multer.File,
+    files: Express.Multer.File[],
   ) {
-    return this.fileUploadService.handleFileUpload(file);
+    return this.fileUploadService.handleFilesUpload(files);
   }
 }

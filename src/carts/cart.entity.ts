@@ -1,17 +1,10 @@
 // src/carts/entities/cart.entity.ts
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { User } from "src/users/user.entity";
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("carts")
-export class Cart {
+export class Cart extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,10 +14,4 @@ export class Cart {
 
   @Column({ type: "decimal", precision: 10, scale: 2, default: 0 })
   total: number;
-
-  @CreateDateColumn({ name: "created_at" })
-  createdAt: Date;
-
-  @UpdateDateColumn({ name: "updated_at" })
-  updatedAt: Date;
 }

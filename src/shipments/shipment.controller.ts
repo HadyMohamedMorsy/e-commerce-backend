@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpCode, Post } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
 import { ShipmentDto } from "./dtos/create.dto";
 import { PatchShipmentDto } from "./dtos/patch.dto";
 import { ShipmentService } from "./shipment.service";
@@ -14,13 +14,26 @@ export class ShipmentController {
   }
 
   @Post("/store")
-  public create(@Body() createDto: ShipmentDto) {
-    return this.service.create(createDto);
+  public create(@Body() create: ShipmentDto, @Req() req: Request) {
+    return this.service.create({
+      type: create.type,
+      kgPrice: create.kgPrice,
+      shipmentPrice: create.shipmentPrice,
+      location: req["location"],
+      createdBy: req["createdBy"],
+    } as ShipmentDto);
   }
 
   @Post("/update")
-  public async update(@Body() update: PatchShipmentDto) {
-    return await this.service.update(update);
+  public async update(@Body() update: PatchShipmentDto, @Req() req: Request) {
+    return await this.service.update({
+      id: update.id,
+      type: update.type,
+      kgPrice: update.kgPrice,
+      shipmentPrice: update.shipmentPrice,
+      location: req["location"],
+      createdBy: req["createdBy"],
+    });
   }
 
   @Delete("/delete")

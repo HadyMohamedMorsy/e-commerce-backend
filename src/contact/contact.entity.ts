@@ -1,13 +1,8 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from "typeorm";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("contacts")
-export class Contact {
+export class Contact extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
@@ -25,10 +20,4 @@ export class Contact {
 
   @Column({ type: "text" })
   message: string;
-
-  @CreateDateColumn({ name: "created_at" })
-  createdAt?: string;
-
-  @UpdateDateColumn({ name: "updated_at" })
-  updatedAt?: string;
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpCode, Post } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
 import { AddressesService } from "./address.service";
 import { AddressDto } from "./dtos/create.dto";
 import { PatchAddressDto } from "./dtos/patch.dto";
@@ -14,13 +14,38 @@ export class AddressController {
   }
 
   @Post("/store")
-  public create(@Body() createDto: AddressDto) {
-    return this.service.create(createDto);
+  public create(@Body() create: AddressDto, @Req() req: Request) {
+    return this.service.create({
+      title: create.title,
+      addressLine1: create.addressLine1,
+      addressLine2: create.addressLine2,
+      country: req["country"],
+      region: req["region"],
+      city: req["city"],
+      area: req["area"],
+      postalCode: create.postalCode,
+      landmark: create.landmark,
+      phoneNumber: create.phoneNumber,
+      createdBy: req["createdBy"],
+    } as AddressDto);
   }
 
   @Post("/update")
-  public async update(@Body() update: PatchAddressDto) {
-    return await this.service.update(update);
+  public async update(@Body() update: PatchAddressDto, @Req() req: Request) {
+    return await this.service.update({
+      id: update.id,
+      title: update.title,
+      addressLine1: update.addressLine1,
+      addressLine2: update.addressLine2,
+      country: req["country"],
+      region: req["region"],
+      city: req["city"],
+      area: req["area"],
+      postalCode: update.postalCode,
+      landmark: update.landmark,
+      phoneNumber: update.phoneNumber,
+      createdBy: req["createdBy"],
+    });
   }
 
   @Delete("/delete")

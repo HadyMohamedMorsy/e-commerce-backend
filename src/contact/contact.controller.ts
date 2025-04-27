@@ -14,13 +14,26 @@ export class ContactController {
   }
 
   @Post("/store")
-  public create(@Body() createDto: ContactDto) {
-    return this.service.create(createDto);
+  public create(@Body() create: ContactDto) {
+    return this.service.create({
+      name: create.name,
+      email: create.email,
+      phone: create.phone,
+      subject: create.subject,
+      message: create.message,
+    });
   }
 
   @Post("/update")
   public async update(@Body() update: PatchContactDto) {
-    return await this.service.update(update);
+    return await this.service.update({
+      id: update.id,
+      name: update.name,
+      email: update.email,
+      phone: update.phone,
+      subject: update.subject,
+      message: update.message,
+    });
   }
 
   @Delete("/delete")

@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsString, IsNumber, IsOptional } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { User } from "src/users/user.entity";
 
 export class BankDto {
   @IsNotEmpty()
@@ -12,10 +13,6 @@ export class BankDto {
   @IsOptional()
   @IsString()
   featuredImage?: string;
-
-  @IsOptional()
-  @IsNumber()
-  isActive?: number;
 
   @IsNotEmpty()
   @IsString()
@@ -39,5 +36,23 @@ export class BankDto {
 
   @IsNotEmpty()
   @IsNumber()
+  regionId: number;
+
+  @IsNotEmpty()
+  @IsNumber()
   cityId: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  areaId: number;
+
+  country: Location;
+
+  region: Location;
+
+  city: Location;
+
+  area: Location;
+
+  createdBy: User;
 }

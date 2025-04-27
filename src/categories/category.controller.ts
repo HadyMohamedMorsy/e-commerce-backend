@@ -14,9 +14,10 @@ export class CategoryController {
   }
 
   @Post("/store")
-  public create(@Body() createDto: CategoryDto, @Req() req: Request) {
+  public create(@Body() create: CategoryDto, @Req() req: Request) {
     return this.service.create({
-      ...createDto,
+      name: create.name,
+      description: create.description,
       createdBy: req["createdBy"],
     });
   }
@@ -24,8 +25,10 @@ export class CategoryController {
   @Post("/update")
   public async update(@Body() update: PatchCategoryDto, @Req() req: Request) {
     return await this.service.update({
-      ...update,
-      createdBy: req["createdBy"],
+      id: update.id,
+      name: update.name,
+      description: update.description,
+      createdBy: req["update"],
     });
   }
 

@@ -1,15 +1,9 @@
+import { Location } from "src/locations/location.entity";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { User } from "src/users/user.entity";
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from "typeorm";
-
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 @Entity()
-export class Address {
+export class Address extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -25,11 +19,17 @@ export class Address {
   @Column({ name: "address_line_2", nullable: true })
   addressLine2?: string;
 
-  @Column()
-  country: string;
+  @ManyToOne(() => Location)
+  country: Location;
 
-  @Column()
-  city: string;
+  @ManyToOne(() => Location)
+  region: Location;
+
+  @ManyToOne(() => Location)
+  city: Location;
+
+  @ManyToOne(() => Location)
+  area: Location;
 
   @Column({ name: "postal_code" })
   postalCode: string;
@@ -39,14 +39,4 @@ export class Address {
 
   @Column({ name: "phone_number" })
   phoneNumber: string;
-
-  @CreateDateColumn({ name: "created_at" })
-  createdAt: Date;
-
-  @UpdateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
-  })
-  updated_at: Date;
 }

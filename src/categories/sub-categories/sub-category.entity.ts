@@ -1,18 +1,10 @@
 // src/categories/category.entity.ts
-import { User } from "src/users/user.entity";
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from "typeorm";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Category } from "../category.entity";
 
 @Entity()
-export class SubCategory {
+export class SubCategory extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -30,29 +22,4 @@ export class SubCategory {
 
   @ManyToOne(() => Category, category => category.subCategories)
   category: Category;
-
-  @ManyToOne(() => User)
-  createdBy: User;
-
-  @CreateDateColumn({
-    name: "created_at",
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
-  })
-  createdAt: Date;
-
-  @UpdateDateColumn({
-    name: "updated_at",
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
-  })
-  updatedAt: Date;
-
-  @DeleteDateColumn({
-    name: "deleted_at",
-    type: "timestamp",
-    nullable: true,
-  })
-  deletedAt?: Date;
 }

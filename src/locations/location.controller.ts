@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpCode, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Post, Query, Req } from "@nestjs/common";
 import { LocationDto } from "./dtos/create.dto";
 import { PatchLocationDto } from "./dtos/patch.dto";
 import { LocationService } from "./location.service";
@@ -14,17 +14,33 @@ export class LocationController {
   }
 
   @Post("/store")
-  public create(@Body() createDto: LocationDto) {
-    return this.service.create(createDto);
+  public create(@Body() create: LocationDto, @Req() req: Request) {
+    return this.service.create({
+      name: create.name,
+      parent: req["parent"],
+      createdBy: req["createdBy"],
+    });
   }
 
   @Post("/update")
-  public async update(@Body() update: PatchLocationDto) {
-    return await this.service.update(update);
+  public async update(@Body() update: PatchLocationDto, @Req() req: Request) {
+    return await this.service.update({
+      id: update.id,
+      name: update.name,
+      parent: req["parent"],
+      createdBy: req["createdBy"],
+    });
   }
 
   @Delete("/delete")
   public delete(@Body() id: number) {
     return this.service.delete(id);
+  }
+
+  @Get("select-options")
+  async getLocationOptions(@Query("parentId") parentId?: string) {
+    const parsedParentId = parentId === "null" ? null : parentId ? parseInt(parentId) : undefined;
+
+    return this.service.getLocationsForSelect(parsedParentId);
   }
 }

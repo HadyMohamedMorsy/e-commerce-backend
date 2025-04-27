@@ -1,8 +1,9 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Location } from "../locations/location.entity";
 
 @Entity("shipments")
-export class Shipment {
+export class Shipment extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
@@ -13,9 +14,6 @@ export class Shipment {
   })
   type: "item" | "weight";
 
-  @Column({ name: "is_active", default: true })
-  isActive: boolean;
-
   @Column({ name: "kg_price", type: "decimal", precision: 10, scale: 2 })
   kgPrice: number;
 
@@ -23,6 +21,5 @@ export class Shipment {
   shipmentPrice: number;
 
   @ManyToOne(() => Location, location => location.shipments)
-  @JoinColumn({ name: "location_id" })
   location: Location;
 }

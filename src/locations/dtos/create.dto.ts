@@ -1,11 +1,12 @@
-import { IsNumber, IsOptional, IsString } from "class-validator";
+import { IsNotEmpty, IsString } from "class-validator";
+import { User } from "src/users/user.entity";
 
 export class LocationDto {
-  @IsOptional()
-  @IsNumber()
-  location_id?: number | null;
-
-  @IsOptional()
   @IsString()
-  name?: string | null;
+  @IsNotEmpty()
+  name: string;
+
+  parent?: Location;
+
+  createdBy: User;
 }

@@ -14,17 +14,22 @@ export class SubCategoryController {
   }
 
   @Post("/store")
-  public create(@Body() createDto: SubCategoryDto, @Req() req: Request) {
+  public create(@Body() create: SubCategoryDto, @Req() req: Request) {
     return this.service.create({
-      ...createDto,
+      name: create.name,
+      description: create.description,
+      category: req["category"],
       createdBy: req["createdBy"],
-    });
+    } as SubCategoryDto);
   }
 
   @Post("/update")
   public async update(@Body() update: PatchSubCategoryDto, @Req() req: Request) {
     return await this.service.update({
-      ...update,
+      id: update.id,
+      name: update.name,
+      description: update.description,
+      category: req["category"],
       createdBy: req["createdBy"],
     });
   }

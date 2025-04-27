@@ -17,7 +17,7 @@ export abstract class BaseCrudService<T, CreateDto, UpdateDto>
       .setRepository(this.repository.target)
       .buildQuery(filterData);
 
-    this.queryRelation(queryBuilder);
+    this.queryRelation(queryBuilder, filterData);
 
     const filteredRecord = await queryBuilder.getMany();
     const totalRecords = await queryBuilder.getCount();
@@ -56,7 +56,12 @@ export abstract class BaseCrudService<T, CreateDto, UpdateDto>
     };
   }
 
-  queryRelation(queryBuilder?: SelectQueryBuilder<any>) {
+  async getList() {
+    return await this.repository.find();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  queryRelation(queryBuilder?: SelectQueryBuilder<any>, filteredRecord?: any) {
     queryBuilder.leftJoin("e.createdBy", "ec").addSelect(["ec.id", "ec.firstName", "ec.lastName"]);
   }
 }

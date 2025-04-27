@@ -14,9 +14,11 @@ export class FaqController {
   }
 
   @Post("/store")
-  public create(@Body() createDto: FaqDto, @Req() req: Request) {
+  public create(@Body() create: FaqDto, @Req() req: Request) {
     return this.service.create({
-      ...createDto,
+      select_questionable_type: create.select_questionable_type,
+      question: create.question,
+      answer: create.answer,
       createdBy: req["createdBy"],
     });
   }
@@ -24,7 +26,10 @@ export class FaqController {
   @Post("/update")
   public async update(@Body() update: PatchFaqDto, @Req() req: Request) {
     return await this.service.update({
-      ...update,
+      id: update.id,
+      select_questionable_type: update.select_questionable_type,
+      question: update.question,
+      answer: update.answer,
       createdBy: req["createdBy"],
     });
   }

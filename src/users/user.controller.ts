@@ -14,18 +14,33 @@ export class UserController {
   }
 
   @Post("/store")
-  public create(@Body() createDto: UserDto, @Req() req: Request) {
+  public create(@Body() create: UserDto, @Req() req: Request) {
     return this.service.create({
-      ...createDto,
+      firstName: create.firstName,
+      lastName: create.lastName,
+      fullName: create.fullName,
+      email: create.email,
+      username: create.username,
+      type: create.type,
+      role: create.role,
+      phoneNumber: create.phoneNumber,
       password: req["password"],
       createdBy: req["createdBy"],
-    });
+    } as UserDto);
   }
 
   @Post("/update")
   public async update(@Body() update: PatchUserDto, @Req() req: Request) {
     return await this.service.update({
-      ...update,
+      id: update.id,
+      firstName: update.firstName,
+      lastName: update.lastName,
+      fullName: update.fullName,
+      email: update.email,
+      username: update.username,
+      type: update.type,
+      role: update.role,
+      phoneNumber: update.phoneNumber,
       password: req["password"],
       createdBy: req["createdBy"],
     });

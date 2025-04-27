@@ -1,7 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-
+import { Location } from "src/locations/location.entity";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 @Entity("banks")
-export class Bank {
+export class Bank extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -13,9 +14,6 @@ export class Bank {
 
   @Column({ name: "featured_image", nullable: true })
   featuredImage: string;
-
-  @Column({ name: "is_active", default: 1 })
-  isActive: number;
 
   @Column({ name: "branch_name" })
   branchName: string;
@@ -29,14 +27,15 @@ export class Bank {
   @Column({ name: "swift_code" })
   swiftCode: string;
 
-  @Column({ name: "created_at", type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  createdAt: string;
-
   @ManyToOne(() => Location)
-  @JoinColumn({ name: "country_id" })
   country: Location;
 
   @ManyToOne(() => Location)
-  @JoinColumn({ name: "city_id" })
+  region: Location;
+
+  @ManyToOne(() => Location)
   city: Location;
+
+  @ManyToOne(() => Location)
+  area: Location;
 }

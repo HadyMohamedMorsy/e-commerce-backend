@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpCode, Post } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
 import { BanksService } from "./bank.service";
 import { BankDto } from "./dtos/create.dto";
 import { PatchBankDto } from "./dtos/patch.dto";
@@ -14,13 +14,40 @@ export class BankController {
   }
 
   @Post("/store")
-  public create(@Body() createDto: BankDto) {
-    return this.service.create(createDto);
+  public create(@Body() create: BankDto, @Req() req: Request) {
+    return this.service.create({
+      accountName: create.accountName,
+      accountNumber: create.accountNumber,
+      branchName: create.branchName,
+      bankName: create.bankName,
+      featuredImage: create.featuredImage,
+      iban: create.iban,
+      swiftCode: create.swiftCode,
+      country: req["country"],
+      region: req["region"],
+      city: req["city"],
+      area: req["area"],
+      createdBy: req["createdBy"],
+    } as BankDto);
   }
 
   @Post("/update")
-  public async update(@Body() update: PatchBankDto) {
-    return await this.service.update(update);
+  public async update(@Body() update: PatchBankDto, @Req() req: Request) {
+    return await this.service.update({
+      id: update.id,
+      accountName: update.accountName,
+      accountNumber: update.accountNumber,
+      branchName: update.branchName,
+      bankName: update.bankName,
+      featuredImage: update.featuredImage,
+      iban: update.iban,
+      swiftCode: update.swiftCode,
+      country: req["country"],
+      region: req["region"],
+      city: req["city"],
+      area: req["area"],
+      createdBy: req["createdBy"],
+    });
   }
 
   @Delete("/delete")

@@ -1,4 +1,6 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { Location } from "src/locations/location.entity";
+import { User } from "src/users/user.entity";
 
 export class AddressDto {
   @IsNotEmpty()
@@ -14,12 +16,28 @@ export class AddressDto {
   addressLine2?: string;
 
   @IsNotEmpty()
-  @IsString()
-  country: string;
+  @IsNumber()
+  countryId: number;
 
   @IsNotEmpty()
-  @IsString()
-  city: string;
+  @IsNumber()
+  regionId: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  cityId: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  areaId: number;
+
+  country: Location;
+
+  region: Location;
+
+  city: Location;
+
+  area: Location;
 
   @IsNotEmpty()
   @IsString()
@@ -33,7 +51,5 @@ export class AddressDto {
   @IsString()
   phoneNumber: string;
 
-  @IsNumber()
-  @IsNotEmpty()
-  user_id: number;
+  createdBy: User;
 }

@@ -1,34 +1,21 @@
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { Shipment } from "src/shipments/shipment.entity";
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Location {
+export class Location extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: "location_id", nullable: true })
-  locationId: number | null;
-
   @Column({ type: "varchar", length: 255, nullable: true })
-  name: string | null; // Nullable string field (max 255 chars)
+  name: string | null;
+
+  @ManyToOne(() => Location, location => location.children)
+  parent: Location;
+
+  @OneToMany(() => Location, location => location.parent)
+  children: Location[];
 
   @OneToMany(() => Shipment, shipment => shipment.location)
   shipments: Shipment[];
-
-  @CreateDateColumn({ name: "created_at" })
-  createdAt: Date;
-
-  @UpdateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
-  })
-  updated_at: Date;
 }

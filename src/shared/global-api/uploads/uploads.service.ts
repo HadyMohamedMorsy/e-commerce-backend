@@ -2,7 +2,9 @@ import { Injectable } from "@nestjs/common";
 
 @Injectable()
 export class UploadsService {
-  handleFileUpload(file: Express.Multer.File) {
-    return { name: `uploads/${file.filename}` };
+  handleFilesUpload(files: Array<Express.Multer.File>) {
+    return files.map(file => ({
+      name: `uploads/${file.filename}`,
+    }));
   }
 }

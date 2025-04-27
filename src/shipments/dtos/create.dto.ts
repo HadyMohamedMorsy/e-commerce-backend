@@ -1,20 +1,25 @@
-import { IsBoolean, IsEnum, IsNumber, IsPositive } from "class-validator";
+import { Type } from "class-transformer";
+import { IsEnum, IsNumber, IsPositive } from "class-validator";
+import { User } from "src/users/user.entity";
 
 export class ShipmentDto {
   @IsEnum(["item", "weight"])
   type: "item" | "weight";
 
-  @IsBoolean()
-  is_active: boolean;
+  @IsNumber()
+  @IsPositive()
+  @Type(() => Number)
+  kgPrice: number;
 
   @IsNumber()
   @IsPositive()
-  kg_price: number;
+  @Type(() => Number)
+  shipmentPrice: number;
 
   @IsNumber()
-  @IsPositive()
-  shipment_price: number;
+  locationId: number;
 
-  @IsNumber()
-  location_id: number;
+  location: Location;
+
+  createdBy: User;
 }

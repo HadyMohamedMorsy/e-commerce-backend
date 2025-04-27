@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("blogs")
-export class Blog {
+export class Blog extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -61,15 +62,4 @@ export class Blog {
 
   @Column({ name: "media_type" })
   mediaType: string;
-
-  @Column({ name: "created_at", type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  createdAt: string;
-
-  @Column({
-    name: "updated_at",
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
-  })
-  updatedAt: string;
 }
