@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
+import { FaqList } from "src/shared/enum/global-enum";
 import { FaqDto } from "./dtos/create.dto";
 import { PatchFaqDto } from "./dtos/patch.dto";
 import { FaqsService } from "./faq.service";
@@ -20,6 +21,7 @@ export class FaqController {
       question: create.question,
       answer: create.answer,
       createdBy: req["createdBy"],
+      productId: create.select_questionable_type === FaqList.Product ? req["product"] : null,
     });
   }
 
@@ -31,6 +33,7 @@ export class FaqController {
       question: update.question,
       answer: update.answer,
       createdBy: req["createdBy"],
+      productId: update.select_questionable_type === FaqList.Product ? req["product"] : null,
     });
   }
 

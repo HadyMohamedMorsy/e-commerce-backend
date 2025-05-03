@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, HttpCode, Post } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
 import { BlogsService } from "./blog.service";
-import { BankDto } from "./dtos/create.dto";
-import { PatchBankDto } from "./dtos/patch.dto";
+import { BlogDto } from "./dtos/create.dto";
+import { PatchBlogDto } from "./dtos/patch.dto";
 
 @Controller("blog")
 export class BlogController {
@@ -14,13 +14,56 @@ export class BlogController {
   }
 
   @Post("/store")
-  public create(@Body() createDto: BankDto) {
-    return this.service.create(createDto);
+  public create(@Body() createDto: BlogDto, @Req() req: Request) {
+    return this.service.create({
+      order: createDto.order,
+      videoType: createDto.videoType,
+      video: createDto.video,
+      views: createDto.views,
+      isFeatured: createDto.isFeatured,
+      isPublished: createDto.isPublished,
+      title: createDto.title,
+      description: createDto.description,
+      subTitle: createDto.subTitle,
+      postType: createDto.postType,
+      slug: createDto.slug,
+      startDate: createDto.startDate,
+      endDate: createDto.endDate,
+      shortDescription: createDto.shortDescription,
+      metaTitle: createDto.metaTitle,
+      metaDescription: createDto.metaDescription,
+      featuredImages: createDto.featuredImages,
+      thumb: createDto.thumb,
+      mediaType: createDto.mediaType,
+      createdBy: req["createdBy"],
+    });
   }
 
   @Post("/update")
-  public async update(@Body() update: PatchBankDto) {
-    return await this.service.update(update);
+  public async update(@Body() update: PatchBlogDto, @Req() req: Request) {
+    return await this.service.update({
+      id: update.id,
+      order: update.order,
+      videoType: update.videoType,
+      video: update.video,
+      views: update.views,
+      isFeatured: update.isFeatured,
+      isPublished: update.isPublished,
+      title: update.title,
+      description: update.description,
+      subTitle: update.subTitle,
+      postType: update.postType,
+      slug: update.slug,
+      startDate: update.startDate,
+      endDate: update.endDate,
+      shortDescription: update.shortDescription,
+      metaTitle: update.metaTitle,
+      metaDescription: update.metaDescription,
+      featuredImages: update.featuredImages,
+      thumb: update.thumb,
+      mediaType: update.mediaType,
+      createdBy: req["createdBy"],
+    });
   }
 
   @Delete("/delete")

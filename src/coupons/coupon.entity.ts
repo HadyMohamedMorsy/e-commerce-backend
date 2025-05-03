@@ -1,7 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("coupons")
-export class Coupon {
+export class Coupon extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -35,17 +36,6 @@ export class Coupon {
   })
   minOrderItemCount: number;
 
-  @Column({
-    name: "created_at",
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
-  })
-  createdAt: string;
-
-  @UpdateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
-  })
-  updated_at: Date;
+  @Column({ name: "is_active" })
+  isActive: boolean;
 }

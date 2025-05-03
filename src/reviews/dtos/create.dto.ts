@@ -1,13 +1,5 @@
-import {
-  IsArray,
-  IsInt,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  Max,
-  Min,
-} from "class-validator";
+import { IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min } from "class-validator";
+import { User } from "src/users/user.entity";
 
 export class ReviewDto {
   @IsNotEmpty()
@@ -38,15 +30,5 @@ export class ReviewDto {
   @IsInt()
   likes_count?: number;
 
-  @IsNotEmpty()
-  @IsString()
-  creator_name: string;
-
-  @IsNotEmpty()
-  @IsString()
-  creator_image: string;
-
-  @IsArray()
-  @IsString({ each: true })
-  media: string[];
+  createdBy: User;
 }

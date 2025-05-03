@@ -1,13 +1,8 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from "typeorm";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("reviews")
-export class Review {
+export class Review extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -29,22 +24,6 @@ export class Review {
   @Column({ name: "likes_count" })
   likesCount: number;
 
-  @Column({ name: "creator_name" })
-  creatorName: string;
-
-  @Column({ name: "creator_image" })
-  creatorImage: string;
-
   @Column({ type: "simple-array" })
   media: string[];
-
-  @CreateDateColumn({ name: "created_at" })
-  createdAt: Date;
-
-  @UpdateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
-  })
-  updated_at: Date;
 }

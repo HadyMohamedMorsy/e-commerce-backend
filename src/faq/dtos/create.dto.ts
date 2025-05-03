@@ -1,4 +1,4 @@
-import { IsEnum, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsInt, IsOptional, IsString } from "class-validator";
 import { FaqList } from "src/shared/enum/global-enum";
 import { User } from "src/users/user.entity";
 
@@ -16,6 +16,10 @@ export class FaqDto {
   @IsOptional()
   @IsString()
   answer?: string | null;
+
+  @IsOptional()
+  @IsInt()
+  productId?: number;
 
   createdBy: User;
 }

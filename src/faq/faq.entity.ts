@@ -1,10 +1,13 @@
+import { Product } from "src/products/products.entity";
 import { FaqList } from "src/shared/enum/global-enum";
 import { User } from "src/users/user.entity";
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -30,6 +33,10 @@ export class Faq {
 
   @ManyToOne(() => User)
   createdBy: User;
+
+  @OneToOne(() => Product, { nullable: true })
+  @JoinColumn()
+  product: Product;
 
   @CreateDateColumn({
     type: "timestamp",

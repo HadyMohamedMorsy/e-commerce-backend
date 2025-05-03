@@ -1,4 +1,7 @@
-import { IsDateString, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsBoolean, IsDateString, IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { CouponType } from "src/shared/enum/global-enum";
+import { User } from "src/users/user.entity";
 
 export class CouponDto {
   @IsNotEmpty()
@@ -6,16 +9,31 @@ export class CouponDto {
   code: string;
 
   @IsNotEmpty()
-  @IsString()
-  coupon_type: string;
+  @IsEnum(CouponType)
+  couponType: CouponType;
 
   @IsNotEmpty()
   @IsNumber()
+  @Type(() => Number)
   discount: number;
 
   @IsNotEmpty()
   @IsString()
-  discount_type: string;
+  discountType: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  minOrderTotalPrice: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  minOrderItemCount: number;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  isActive: boolean = true;
 
   @IsNotEmpty()
   @IsDateString()
@@ -26,4 +44,6 @@ export class CouponDto {
 
   @IsNumber()
   min_order_item_count: number = 0;
+
+  createdBy: User;
 }

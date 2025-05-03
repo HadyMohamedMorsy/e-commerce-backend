@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpCode, Post } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
 import { ReviewDto } from "./dtos/create.dto";
 import { PatchReviewDto } from "./dtos/patch.dto";
 import { ReviewService } from "./review.service";
@@ -14,13 +14,28 @@ export class ReviewController {
   }
 
   @Post("/store")
-  public create(@Body() createDto: ReviewDto) {
-    return this.service.create(createDto);
+  public create(@Body() createDto: ReviewDto, @Req() req: Request) {
+    return this.service.create({
+      title: createDto.title,
+      comment: createDto.comment,
+      rate: createDto.rate,
+      is_liked: createDto.is_liked,
+      likes_count: createDto.likes_count,
+      createdBy: req["createdBy"],
+    });
   }
 
   @Post("/update")
-  public async update(@Body() update: PatchReviewDto) {
-    return await this.service.update(update);
+  public async update(@Body() update: PatchReviewDto, @Req() req: Request) {
+    return await this.service.update({
+      id: update.id,
+      title: update.title,
+      comment: update.comment,
+      rate: update.rate,
+      is_liked: update.is_liked,
+      likes_count: update.likes_count,
+      createdBy: req["createdBy"],
+    });
   }
 
   @Delete("/delete")

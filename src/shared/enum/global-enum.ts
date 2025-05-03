@@ -54,3 +54,15 @@ export enum Role {
   CUSTOMER = "CUSTOMER",
   TECH_SUPPORT = "TECH_SUPPORT",
 }
+
+export enum CouponType {
+  FREE_SHIPPING_ALL = "free_shipping_all",
+  FREE_SHIPPING_CATEGORY = "free_shipping_category",
+  FREE_SHIPPING_PRODUCT = "free_shipping_product",
+  BUY_ONE_GET_ONE_ALL = "buy_one_get_one_all",
+  BUY_ONE_GET_ONE_CATEGORY = "buy_one_get_one_category",
+  BUY_ONE_GET_ONE_PRODUCT = "buy_one_get_one_product",
+  DISCOUNT_ALL = "discount_all",
+  DISCOUNT_CATEGORY = "discount_category",
+  DISCOUNT_PRODUCT = "discount_product",
+}

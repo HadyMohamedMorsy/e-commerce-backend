@@ -60,6 +60,11 @@ export abstract class BaseCrudService<T, CreateDto, UpdateDto>
     return await this.repository.find();
   }
 
+  public async changeStatus(id: number, status: string | boolean) {
+    await this.repository.update(id, { status } as any);
+    return this.findOne(id);
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   queryRelation(queryBuilder?: SelectQueryBuilder<any>, filteredRecord?: any) {
     queryBuilder.leftJoin("e.createdBy", "ec").addSelect(["ec.id", "ec.firstName", "ec.lastName"]);

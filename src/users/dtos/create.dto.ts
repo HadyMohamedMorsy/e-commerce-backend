@@ -32,6 +32,9 @@ export class UserDto {
   @MaxLength(96)
   fullName?: string;
 
+  @IsString()
+  birthOfDate?: string;
+
   @IsEmail()
   @IsNotEmpty()
   @MaxLength(96)

@@ -1,9 +1,9 @@
 import { PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsInt, IsNotEmpty } from "class-validator";
-import { BankDto } from "./create.dto";
+import { BlogDto } from "./create.dto";
 
-export class PatchBankDto extends PartialType(BankDto) {
+export class PatchBlogDto extends PartialType(BlogDto) {
   @IsInt()
   @Type(() => Number)
   @IsNotEmpty()

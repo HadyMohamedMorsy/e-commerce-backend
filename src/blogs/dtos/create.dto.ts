@@ -1,6 +1,6 @@
 import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
-export class BankDto {
+export class BlogDto {
   @IsOptional()
   @IsNumber()
   order?: number;
