@@ -18,7 +18,6 @@ export class UserController {
     return this.service.create({
       firstName: create.firstName,
       lastName: create.lastName,
-      fullName: create.fullName,
       email: create.email,
       username: create.username,
       birthOfDate: create.birthOfDate,
@@ -32,20 +31,21 @@ export class UserController {
 
   @Post("/update")
   public async update(@Body() update: PatchUserDto, @Req() req: Request) {
-    return await this.service.update({
+    const updateData: PatchUserDto = {
       id: update.id,
       firstName: update.firstName,
       lastName: update.lastName,
-      fullName: update.fullName,
       email: update.email,
       username: update.username,
       birthOfDate: update.birthOfDate,
       type: update.type,
       role: update.role,
       phoneNumber: update.phoneNumber,
-      password: req["password"],
       createdBy: req["createdBy"],
-    });
+    };
+    if (req["password"]) updateData.password = req["password"];
+
+    return await this.service.update(updateData);
   }
 
   @Delete("/delete")
