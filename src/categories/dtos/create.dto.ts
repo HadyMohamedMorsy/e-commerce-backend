@@ -12,4 +12,8 @@ export class CategoryDto {
   description?: string;
 
   createdBy: User;
+
+  @IsOptional()
+  @IsString()
+  image?: string;
 }

@@ -22,4 +22,7 @@ export class SubCategory extends BaseMemberEntity {
 
   @ManyToOne(() => Category, category => category.subCategories)
   category: Category;
+
+  @Column({ nullable: true })
+  image?: string;
 }

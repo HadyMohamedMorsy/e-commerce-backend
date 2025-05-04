@@ -23,6 +23,9 @@ export class Category extends BaseMemberEntity {
   })
   products: Product[];
 
+  @Column({ nullable: true })
+  image?: string;
+
   @OneToMany(() => SubCategory, subCategory => subCategory.category)
   subCategories: SubCategory[];
 }
