@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
+import { Roles } from "src/shared/decorators/roles.decorator";
 import { UserDto } from "./dtos/create.dto";
 import { PatchUserDto } from "./dtos/patch.dto";
 import { UserService } from "./user.service";
@@ -8,12 +9,22 @@ export class UserController {
   constructor(private readonly service: UserService) {}
 
   @Post("/index")
+  @Roles(
+    "CEO",
+    "TECH_SUPPORT",
+    "STORE_MANAGER",
+    "SUPER_ADMIN",
+    "INVENTORY_MANAGER",
+    "CONTENT_MANAGER",
+    "SYSTEM_ADMIN",
+  )
   @HttpCode(200)
   public index(@Body() filter: any) {
     return this.service.findAll(filter);
   }
 
   @Post("/store")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public create(@Body() create: UserDto, @Req() req: Request) {
     return this.service.create({
       firstName: create.firstName,
@@ -30,6 +41,7 @@ export class UserController {
   }
 
   @Post("/update")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public async update(@Body() update: PatchUserDto, @Req() req: Request) {
     const updateData: PatchUserDto = {
       id: update.id,
@@ -49,6 +61,7 @@ export class UserController {
   }
 
   @Delete("/delete")
+  @Roles("STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
   public delete(@Body() id: number) {
     return this.service.delete(id);
   }

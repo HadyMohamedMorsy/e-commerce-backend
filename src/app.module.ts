@@ -13,6 +13,7 @@ import { AuthModule } from "./auth/auth.module";
 import jwtConfig from "./auth/config/jwt.config";
 import { AccessTokenGuard } from "./auth/guards/access-token/access-token.guard";
 import { AuthenticationGuard } from "./auth/guards/authentication/authentication.guard";
+import { RolesGuard } from "./auth/guards/roles/roles.guard";
 import { BankModule } from "./banks/bank.module";
 import { CartModule } from "./carts/carts.module";
 import { CategoryModule } from "./categories/category.module";
@@ -104,6 +105,10 @@ const ENV = process.env.NODE_ENV;
     {
       provide: APP_GUARD,
       useClass: AuthenticationGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
     AccessTokenGuard,
     {

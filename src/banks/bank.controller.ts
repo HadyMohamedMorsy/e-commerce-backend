@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
+import { Roles } from "src/shared/decorators/roles.decorator";
 import { BanksService } from "./bank.service";
 import { BankDto } from "./dtos/create.dto";
 import { PatchBankDto } from "./dtos/patch.dto";
@@ -8,12 +9,14 @@ export class BankController {
   constructor(private readonly service: BanksService) {}
 
   @Post("/index")
+  @Roles("CEO", "TECH_SUPPORT")
   @HttpCode(200)
   public index(@Body() filter: any) {
     return this.service.findAll(filter);
   }
 
   @Post("/store")
+  @Roles("CEO", "TECH_SUPPORT")
   public create(@Body() create: BankDto, @Req() req: Request) {
     return this.service.create({
       accountName: create.accountName,
@@ -32,6 +35,7 @@ export class BankController {
   }
 
   @Post("/update")
+  @Roles("CEO", "TECH_SUPPORT")
   public async update(@Body() update: PatchBankDto, @Req() req: Request) {
     return await this.service.update({
       id: update.id,
@@ -51,6 +55,7 @@ export class BankController {
   }
 
   @Delete("/delete")
+  @Roles("CEO", "TECH_SUPPORT")
   public delete(@Body() id: number) {
     return this.service.delete(id);
   }

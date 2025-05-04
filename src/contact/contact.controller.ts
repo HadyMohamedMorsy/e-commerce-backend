@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, HttpCode, Post } from "@nestjs/common";
+import { Roles } from "src/shared/decorators/roles.decorator";
 import { ContactsService } from "./contact.service";
 import { ContactDto } from "./dtos/create.dto";
 import { PatchContactDto } from "./dtos/patch.dto";
@@ -8,12 +9,22 @@ export class ContactController {
   constructor(private readonly service: ContactsService) {}
 
   @Post("/index")
+  @Roles(
+    "CEO",
+    "TECH_SUPPORT",
+    "STORE_MANAGER",
+    "SUPER_ADMIN",
+    "INVENTORY_MANAGER",
+    "CONTENT_MANAGER",
+    "SYSTEM_ADMIN",
+  )
   @HttpCode(200)
   public index(@Body() filter: any) {
     return this.service.findAll(filter);
   }
 
   @Post("/store")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public create(@Body() create: ContactDto) {
     return this.service.create({
       name: create.name,
@@ -25,6 +36,7 @@ export class ContactController {
   }
 
   @Post("/update")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public async update(@Body() update: PatchContactDto) {
     return await this.service.update({
       id: update.id,
@@ -37,6 +49,7 @@ export class ContactController {
   }
 
   @Delete("/delete")
+  @Roles("STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
   public delete(@Body() id: number) {
     return this.service.delete(id);
   }

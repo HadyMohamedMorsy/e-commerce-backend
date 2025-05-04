@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, Post, Query, Req } from "@nestjs/common";
+import { Roles } from "src/shared/decorators/roles.decorator";
 import { LocationDto } from "./dtos/create.dto";
 import { PatchLocationDto } from "./dtos/patch.dto";
 import { LocationService } from "./location.service";
@@ -8,12 +9,22 @@ export class LocationController {
   constructor(private readonly service: LocationService) {}
 
   @Post("/index")
+  @Roles(
+    "CEO",
+    "TECH_SUPPORT",
+    "STORE_MANAGER",
+    "SUPER_ADMIN",
+    "INVENTORY_MANAGER",
+    "CONTENT_MANAGER",
+    "SYSTEM_ADMIN",
+  )
   @HttpCode(200)
   public index(@Body() filter: any) {
     return this.service.findAll(filter);
   }
 
   @Post("/store")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public create(@Body() create: LocationDto, @Req() req: Request) {
     return this.service.create({
       name: create.name,
@@ -23,6 +34,7 @@ export class LocationController {
   }
 
   @Post("/update")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public async update(@Body() update: PatchLocationDto, @Req() req: Request) {
     return await this.service.update({
       id: update.id,
@@ -33,11 +45,21 @@ export class LocationController {
   }
 
   @Delete("/delete")
+  @Roles("STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
   public delete(@Body() id: number) {
     return this.service.delete(id);
   }
 
   @Get("select-options")
+  @Roles(
+    "CEO",
+    "TECH_SUPPORT",
+    "STORE_MANAGER",
+    "SUPER_ADMIN",
+    "INVENTORY_MANAGER",
+    "CONTENT_MANAGER",
+    "SYSTEM_ADMIN",
+  )
   async getLocationOptions(@Query("parentId") parentId?: string) {
     const parsedParentId = parentId === "null" ? null : parentId ? parseInt(parentId) : undefined;
 
