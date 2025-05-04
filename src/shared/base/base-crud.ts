@@ -1,6 +1,6 @@
 // src/shared/base-crud.service.ts
 import { NotFoundException } from "@nestjs/common";
-import { Repository, SelectQueryBuilder } from "typeorm";
+import { In, Repository, SelectQueryBuilder } from "typeorm";
 import { APIFeaturesService } from "../filters/filter.service";
 import { ICrudService } from "../interfaces/crud-service.interface";
 
@@ -63,6 +63,9 @@ export abstract class BaseCrudService<T, CreateDto, UpdateDto>
   public async changeStatus(id: number, status: string | boolean) {
     await this.repository.update(id, { status } as any);
     return this.findOne(id);
+  }
+  async findByIds(ids: number[]): Promise<T[]> {
+    return this.repository.findBy({ id: In(ids) } as any);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { ProductModule } from "src/products/products.module";
 import { FilterDateModule } from "src/shared/filters/filter-date.module";
 import { OrderItem } from "./order-item.entity";
 import { OrderController } from "./order.controller";
@@ -7,7 +8,11 @@ import { Order } from "./order.entity";
 import { OrderService } from "./order.service";
 import { PaymentDetail } from "./payment-detail.entity";
 @Module({
-  imports: [FilterDateModule, TypeOrmModule.forFeature([Order, OrderItem, PaymentDetail])],
+  imports: [
+    FilterDateModule,
+    ProductModule,
+    TypeOrmModule.forFeature([Order, OrderItem, PaymentDetail]),
+  ],
   controllers: [OrderController],
   providers: [OrderService],
   exports: [OrderService],

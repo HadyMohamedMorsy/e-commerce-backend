@@ -1,13 +1,5 @@
 import { Product } from "src/products/products.entity";
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Order } from "./order.entity";
 
 @Entity("order_item")
@@ -26,9 +18,6 @@ export class OrderItem {
   @Column("integer")
   quantity: number;
 
-  @CreateDateColumn({ name: "created_at" })
-  createdAt: Date;
-
-  @UpdateDateColumn({ name: "updated_at" })
-  updatedAt: Date;
+  @Column("integer")
+  price: number;
 }

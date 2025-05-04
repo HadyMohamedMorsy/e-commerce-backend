@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpCode, Post } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
 import { OrderDto } from "./dtos/create.dto";
 import { PatchOrderDto } from "./dtos/patch.dto";
 import { OrderService } from "./order.service";
@@ -14,8 +14,11 @@ export class OrderController {
   }
 
   @Post("/store")
-  public create(@Body() createDto: OrderDto) {
-    return this.service.create(createDto);
+  public create(@Body() createDto: OrderDto, @Req() req: Request) {
+    return this.service.create({
+      ...createDto,
+      createdBy: req["createdBy"],
+    });
   }
 
   @Post("/update")

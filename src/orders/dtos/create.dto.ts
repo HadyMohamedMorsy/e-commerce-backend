@@ -1,12 +1,30 @@
-// src/orders/dto/create-order.dto.ts
-import { IsNotEmpty, IsNumber } from "class-validator";
+import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from "class-validator";
+import { PaymentStatus } from "src/shared/enum/global-enum";
+import { User } from "src/users/user.entity";
+import { CreateOrderItemDto } from "./create-order-item.dto";
 
 export class OrderDto {
   @IsNumber()
-  @IsNotEmpty()
-  userId: number;
-
-  @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   total: number;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateOrderItemDto)
+  @IsOptional()
+  orderItems: CreateOrderItemDto[];
+
+  @IsString()
+  @IsNotEmpty()
+  status: PaymentStatus;
+
+  createdBy: User;
 }

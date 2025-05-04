@@ -1,36 +1,21 @@
 // src/orders/entities/order.entity.ts
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from "typeorm";
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { User } from "src/users/user.entity";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { OrderItem } from "./order-item.entity";
 import { PaymentDetail } from "./payment-detail.entity";
 
 @Entity("order_details")
-export class Order {
+export class Order extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @ManyToOne(() => User)
-  @JoinColumn({ name: "user_id" })
-  user: User;
 
   @OneToOne(() => PaymentDetail, payment => payment.order)
   payment: PaymentDetail;
 
+  @OneToMany(() => OrderItem, orderItem => orderItem.order)
+  orderItems: OrderItem[];
+
   @Column("integer")
   total: number;
-
-  @CreateDateColumn({ name: "created_at" })
-  createdAt: Date;
-
-  @UpdateDateColumn({ name: "updated_at" })
-  updatedAt: Date;
 }

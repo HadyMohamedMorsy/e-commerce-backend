@@ -7,6 +7,7 @@ import { Repository } from "typeorm";
 import { ProductDto } from "./dtos/create.dto";
 import { PatchProductDto } from "./dtos/patch.dto";
 import { Product } from "./products.entity";
+
 @Injectable()
 export class ProductService
   extends BaseCrudService<Product, ProductDto, PatchProductDto>
