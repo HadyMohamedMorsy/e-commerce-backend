@@ -37,13 +37,7 @@ export class CouponDto {
 
   @IsNotEmpty()
   @IsDateString()
-  expiry_date: string;
-
-  @IsNumber()
-  min_order_total_price: number = 0;
-
-  @IsNumber()
-  min_order_item_count: number = 0;
+  expiryDate: string;
 
   createdBy: User;
 }

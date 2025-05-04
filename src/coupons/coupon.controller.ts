@@ -23,9 +23,7 @@ export class CouponController {
       minOrderTotalPrice: createDto.minOrderTotalPrice,
       minOrderItemCount: createDto.minOrderItemCount,
       isActive: createDto.isActive,
-      expiry_date: createDto.expiry_date,
-      min_order_total_price: 0,
-      min_order_item_count: 0,
+      expiryDate: createDto.expiryDate,
       createdBy: req["createdBy"],
     });
   }
@@ -41,9 +39,7 @@ export class CouponController {
       minOrderTotalPrice: update.minOrderTotalPrice,
       minOrderItemCount: update.minOrderItemCount,
       isActive: update.isActive,
-      expiry_date: update.expiry_date,
-      min_order_total_price: 0,
-      min_order_item_count: 0,
+      expiryDate: update.expiryDate,
       createdBy: req["createdBy"],
     });
   }
