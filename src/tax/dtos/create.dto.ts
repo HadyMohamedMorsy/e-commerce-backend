@@ -14,7 +14,7 @@ export class TaxDto {
   @IsNotEmpty()
   locationId: number;
 
-  location: Location;
+  country: Location;
 
   createdBy: User;
 }

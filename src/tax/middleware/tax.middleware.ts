@@ -8,7 +8,7 @@ export class TaxLocationMiddleware implements NestMiddleware {
 
   async use(req: Request, res: Response, next: NextFunction) {
     const { locationId } = req.body;
-    req["location"] = await this.getLocation(locationId);
+    req["country"] = await this.getLocation(locationId);
     next();
   }
 

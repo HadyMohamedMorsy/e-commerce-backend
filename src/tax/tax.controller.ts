@@ -29,7 +29,7 @@ export class TaxController {
     return this.service.create({
       name: createDto.name,
       rate: createDto.rate,
-      location: req["location"],
+      country: req["country"],
       createdBy: req["createdBy"],
     } as TaxDto);
   }
@@ -41,7 +41,7 @@ export class TaxController {
       id: update.id,
       name: update.name,
       rate: update.rate,
-      location: req["location"],
+      country: req["country"],
       createdBy: req["createdBy"],
     });
   }

@@ -15,7 +15,7 @@ export class Tax extends BaseMemberEntity {
 
   @ManyToOne(() => Location)
   @JoinColumn({ name: "locationId" })
-  location: Location;
+  country: Location;
 
   @Column({ default: true })
   isActive: boolean;
