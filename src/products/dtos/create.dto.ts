@@ -1,4 +1,7 @@
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsArray, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { Category } from "src/categories/category.entity";
+import { User } from "src/users/user.entity";
 
 export class ProductDto {
   @IsString()
@@ -17,7 +20,12 @@ export class ProductDto {
   @IsOptional()
   cover?: string;
 
-  @IsString()
+  @IsArray()
+  @Type(() => Number)
   @IsNotEmpty()
-  categoryId: string;
+  categoryIds: number[];
+
+  categories: Category[];
+
+  createdBy: User;
 }

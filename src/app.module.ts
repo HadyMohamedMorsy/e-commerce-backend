@@ -21,7 +21,9 @@ import { ContactModule } from "./contact/contact.module";
 import { FaqModule } from "./faq/faq.module";
 import { LocationModule } from "./locations/location.module";
 import { OrderModule } from "./orders/order.module";
+import { AttributeModule } from "./products/attributes/attribute.module";
 import { ProductModule } from "./products/products.module";
+import { SkuModule } from "./products/skus/sku.module";
 import appConfig from "./shared/config/app.config";
 import databaseConfig from "./shared/config/database.config";
 import { FilterDateModule } from "./shared/filters/filter-date.module";
@@ -57,6 +59,8 @@ const ENV = process.env.NODE_ENV;
     CategoryModule,
     SubCategoryModule,
     AuthModule,
+    AttributeModule,
+    SkuModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, "..", "uploads"),
       serveRoot: "/uploads",

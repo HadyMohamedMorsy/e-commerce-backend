@@ -1,19 +1,12 @@
 // src/products/entities/product.entity.ts
 import { Category } from "src/categories/category.entity";
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from "typeorm";
-import { ProductAttribute } from "./product-attribute.entity";
-import { ProductSku } from "./product-sku.entity";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Attribute } from "./attributes/attribute.entity";
+import { Sku } from "./skus/sku.entity";
 
 @Entity("products")
-export class Product {
+export class Product extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -29,19 +22,17 @@ export class Product {
   @Column("varchar", { nullable: true })
   cover: string;
 
-  @ManyToOne(() => Category)
-  @Column({ name: "category_id" })
-  categoryId: string;
+  @ManyToMany(() => Category, category => category.products)
+  @JoinTable({
+    name: "product_categories",
+    joinColumn: { name: "product_id", referencedColumnName: "id" },
+    inverseJoinColumn: { name: "category_id", referencedColumnName: "id" },
+  })
+  categories: Category[];
 
-  @CreateDateColumn({ name: "created_at" })
-  createdAt: Date;
+  @OneToMany(() => Sku, sku => sku.product)
+  skus: Sku[];
 
-  @DeleteDateColumn({ name: "deleted_at", nullable: true })
-  deletedAt: Date;
-
-  @OneToMany(() => ProductSku, sku => sku.product)
-  skus: ProductSku[];
-
-  @OneToMany(() => ProductAttribute, attribute => attribute.product)
-  attributes: ProductAttribute[];
+  @OneToMany(() => Attribute, attribute => attribute.product)
+  attributes: Attribute[];
 }

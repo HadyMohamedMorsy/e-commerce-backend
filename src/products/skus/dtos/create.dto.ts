@@ -1,23 +1,22 @@
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { Product } from "src/products/products.entity";
 
-export class CreateSkuDto {
+export class SkuDto {
   @IsNumber()
   @IsNotEmpty()
   productId: number;
-
-  @IsNumber()
-  @IsNotEmpty()
-  attributeId: number;
 
   @IsString()
   @IsNotEmpty()
   sku: string;
 
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
-  price: string;
+  price: number;
 
   @IsNumber()
   @IsNotEmpty()
   quantity: number;
+
+  product: Product;
 }
