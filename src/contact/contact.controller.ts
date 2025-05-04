@@ -11,6 +11,7 @@ export class ContactController {
   @Post("/index")
   @Roles(
     "CEO",
+    "CUSTOMER",
     "TECH_SUPPORT",
     "STORE_MANAGER",
     "SUPER_ADMIN",
@@ -24,7 +25,15 @@ export class ContactController {
   }
 
   @Post("/store")
-  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  @Roles(
+    "CEO",
+    "CUSTOMER",
+    "TECH_SUPPORT",
+    "STORE_MANAGER",
+    "SUPER_ADMIN",
+    "CONTENT_MANAGER",
+    "SYSTEM_ADMIN",
+  )
   public create(@Body() create: ContactDto) {
     return this.service.create({
       name: create.name,
@@ -36,7 +45,15 @@ export class ContactController {
   }
 
   @Post("/update")
-  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  @Roles(
+    "CEO",
+    "CUSTOMER",
+    "TECH_SUPPORT",
+    "STORE_MANAGER",
+    "SUPER_ADMIN",
+    "CONTENT_MANAGER",
+    "SYSTEM_ADMIN",
+  )
   public async update(@Body() update: PatchContactDto) {
     return await this.service.update({
       id: update.id,
@@ -49,7 +66,7 @@ export class ContactController {
   }
 
   @Delete("/delete")
-  @Roles("STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
+  @Roles("STORE_MANAGER", "CUSTOMER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
   public delete(@Body() id: number) {
     return this.service.delete(id);
   }

@@ -37,6 +37,7 @@ import { LocationResolutionMiddleware } from "./shared/middleware/location-selec
 import { UserMiddleware } from "./shared/middleware/user.middleware";
 import enviromentValidation from "./shared/validations/env.validation";
 import { ShipmentModule } from "./shipments/shipment.module";
+import { TaxModule } from "./tax/tax.module";
 import { UserModule } from "./users/users.module";
 import { WishlistsModule } from "./wishlist/wishlists.module";
 
@@ -53,6 +54,7 @@ const ENV = process.env.NODE_ENV;
     OrderModule,
     ContactModule,
     AddressModule,
+    TaxModule,
     BankModule,
     ProductModule,
     ListModule,

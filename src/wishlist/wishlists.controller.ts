@@ -11,6 +11,7 @@ export class WishlistsController {
   @Post("/index")
   @Roles(
     "CEO",
+    "CUSTOMER",
     "TECH_SUPPORT",
     "STORE_MANAGER",
     "SUPER_ADMIN",
@@ -24,19 +25,35 @@ export class WishlistsController {
   }
 
   @Post("/store")
-  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  @Roles(
+    "CEO",
+    "CUSTOMER",
+    "TECH_SUPPORT",
+    "STORE_MANAGER",
+    "SUPER_ADMIN",
+    "CONTENT_MANAGER",
+    "SYSTEM_ADMIN",
+  )
   public create(@Body() createDto: WishlistDto) {
     return this.service.create(createDto);
   }
 
   @Post("/update")
-  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  @Roles(
+    "CEO",
+    "CUSTOMER",
+    "TECH_SUPPORT",
+    "STORE_MANAGER",
+    "SUPER_ADMIN",
+    "CONTENT_MANAGER",
+    "SYSTEM_ADMIN",
+  )
   public async update(@Body() update: PatchWishlistsDto) {
     return await this.service.update(update);
   }
 
   @Delete("/delete")
-  @Roles("STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
+  @Roles("STORE_MANAGER", "CUSTOMER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
   public delete(@Body() id: number) {
     return this.service.delete(id);
   }

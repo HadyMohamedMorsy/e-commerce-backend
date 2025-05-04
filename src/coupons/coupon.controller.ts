@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
+import { Roles } from "src/shared/decorators/roles.decorator";
 import { CouponsService } from "./coupon.service";
 import { CouponDto } from "./dtos/create.dto";
 import { PatchCouponDto } from "./dtos/patch.dto";
@@ -9,11 +10,13 @@ export class CouponController {
 
   @Post("/index")
   @HttpCode(200)
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public index(@Body() filter: any) {
     return this.service.findAll(filter);
   }
 
   @Post("/store")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public create(@Body() createDto: CouponDto, @Req() req: Request) {
     return this.service.create({
       code: createDto.code,
@@ -29,6 +32,7 @@ export class CouponController {
   }
 
   @Post("/update")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public async update(@Body() update: PatchCouponDto, @Req() req: Request) {
     return await this.service.update({
       id: update.id,
@@ -45,11 +49,13 @@ export class CouponController {
   }
 
   @Post("/change-status")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public changeStatus(@Body() update: PatchCouponDto) {
     return this.service.changeStatus(update.id, update.isActive);
   }
 
   @Delete("/delete")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public delete(@Body() id: number) {
     return this.service.delete(id);
   }

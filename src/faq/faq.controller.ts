@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
+import { Roles } from "src/shared/decorators/roles.decorator";
 import { FaqList } from "src/shared/enum/global-enum";
 import { FaqDto } from "./dtos/create.dto";
 import { PatchFaqDto } from "./dtos/patch.dto";
@@ -10,11 +11,13 @@ export class FaqController {
 
   @Post("/index")
   @HttpCode(200)
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public index(@Body() filter: any) {
     return this.service.findAll(filter);
   }
 
   @Post("/store")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public create(@Body() create: FaqDto, @Req() req: Request) {
     return this.service.create({
       select_questionable_type: create.select_questionable_type,
@@ -26,6 +29,7 @@ export class FaqController {
   }
 
   @Post("/update")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public async update(@Body() update: PatchFaqDto, @Req() req: Request) {
     return await this.service.update({
       id: update.id,
@@ -38,6 +42,7 @@ export class FaqController {
   }
 
   @Delete("/delete")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public delete(@Body() id: number) {
     return this.service.delete(id);
   }

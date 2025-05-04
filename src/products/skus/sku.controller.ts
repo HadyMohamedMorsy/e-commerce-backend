@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
+import { Roles } from "src/shared/decorators/roles.decorator";
 import { SkuDto } from "./dtos/create.dto";
 import { PatchSkuDto } from "./dtos/patch.dto";
 import { SkuService } from "./sku.service";
@@ -9,11 +10,13 @@ export class SkuController {
 
   @Post("/index")
   @HttpCode(200)
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public index(@Body() filter: any) {
     return this.service.findAll(filter);
   }
 
   @Post("/store")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public create(@Body() createDto: SkuDto, @Req() req: Request) {
     return this.service.create({
       product: req["product"],
@@ -24,6 +27,7 @@ export class SkuController {
   }
 
   @Post("/update")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public async update(@Body() update: PatchSkuDto, @Req() req: Request) {
     return await this.service.update({
       id: update.id,
@@ -35,6 +39,7 @@ export class SkuController {
   }
 
   @Delete("/delete")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public delete(@Body() id: number) {
     return this.service.delete(id);
   }

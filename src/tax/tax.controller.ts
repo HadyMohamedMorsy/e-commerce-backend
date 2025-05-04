@@ -1,12 +1,12 @@
 import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
 import { Roles } from "src/shared/decorators/roles.decorator";
-import { ShipmentDto } from "./dtos/create.dto";
-import { PatchShipmentDto } from "./dtos/patch.dto";
-import { ShipmentService } from "./shipment.service";
+import { TaxDto } from "./dtos/create.dto";
+import { PatchTaxDto } from "./dtos/patch.dto";
+import { TaxService } from "./tax.service";
 
-@Controller("shipment")
-export class ShipmentController {
-  constructor(private readonly service: ShipmentService) {}
+@Controller("tax")
+export class TaxController {
+  constructor(private readonly service: TaxService) {}
 
   @Post("/index")
   @Roles(
@@ -25,24 +25,22 @@ export class ShipmentController {
 
   @Post("/store")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  public create(@Body() create: ShipmentDto, @Req() req: Request) {
+  public create(@Body() createDto: TaxDto, @Req() req: Request) {
     return this.service.create({
-      type: create.type,
-      kgPrice: create.kgPrice,
-      shipmentPrice: create.shipmentPrice,
+      name: createDto.name,
+      rate: createDto.rate,
       location: req["location"],
       createdBy: req["createdBy"],
-    } as ShipmentDto);
+    } as TaxDto);
   }
 
   @Post("/update")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  public async update(@Body() update: PatchShipmentDto, @Req() req: Request) {
+  public async update(@Body() update: PatchTaxDto, @Req() req: Request) {
     return await this.service.update({
       id: update.id,
-      type: update.type,
-      kgPrice: update.kgPrice,
-      shipmentPrice: update.shipmentPrice,
+      name: update.name,
+      rate: update.rate,
       location: req["location"],
       createdBy: req["createdBy"],
     });

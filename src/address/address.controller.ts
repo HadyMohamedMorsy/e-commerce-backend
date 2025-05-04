@@ -12,6 +12,7 @@ export class AddressController {
   @Roles(
     "CEO",
     "TECH_SUPPORT",
+    "CUSTOMER",
     "STORE_MANAGER",
     "SUPER_ADMIN",
     "INVENTORY_MANAGER",
@@ -24,7 +25,15 @@ export class AddressController {
   }
 
   @Post("/store")
-  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  @Roles(
+    "CEO",
+    "CUSTOMER",
+    "TECH_SUPPORT",
+    "STORE_MANAGER",
+    "SUPER_ADMIN",
+    "CONTENT_MANAGER",
+    "SYSTEM_ADMIN",
+  )
   public create(@Body() create: AddressDto, @Req() req: Request) {
     return this.service.create({
       title: create.title,
@@ -42,7 +51,15 @@ export class AddressController {
   }
 
   @Post("/update")
-  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  @Roles(
+    "CEO",
+    "CUSTOMER",
+    "TECH_SUPPORT",
+    "STORE_MANAGER",
+    "SUPER_ADMIN",
+    "CONTENT_MANAGER",
+    "SYSTEM_ADMIN",
+  )
   public async update(@Body() update: PatchAddressDto, @Req() req: Request) {
     return await this.service.update({
       id: update.id,
@@ -61,7 +78,7 @@ export class AddressController {
   }
 
   @Delete("/delete")
-  @Roles("STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
+  @Roles("STORE_MANAGER", "CUSTOMER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
   public delete(@Body() id: number) {
     return this.service.delete(id);
   }
