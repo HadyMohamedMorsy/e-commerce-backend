@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { BaseCrudService } from "src/shared/base/base-crud";
+import { CategoryType } from "src/shared/enum/global-enum";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
 import { Repository } from "typeorm";
@@ -19,5 +20,17 @@ export class CategoryService
     repository: Repository<Category>,
   ) {
     super(repository, apiFeaturesService);
+  }
+
+  async getCategoriesByType(type: CategoryType) {
+    const categories = await this.repository.find({
+      where: { categoryType: type },
+      select: ["id", "name"],
+    });
+
+    return categories.map(category => ({
+      label: category.name,
+      value: category.id,
+    }));
   }
 }

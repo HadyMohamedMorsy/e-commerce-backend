@@ -66,3 +66,19 @@ export enum CouponType {
   DISCOUNT_CATEGORY = "discount_category",
   DISCOUNT_PRODUCT = "discount_product",
 }
+
+export enum CategoryType {
+  PRODUCT = "product",
+  BLOG = "blog",
+}
+
+export enum ArticleType {
+  ARTICLE = "article",
+  VIDEO = "video",
+  GALLERY = "gallery",
+}
+
+export enum MediaType {
+  video = "video",
+  IFRAME = "iframe",
+}

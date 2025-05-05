@@ -1,18 +1,16 @@
+import { Category } from "src/categories/category.entity";
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("blogs")
 export class Blog extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: "int" })
+  @Column({ type: "int", default: 1, unique: true })
   order: number;
 
-  @Column({ name: "video_type" })
-  videoType: string;
-
-  @Column()
+  @Column({ nullable: true })
   video: string;
 
   @Column({ type: "int", default: 0 })
@@ -42,24 +40,28 @@ export class Blog extends BaseMemberEntity {
   @Column()
   slug: string;
 
-  @Column({ type: "text" })
+  @Column({ type: "text", nullable: true })
   description: string;
 
-  @Column({ name: "short_description", type: "text" })
+  @Column({ name: "short_description", type: "text", nullable: true })
   shortDescription: string;
 
   @Column({ name: "meta_title", nullable: true })
   metaTitle: string | null;
 
-  @Column({ name: "meta_description", type: "text" })
+  @Column({ name: "meta_description", type: "text", nullable: true })
   metaDescription: string;
 
-  @Column({ name: "featured_images", type: "simple-array" })
+  @Column({ name: "featured_images", type: "simple-array", nullable: true })
   featuredImages: string[];
 
-  @Column()
+  @Column({ nullable: true })
   thumb: string;
 
-  @Column({ name: "media_type" })
+  @Column({ name: "media_type", nullable: true })
   mediaType: string;
+
+  @ManyToMany(() => Category, category => category.blogs)
+  @JoinTable({ name: "blog_categories" })
+  categories: Category[];
 }

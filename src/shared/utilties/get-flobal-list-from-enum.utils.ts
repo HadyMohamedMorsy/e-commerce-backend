@@ -1,4 +1,14 @@
-import { FaqList, PaymentStatus, Role, Status, UserStatus, Weight } from "../enum/global-enum";
+import {
+  ArticleType,
+  CategoryType,
+  FaqList,
+  MediaType,
+  PaymentStatus,
+  Role,
+  Status,
+  UserStatus,
+  Weight,
+} from "../enum/global-enum";
 
 export function getRoleList() {
   return generateListFromEnum(Role);
@@ -22,6 +32,18 @@ export function getFaqList() {
 
 export function getWeight() {
   return generateListFromEnum(Weight);
+}
+
+export function getMediaTypeList() {
+  return generateListFromEnum(MediaType);
+}
+
+export function getArticleTypeList() {
+  return generateListFromEnum(ArticleType);
+}
+
+export function getCategoryTypeList() {
+  return generateListFromEnum(CategoryType);
 }
 
 export function generateListFromEnum<T extends Record<string, any>>(enumObj: T) {

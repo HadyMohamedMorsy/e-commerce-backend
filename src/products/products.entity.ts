@@ -23,11 +23,7 @@ export class Product extends BaseMemberEntity {
   cover: string;
 
   @ManyToMany(() => Category, category => category.products)
-  @JoinTable({
-    name: "product_categories",
-    joinColumn: { name: "product_id", referencedColumnName: "id" },
-    inverseJoinColumn: { name: "category_id", referencedColumnName: "id" },
-  })
+  @JoinTable({ name: "product_categories" })
   categories: Category[];
 
   @OneToMany(() => Sku, sku => sku.product)

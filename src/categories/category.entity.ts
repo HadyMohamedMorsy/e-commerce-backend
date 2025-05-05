@@ -1,7 +1,9 @@
 // src/categories/category.entity.ts
+import { Blog } from "src/blogs/blog.entity";
 import { Product } from "src/products/products.entity";
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { CategoryType } from "src/shared/enum/global-enum";
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { SubCategory } from "./sub-categories/sub-category.entity";
 
 @Entity("categories")
@@ -12,16 +14,22 @@ export class Category extends BaseMemberEntity {
   @Column("varchar")
   name: string;
 
+  @Column({
+    type: "enum",
+    enum: CategoryType,
+    default: CategoryType.PRODUCT,
+    name: "category_type",
+  })
+  categoryType: CategoryType;
+
   @Column("varchar", { nullable: true })
   description: string;
 
   @ManyToMany(() => Product, product => product.categories)
-  @JoinTable({
-    name: "product_categories",
-    joinColumn: { name: "category_id", referencedColumnName: "id" },
-    inverseJoinColumn: { name: "product_id", referencedColumnName: "id" },
-  })
   products: Product[];
+
+  @ManyToMany(() => Blog, blog => blog.categories)
+  blogs: Blog[];
 
   @Column({ nullable: true })
   image?: string;

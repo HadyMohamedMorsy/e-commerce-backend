@@ -1,21 +1,17 @@
+import { Type } from "class-transformer";
 import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { Category } from "src/categories/category.entity";
+import { User } from "src/users/user.entity";
 
 export class BlogDto {
   @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   order?: number;
 
-  @IsOptional()
-  @IsString()
-  videoType?: string;
-
-  @IsOptional()
-  @IsString()
-  video?: string;
-
-  @IsOptional()
-  @IsNumber()
-  views?: number;
+  @IsArray()
+  @IsNumber({}, { each: true })
+  categoryIds?: number[];
 
   @IsOptional()
   @IsBoolean()
@@ -77,4 +73,12 @@ export class BlogDto {
   @IsOptional()
   @IsString()
   mediaType?: string;
+
+  @IsOptional()
+  @IsString()
+  video?: string;
+
+  categories: Category[];
+
+  createdBy: User;
 }

@@ -5,13 +5,13 @@ import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
 import { Repository } from "typeorm";
 import { Blog } from "./blog.entity";
-import { BankDto } from "./dtos/create.dto";
-import { PatchBankDto } from "./dtos/patch.dto";
+import { BlogDto } from "./dtos/create.dto";
+import { PatchBlogDto } from "./dtos/patch.dto";
 
 @Injectable()
 export class BlogsService
-  extends BaseCrudService<Blog, BankDto, PatchBankDto>
-  implements ICrudService<Blog, BankDto, PatchBankDto>
+  extends BaseCrudService<Blog, BlogDto, PatchBlogDto>
+  implements ICrudService<Blog, BlogDto, PatchBlogDto>
 {
   constructor(
     apiFeaturesService: APIFeaturesService,

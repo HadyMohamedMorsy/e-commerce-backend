@@ -29,6 +29,8 @@ export class CategoryController {
     return this.service.create({
       name: create.name,
       description: create.description,
+      categoryType: create.categoryType,
+      image: create.image,
       createdBy: req["createdBy"],
     });
   }
@@ -40,6 +42,8 @@ export class CategoryController {
       id: update.id,
       name: update.name,
       description: update.description,
+      categoryType: update.categoryType,
+      image: update.image,
       createdBy: req["update"],
     });
   }

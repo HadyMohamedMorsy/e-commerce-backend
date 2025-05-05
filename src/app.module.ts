@@ -15,6 +15,7 @@ import { AccessTokenGuard } from "./auth/guards/access-token/access-token.guard"
 import { AuthenticationGuard } from "./auth/guards/authentication/authentication.guard";
 import { RolesGuard } from "./auth/guards/roles/roles.guard";
 import { BankModule } from "./banks/bank.module";
+import { BlogModule } from "./blogs/blog.module";
 import { CartModule } from "./carts/carts.module";
 import { CategoryModule } from "./categories/category.module";
 import { SubCategoryModule } from "./categories/sub-categories/sub-category.module";
@@ -51,6 +52,7 @@ const ENV = process.env.NODE_ENV;
     FaqModule,
     LocationModule,
     ShipmentModule,
+    BlogModule,
     OrderModule,
     ContactModule,
     AddressModule,

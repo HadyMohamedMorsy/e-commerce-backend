@@ -28,9 +28,6 @@ export class BlogController {
   public create(@Body() createDto: BlogDto, @Req() req: Request) {
     return this.service.create({
       order: createDto.order,
-      videoType: createDto.videoType,
-      video: createDto.video,
-      views: createDto.views,
       isFeatured: createDto.isFeatured,
       isPublished: createDto.isPublished,
       title: createDto.title,
@@ -46,6 +43,7 @@ export class BlogController {
       featuredImages: createDto.featuredImages,
       thumb: createDto.thumb,
       mediaType: createDto.mediaType,
+      categories: req["categories"],
       createdBy: req["createdBy"],
     });
   }
@@ -56,9 +54,6 @@ export class BlogController {
     return await this.service.update({
       id: update.id,
       order: update.order,
-      videoType: update.videoType,
-      video: update.video,
-      views: update.views,
       isFeatured: update.isFeatured,
       isPublished: update.isPublished,
       title: update.title,
@@ -74,6 +69,7 @@ export class BlogController {
       featuredImages: update.featuredImages,
       thumb: update.thumb,
       mediaType: update.mediaType,
+      categories: req["categories"],
       createdBy: req["createdBy"],
     });
   }
