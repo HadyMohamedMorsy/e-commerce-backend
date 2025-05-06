@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { Product } from "src/products/products.entity";
 
 export class AttributeDto {
@@ -12,6 +12,10 @@ export class AttributeDto {
 
   @IsNotEmpty()
   productId: number;
+
+  @IsOptional()
+  @IsString()
+  image: string;
 
   product: Product;
 }

@@ -12,6 +12,9 @@ export class Attribute {
   @Column()
   value: string;
 
+  @Column({ nullable: true })
+  image: string;
+
   @ManyToOne(() => Product, product => product.attributes)
   product: Product;
 }
