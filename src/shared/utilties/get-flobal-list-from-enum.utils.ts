@@ -1,6 +1,8 @@
 import {
   ArticleType,
   CategoryType,
+  CouponType,
+  DiscountType,
   FaqList,
   MediaType,
   PaymentStatus,
@@ -44,6 +46,14 @@ export function getArticleTypeList() {
 
 export function getCategoryTypeList() {
   return generateListFromEnum(CategoryType);
+}
+
+export function getCouponTypeList() {
+  return generateListFromEnum(CouponType);
+}
+
+export function getDiscountTypeList() {
+  return generateListFromEnum(DiscountType);
 }
 
 export function generateListFromEnum<T extends Record<string, any>>(enumObj: T) {

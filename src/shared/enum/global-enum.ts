@@ -82,3 +82,8 @@ export enum MediaType {
   video = "video",
   IFRAME = "iframe",
 }
+
+export enum DiscountType {
+  PERCENTAGE = "percentage",
+  FIXED = "fixed",
+}

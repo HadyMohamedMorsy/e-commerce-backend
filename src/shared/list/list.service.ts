@@ -5,6 +5,8 @@ import { CategoryType } from "../enum/global-enum";
 import {
   getArticleTypeList,
   getCategoryTypeList,
+  getCouponTypeList,
+  getDiscountTypeList,
   getFaqList,
   getMediaTypeList,
   getRoleList,
@@ -21,6 +23,8 @@ export class ListService {
     mediaType: getMediaTypeList(),
     articleType: getArticleTypeList(),
     categoryType: getCategoryTypeList(),
+    couponType: getCouponTypeList(),
+    discountType: getDiscountTypeList(),
   };
 
   async getListsBySlug(slug: string) {
@@ -36,6 +40,11 @@ export class ListService {
       case "shipment":
         return {
           weight: this.lists.weight,
+        };
+      case "coupon":
+        return {
+          couponType: this.lists.couponType,
+          discountType: this.lists.discountType,
         };
       case "category":
         return {

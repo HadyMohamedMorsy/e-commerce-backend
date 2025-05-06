@@ -23,6 +23,8 @@ export class SkuController {
       sku: createDto.sku,
       price: createDto.price,
       quantity: createDto.quantity,
+      discount: createDto.discount,
+      discountType: createDto.discountType,
     } as SkuDto);
   }
 
@@ -35,6 +37,8 @@ export class SkuController {
       sku: update.sku,
       price: update.price,
       quantity: update.quantity,
+      discount: update.discount,
+      discountType: update.discountType,
     });
   }
 
