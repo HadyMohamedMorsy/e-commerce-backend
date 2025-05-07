@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { User } from "src/users/user.entity";
 
 export class BankDto {
@@ -45,6 +45,10 @@ export class BankDto {
   @IsNotEmpty()
   @IsNumber()
   areaId: number;
+
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean = true;
 
   country: Location;
 

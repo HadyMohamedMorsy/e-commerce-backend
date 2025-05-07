@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Patch, Post, Put, Req } from "@nestjs/common";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { BanksService } from "./bank.service";
 import { BankDto } from "./dtos/create.dto";
@@ -26,6 +26,7 @@ export class BankController {
       featuredImage: create.featuredImage,
       iban: create.iban,
       swiftCode: create.swiftCode,
+      isActive: create.isActive,
       country: req["country"],
       region: req["region"],
       city: req["city"],
@@ -46,11 +47,21 @@ export class BankController {
       featuredImage: update.featuredImage,
       iban: update.iban,
       swiftCode: update.swiftCode,
+      isActive: update.isActive,
       country: req["country"],
       region: req["region"],
       city: req["city"],
       area: req["area"],
       createdBy: req["createdBy"],
+    });
+  }
+
+  @Patch("/change-active-status")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public async changeActiveStatus(@Body() data: { id: number; isActive: boolean }) {
+    return await this.service.update({
+      id: data.id,
+      isActive: data.isActive,
     });
   }
 

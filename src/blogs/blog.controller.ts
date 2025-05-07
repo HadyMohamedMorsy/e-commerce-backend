@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Patch, Post, Put, Req } from "@nestjs/common";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { BlogsService } from "./blog.service";
 import { BlogDto } from "./dtos/create.dto";
@@ -74,9 +74,8 @@ export class BlogController {
     });
   }
 
-  @Post("/change-published-status")
+  @Patch("/change-published-status")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  @HttpCode(200)
   public async changePublishedStatus(@Body() data: { id: number; isPublished: boolean }) {
     return await this.service.update({
       id: data.id,
@@ -84,9 +83,8 @@ export class BlogController {
     });
   }
 
-  @Post("/change-featured-status")
+  @Patch("/change-featured-status")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  @HttpCode(200)
   public async changeFeaturedStatus(@Body() data: { id: number; isFeatured: boolean }) {
     return await this.service.update({
       id: data.id,

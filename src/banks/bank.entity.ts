@@ -27,6 +27,9 @@ export class Bank extends BaseMemberEntity {
   @Column({ name: "swift_code" })
   swiftCode: string;
 
+  @Column({ name: "is_active", type: "boolean", default: true })
+  isActive: boolean;
+
   @ManyToOne(() => Location)
   country: Location;
 
