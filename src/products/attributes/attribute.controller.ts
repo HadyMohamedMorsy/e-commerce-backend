@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { AttributeService } from "./attribute.service";
 import { AttributeDto } from "./dtos/create.dto";
@@ -31,7 +31,7 @@ export class AttributeController {
     return await Promise.all(attributesToCreate.map(attribute => this.service.create(attribute)));
   }
 
-  @Post("/update")
+  @Put("/update")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public async update(@Body() updates: PatchAttributeDto[], @Req() req: Request) {
     const attributesToUpdate = updates.map(update => ({

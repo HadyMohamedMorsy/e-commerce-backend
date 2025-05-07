@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Req } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Req } from "@nestjs/common";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { ProductDto } from "./dtos/create.dto";
 import { PatchProductDto } from "./dtos/patch.dto";
@@ -51,7 +51,7 @@ export class ProductController {
     } as ProductDto);
   }
 
-  @Post("/update")
+  @Put("/update")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public async update(@Body() update: PatchProductDto, @Req() req: Request) {
     return await this.service.update({

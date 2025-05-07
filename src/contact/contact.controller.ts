@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpCode, Post } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Post, Put } from "@nestjs/common";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { ContactsService } from "./contact.service";
 import { ContactDto } from "./dtos/create.dto";
@@ -44,7 +44,7 @@ export class ContactController {
     });
   }
 
-  @Post("/update")
+  @Put("/update")
   @Roles(
     "CEO",
     "CUSTOMER",

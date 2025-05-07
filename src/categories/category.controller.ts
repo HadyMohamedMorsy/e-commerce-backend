@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { CategoryService } from "./category.service";
 import { CategoryDto } from "./dtos/create.dto";
@@ -35,7 +35,7 @@ export class CategoryController {
     });
   }
 
-  @Post("/update")
+  @Put("/update")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public async update(@Body() update: PatchCategoryDto, @Req() req: Request) {
     return await this.service.update({

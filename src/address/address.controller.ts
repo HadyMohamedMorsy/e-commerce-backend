@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { AddressesService } from "./address.service";
 import { AddressDto } from "./dtos/create.dto";
@@ -51,7 +51,7 @@ export class AddressController {
     } as AddressDto);
   }
 
-  @Post("/update")
+  @Put("/update")
   @Roles(
     "CEO",
     "CUSTOMER",

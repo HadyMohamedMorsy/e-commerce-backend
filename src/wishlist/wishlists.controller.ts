@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { WishlistDto } from "./dtos/create.dto";
 import { PatchWishlistsDto } from "./dtos/patch.dto";
@@ -42,7 +42,7 @@ export class WishlistsController {
     } as WishlistDto);
   }
 
-  @Post("/update")
+  @Put("/update")
   @Roles(
     "CEO",
     "CUSTOMER",
