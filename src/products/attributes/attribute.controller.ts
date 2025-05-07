@@ -17,25 +17,32 @@ export class AttributeController {
 
   @Post("/store")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  public create(@Body() createDto: AttributeDto, @Req() req: Request) {
-    return this.service.create({
-      name: createDto.name,
-      value: createDto.value,
-      image: createDto.image,
-      product: req["product"],
-    } as AttributeDto);
+  public async create(@Body() createDtos: AttributeDto[], @Req() req: Request) {
+    const attributesToCreate = createDtos.map(
+      createDto =>
+        ({
+          name: createDto.name,
+          value: createDto.value,
+          image: createDto.image,
+          product: req["product"],
+        }) as AttributeDto,
+    );
+
+    return await Promise.all(attributesToCreate.map(attribute => this.service.create(attribute)));
   }
 
   @Post("/update")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  public async update(@Body() update: PatchAttributeDto, @Req() req: Request) {
-    return await this.service.update({
+  public async update(@Body() updates: PatchAttributeDto[], @Req() req: Request) {
+    const attributesToUpdate = updates.map(update => ({
       id: update.id,
       name: update.name,
       value: update.value,
       image: update.image,
       product: req["product"],
-    });
+    }));
+
+    return await Promise.all(attributesToUpdate.map(attribute => this.service.update(attribute)));
   }
 
   @Delete("/delete")
