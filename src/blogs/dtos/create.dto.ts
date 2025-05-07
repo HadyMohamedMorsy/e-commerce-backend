@@ -15,11 +15,11 @@ export class BlogDto {
 
   @IsOptional()
   @IsBoolean()
-  isFeatured?: boolean;
+  isFeatured?: boolean = false;
 
   @IsOptional()
   @IsBoolean()
-  isPublished?: boolean;
+  isPublished?: boolean = false;
 
   @IsNotEmpty()
   @IsString()

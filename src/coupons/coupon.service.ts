@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { BaseCrudService } from "src/shared/base/base-crud";
+import { BaseService } from "src/shared/base/base-crud";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
 import { Repository } from "typeorm";
@@ -10,7 +10,7 @@ import { PatchCouponDto } from "./dtos/patch.dto";
 
 @Injectable()
 export class CouponsService
-  extends BaseCrudService<Coupon, CouponDto, PatchCouponDto>
+  extends BaseService<Coupon, CouponDto, PatchCouponDto>
   implements ICrudService<Coupon, CouponDto, PatchCouponDto>
 {
   constructor(

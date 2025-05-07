@@ -1,4 +1,5 @@
 import { IsEnum, IsInt, IsOptional, IsString } from "class-validator";
+import { Product } from "src/products/products.entity";
 import { FaqList } from "src/shared/enum/global-enum";
 import { User } from "src/users/user.entity";
 
@@ -22,4 +23,6 @@ export class FaqDto {
   productId?: number;
 
   createdBy: User;
+
+  product: Product;
 }

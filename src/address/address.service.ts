@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { BaseCrudService } from "src/shared/base/base-crud";
+import { BaseService } from "src/shared/base/base-crud";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
 import { Repository } from "typeorm";
@@ -9,7 +9,7 @@ import { AddressDto } from "./dtos/create.dto";
 import { PatchAddressDto } from "./dtos/patch.dto";
 @Injectable()
 export class AddressesService
-  extends BaseCrudService<Address, AddressDto, PatchAddressDto>
+  extends BaseService<Address, AddressDto, PatchAddressDto>
   implements ICrudService<Address, AddressDto, PatchAddressDto>
 {
   constructor(

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { BaseCrudService } from "src/shared/base/base-crud";
+import { BaseService } from "src/shared/base/base-crud";
 import { CategoryType } from "src/shared/enum/global-enum";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
@@ -11,7 +11,7 @@ import { PatchCategoryDto } from "./dtos/patch.dto";
 
 @Injectable()
 export class CategoryService
-  extends BaseCrudService<Category, CategoryDto, PatchCategoryDto>
+  extends BaseService<Category, CategoryDto, PatchCategoryDto>
   implements ICrudService<Category, CategoryDto, PatchCategoryDto>
 {
   constructor(

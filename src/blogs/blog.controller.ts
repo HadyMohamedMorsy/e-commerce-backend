@@ -74,6 +74,26 @@ export class BlogController {
     });
   }
 
+  @Post("/change-published-status")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  @HttpCode(200)
+  public async changePublishedStatus(@Body() data: { id: number; isPublished: boolean }) {
+    return await this.service.update({
+      id: data.id,
+      isPublished: data.isPublished,
+    });
+  }
+
+  @Post("/change-featured-status")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  @HttpCode(200)
+  public async changeFeaturedStatus(@Body() data: { id: number; isFeatured: boolean }) {
+    return await this.service.update({
+      id: data.id,
+      isFeatured: data.isFeatured,
+    });
+  }
+
   @Delete("/delete")
   @Roles("STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
   public delete(@Body() id: number) {

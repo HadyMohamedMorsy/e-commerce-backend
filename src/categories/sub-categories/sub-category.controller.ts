@@ -21,6 +21,7 @@ export class SubCategoryController {
     return this.service.create({
       name: create.name,
       description: create.description,
+      image: create.image,
       category: req["category"],
       createdBy: req["createdBy"],
     } as SubCategoryDto);
@@ -33,6 +34,7 @@ export class SubCategoryController {
       id: update.id,
       name: update.name,
       description: update.description,
+      image: update.image,
       category: req["category"],
       createdBy: req["createdBy"],
     });

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { BaseCrudService } from "src/shared/base/base-crud";
+import { BaseService } from "src/shared/base/base-crud";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
 import { Repository, SelectQueryBuilder } from "typeorm";
@@ -10,7 +10,7 @@ import { Tax } from "./tax.entity";
 
 @Injectable()
 export class TaxService
-  extends BaseCrudService<Tax, TaxDto, PatchTaxDto>
+  extends BaseService<Tax, TaxDto, PatchTaxDto>
   implements ICrudService<Tax, TaxDto, PatchTaxDto>
 {
   constructor(

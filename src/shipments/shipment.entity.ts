@@ -1,4 +1,5 @@
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { Weight } from "src/shared/enum/global-enum";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Location } from "../locations/location.entity";
 
@@ -9,10 +10,10 @@ export class Shipment extends BaseMemberEntity {
 
   @Column({
     type: "enum",
-    enum: ["item", "weight"],
+    enum: Weight,
     default: "item",
   })
-  type: "item" | "weight";
+  type: Weight;
 
   @Column({ name: "kg_price", type: "decimal", precision: 10, scale: 2 })
   kgPrice: number;

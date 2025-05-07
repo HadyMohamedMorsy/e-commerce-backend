@@ -52,4 +52,6 @@ export class AddressDto {
   phoneNumber: string;
 
   createdBy: User;
+
+  user: User;
 }

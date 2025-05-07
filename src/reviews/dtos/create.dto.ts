@@ -1,4 +1,14 @@
-import { IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min } from "class-validator";
+import {
+  IsBoolean,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+} from "class-validator";
+import { Product } from "src/products/products.entity";
 import { User } from "src/users/user.entity";
 
 export class ReviewDto {
@@ -7,8 +17,8 @@ export class ReviewDto {
   title: string;
 
   @IsOptional()
-  @IsInt()
-  is_approved?: number;
+  @IsBoolean()
+  isApproved: boolean = false;
 
   @IsNotEmpty()
   @IsString()
@@ -21,14 +31,14 @@ export class ReviewDto {
   rate: number;
 
   @IsOptional()
-  @IsInt()
-  @Min(0)
-  @Max(1)
-  is_liked?: 0 | 1;
+  @IsBoolean()
+  isLiked?: boolean = false;
 
   @IsOptional()
   @IsInt()
-  likes_count?: number;
+  likesCount?: number;
 
   createdBy: User;
+
+  product: Product;
 }

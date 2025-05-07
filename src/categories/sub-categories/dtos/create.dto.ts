@@ -16,6 +16,10 @@ export class SubCategoryDto {
   @IsOptional()
   description?: string;
 
+  @IsOptional()
+  @IsString()
+  image?: string;
+
   createdBy: User;
 
   category: Category;

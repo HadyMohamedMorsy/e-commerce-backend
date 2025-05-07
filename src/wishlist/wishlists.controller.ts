@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpCode, Post } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { WishlistDto } from "./dtos/create.dto";
 import { PatchWishlistsDto } from "./dtos/patch.dto";
@@ -34,8 +34,12 @@ export class WishlistsController {
     "CONTENT_MANAGER",
     "SYSTEM_ADMIN",
   )
-  public create(@Body() createDto: WishlistDto) {
-    return this.service.create(createDto);
+  public create(@Body() createDto: WishlistDto, @Req() req: Request) {
+    return this.service.create({
+      isFav: createDto.isFav,
+      createdBy: req["createdBy"],
+      product: req["product"],
+    } as WishlistDto);
   }
 
   @Post("/update")
@@ -48,8 +52,13 @@ export class WishlistsController {
     "CONTENT_MANAGER",
     "SYSTEM_ADMIN",
   )
-  public async update(@Body() update: PatchWishlistsDto) {
-    return await this.service.update(update);
+  public async update(@Body() update: PatchWishlistsDto, @Req() req: Request) {
+    return await this.service.update({
+      id: update.id,
+      isFav: update.isFav,
+      createdBy: req["createdBy"],
+      product: req["product"],
+    });
   }
 
   @Delete("/delete")

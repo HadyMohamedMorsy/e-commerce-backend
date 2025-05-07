@@ -1,9 +1,16 @@
-import { IsNumber } from "class-validator";
+import { IsBoolean, IsNumber, IsOptional } from "class-validator";
+import { Product } from "src/products/products.entity";
+import { User } from "src/users/user.entity";
 
 export class WishlistDto {
   @IsNumber()
   productId: number;
 
-  @IsNumber()
-  userId: number;
+  @IsBoolean()
+  @IsOptional()
+  isFav?: boolean;
+
+  createdBy: User;
+
+  product: Product;
 }

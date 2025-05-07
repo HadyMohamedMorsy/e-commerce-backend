@@ -1,5 +1,6 @@
+import { Product } from "src/products/products.entity";
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("reviews")
 export class Review extends BaseMemberEntity {
@@ -9,8 +10,8 @@ export class Review extends BaseMemberEntity {
   @Column()
   title: string;
 
-  @Column({ name: "is_approved", type: "tinyint" })
-  isApproved: number;
+  @Column({ name: "is_approved", type: "boolean", default: false })
+  isApproved: boolean;
 
   @Column({ type: "text" })
   comment: string;
@@ -18,12 +19,13 @@ export class Review extends BaseMemberEntity {
   @Column({ type: "decimal", precision: 3, scale: 1 })
   rate: number;
 
-  @Column({ name: "is_liked", type: "tinyint" })
-  isLiked: 0 | 1;
+  @Column({ name: "is_liked", type: "boolean", default: false })
+  isLiked: boolean;
 
   @Column({ name: "likes_count" })
   likesCount: number;
 
-  @Column({ type: "simple-array" })
-  media: string[];
+  @OneToOne(() => Product)
+  @JoinColumn()
+  product: Product;
 }

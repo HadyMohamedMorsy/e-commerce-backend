@@ -16,9 +16,9 @@ export class CategoryDto {
   @IsOptional()
   description?: string;
 
-  createdBy: User;
-
   @IsOptional()
   @IsString()
   image?: string;
+
+  createdBy: User;
 }

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { BaseCrudService } from "src/shared/base/base-crud";
+import { BaseService } from "src/shared/base/base-crud";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
 import { Repository, SelectQueryBuilder } from "typeorm";
@@ -10,7 +10,7 @@ import { PatchBankDto } from "./dtos/patch.dto";
 
 @Injectable()
 export class BanksService
-  extends BaseCrudService<Bank, BankDto, PatchBankDto>
+  extends BaseService<Bank, BankDto, PatchBankDto>
   implements ICrudService<Bank, BankDto, PatchBankDto>
 {
   constructor(

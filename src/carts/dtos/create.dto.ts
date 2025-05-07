@@ -1,39 +1,24 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsArray, IsNotEmpty, IsNumber, ValidateNested } from "class-validator";
+import { User } from "src/users/user.entity";
 
-export class CartDto {
+export class CreateCartItemDto {
+  @IsNumber()
   @IsNotEmpty()
-  @IsString()
-  title: string;
-
-  @IsNotEmpty()
-  @IsString()
-  addressLine1: string;
-
-  @IsOptional()
-  @IsString()
-  addressLine2?: string;
-
-  @IsNotEmpty()
-  @IsString()
-  country: string;
-
-  @IsNotEmpty()
-  @IsString()
-  city: string;
-
-  @IsNotEmpty()
-  @IsString()
-  postalCode: string;
-
-  @IsOptional()
-  @IsString()
-  landmark?: string;
-
-  @IsNotEmpty()
-  @IsString()
-  phoneNumber: string;
+  productId: number;
 
   @IsNumber()
   @IsNotEmpty()
-  user_id: number;
+  quantity: number;
+}
+
+export class CartDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateCartItemDto)
+  cartItems: CreateCartItemDto[];
+
+  user: User;
+
+  createdBy: User;
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpCode, Post } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Post, Req } from "@nestjs/common";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { CartService } from "./carts.service";
 import { CartDto } from "./dtos/create.dto";
@@ -25,14 +25,23 @@ export class CartController {
 
   @Post("/store")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  public create(@Body() createDto: CartDto) {
-    return this.service.create(createDto);
+  public create(@Body() createDto: CartDto, @Req() req: Request) {
+    return this.service.create({
+      cartItems: createDto.cartItems,
+      user: req["createdBy"],
+      createdBy: req["createdBy"],
+    });
   }
 
   @Post("/update")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  public async update(@Body() update: PatchCartDto) {
-    return await this.service.update(update);
+  public async update(@Body() update: PatchCartDto, @Req() req: Request) {
+    return await this.service.update({
+      id: update.id,
+      cartItems: update.cartItems,
+      user: req["createdBy"],
+      createdBy: req["createdBy"],
+    });
   }
 
   @Delete("/delete")

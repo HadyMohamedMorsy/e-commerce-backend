@@ -21,6 +21,7 @@ export class AttributeController {
     return this.service.create({
       name: createDto.name,
       value: createDto.value,
+      image: createDto.image,
       product: req["product"],
     } as AttributeDto);
   }
@@ -32,6 +33,7 @@ export class AttributeController {
       id: update.id,
       name: update.name,
       value: update.value,
+      image: update.image,
       product: req["product"],
     });
   }

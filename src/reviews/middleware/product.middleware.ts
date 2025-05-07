@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware, NotFoundException } from "@nestjs/common";
 import { NextFunction, Request, Response } from "express";
-import { ProductService } from "../products.service";
+import { ProductService } from "src/products/products.service";
 
 @Injectable()
 export class ProductMiddleware implements NestMiddleware {

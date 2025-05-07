@@ -24,7 +24,7 @@ export class FaqController {
       question: create.question,
       answer: create.answer,
       createdBy: req["createdBy"],
-      productId: create.select_questionable_type === FaqList.Product ? req["product"] : null,
+      product: create.select_questionable_type === FaqList.Product ? req["product"] : null,
     });
   }
 
@@ -37,7 +37,7 @@ export class FaqController {
       question: update.question,
       answer: update.answer,
       createdBy: req["createdBy"],
-      productId: update.select_questionable_type === FaqList.Product ? req["product"] : null,
+      product: update.select_questionable_type === FaqList.Product ? req["product"] : null,
     });
   }
 

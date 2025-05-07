@@ -1,17 +1,11 @@
 // src/wishlists/entities/wishlist.entity.ts
 import { Product } from "src/products/products.entity";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { User } from "src/users/user.entity";
-import {
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("wishlists")
-export class Wishlist {
+export class Wishlist extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -23,9 +17,6 @@ export class Wishlist {
   @JoinColumn({ name: "user_id" })
   user: User;
 
-  @CreateDateColumn({ name: "created_at" })
-  createdAt: Date;
-
-  @DeleteDateColumn({ name: "deleted_at", nullable: true })
-  deletedAt: Date;
+  @Column({ type: "boolean", default: true })
+  isFav: boolean;
 }

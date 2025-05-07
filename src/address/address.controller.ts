@@ -47,6 +47,7 @@ export class AddressController {
       landmark: create.landmark,
       phoneNumber: create.phoneNumber,
       createdBy: req["createdBy"],
+      user: req["createdBy"],
     } as AddressDto);
   }
 
@@ -74,6 +75,7 @@ export class AddressController {
       landmark: update.landmark,
       phoneNumber: update.phoneNumber,
       createdBy: req["createdBy"],
+      user: req["createdBy"],
     });
   }
 

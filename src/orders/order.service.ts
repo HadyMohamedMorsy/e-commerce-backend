@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Product } from "src/products/products.entity";
 import { ProductService } from "src/products/products.service";
-import { BaseCrudService } from "src/shared/base/base-crud";
+import { BaseService } from "src/shared/base/base-crud";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
 import { Repository } from "typeorm";
@@ -13,7 +13,7 @@ import { Order } from "./order.entity";
 
 @Injectable()
 export class OrderService
-  extends BaseCrudService<Order, OrderDto, PatchOrderDto>
+  extends BaseService<Order, OrderDto, PatchOrderDto>
   implements ICrudService<Order, OrderDto, PatchOrderDto>
 {
   constructor(

@@ -4,7 +4,7 @@ import { In, Repository, SelectQueryBuilder } from "typeorm";
 import { APIFeaturesService } from "../filters/filter.service";
 import { ICrudService } from "../interfaces/crud-service.interface";
 
-export abstract class BaseCrudService<T, CreateDto, UpdateDto>
+export abstract class BaseService<T, CreateDto, UpdateDto>
   implements ICrudService<T, CreateDto, UpdateDto>
 {
   constructor(

@@ -30,9 +30,11 @@ export class ReviewController {
       title: createDto.title,
       comment: createDto.comment,
       rate: createDto.rate,
-      is_liked: createDto.is_liked,
-      likes_count: createDto.likes_count,
+      isLiked: createDto.isLiked,
+      likesCount: createDto.likesCount,
+      isApproved: createDto.isApproved,
       createdBy: req["createdBy"],
+      product: req["product"],
     });
   }
 
@@ -44,9 +46,11 @@ export class ReviewController {
       title: update.title,
       comment: update.comment,
       rate: update.rate,
-      is_liked: update.is_liked,
-      likes_count: update.likes_count,
+      isLiked: update.isLiked,
+      likesCount: update.likesCount,
+      isApproved: update.isApproved,
       createdBy: req["createdBy"],
+      product: req["product"],
     });
   }
 
