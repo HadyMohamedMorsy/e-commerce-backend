@@ -5,13 +5,13 @@ import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
 import { Repository, SelectQueryBuilder } from "typeorm";
 import { Attribute } from "./attribute.entity";
-import { AttributeDto } from "./dtos/create.dto";
+import { IAttribute } from "./dtos/create.dto";
 import { PatchAttributeDto } from "./dtos/patch.dto";
 
 @Injectable()
 export class AttributeService
-  extends BaseService<Attribute, AttributeDto, PatchAttributeDto>
-  implements ICrudService<Attribute, AttributeDto, PatchAttributeDto>
+  extends BaseService<Attribute, IAttribute, PatchAttributeDto>
+  implements ICrudService<Attribute, IAttribute, PatchAttributeDto>
 {
   constructor(
     apiFeaturesService: APIFeaturesService,

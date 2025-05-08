@@ -10,11 +10,9 @@ export class FaqProductMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
     const body = req.body;
 
-    if (body.select_questionable_type === FaqList.Product && body.productId) {
+    if (body.selectQuestionableType === FaqList.Product && body.productId) {
       const product = await this.productService.findOne(body.productId);
-      if (product) {
-        req["product"] = product;
-      }
+      req["product"] = product;
     }
 
     next();

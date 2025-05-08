@@ -59,6 +59,7 @@ export class ListService {
       case "product":
         return {
           category: await this.categoryService.getCategoriesByType(CategoryType.PRODUCT),
+          discountType: this.lists.discountType,
         };
       default:
         throw new Error(`Slug "${slug}" not supported`);

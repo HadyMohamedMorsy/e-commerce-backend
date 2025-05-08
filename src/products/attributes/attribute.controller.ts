@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { AttributeService } from "./attribute.service";
-import { AttributeDto } from "./dtos/create.dto";
+import { AttributeDto, IAttribute } from "./dtos/create.dto";
 import { PatchAttributeDto } from "./dtos/patch.dto";
 
 @Controller("attribute")
@@ -17,15 +17,15 @@ export class AttributeController {
 
   @Post("/store")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  public async create(@Body() createDtos: AttributeDto[], @Req() req: Request) {
-    const attributesToCreate = createDtos.map(
+  public async create(@Body() createDtos: AttributeDto, @Req() req: Request) {
+    const attributesToCreate = createDtos.attributes.map(
       createDto =>
         ({
           name: createDto.name,
           value: createDto.value,
           image: createDto.image,
           product: req["product"],
-        }) as AttributeDto,
+        }) as IAttribute,
     );
 
     return await Promise.all(attributesToCreate.map(attribute => this.service.create(attribute)));

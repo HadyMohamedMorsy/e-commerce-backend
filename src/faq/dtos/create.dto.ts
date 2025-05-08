@@ -8,7 +8,7 @@ export class FaqDto {
   @IsEnum(FaqList, {
     message: 'Questionable type must be either "Product" or "All"',
   })
-  select_questionable_type: FaqList;
+  selectQuestionableType: FaqList;
 
   @IsOptional()
   @IsString()

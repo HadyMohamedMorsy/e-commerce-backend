@@ -34,8 +34,8 @@ export abstract class BaseService<T, CreateDto, UpdateDto>
   }
 
   public async create(createDto: CreateDto): Promise<T[]> {
-    const newUser = this.repository.create(createDto as any);
-    return await this.repository.save(newUser);
+    const newCreate = this.repository.create(createDto as any);
+    return await this.repository.save(newCreate);
   }
 
   public async update(updateDto: UpdateDto & { id: number }): Promise<T> {

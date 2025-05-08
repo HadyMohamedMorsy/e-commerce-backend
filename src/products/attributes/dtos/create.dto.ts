@@ -1,21 +1,15 @@
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsArray, IsNotEmpty } from "class-validator";
 import { Product } from "src/products/products.entity";
 
-export class AttributeDto {
-  @IsString()
-  @IsNotEmpty()
+export interface IAttribute {
   name: string;
-
-  @IsString()
-  @IsNotEmpty()
   value: string;
-
-  @IsNotEmpty()
-  productId: number;
-
-  @IsOptional()
-  @IsString()
   image: string;
-
   product: Product;
+}
+
+export class AttributeDto {
+  @IsArray()
+  @IsNotEmpty()
+  attributes: IAttribute[];
 }

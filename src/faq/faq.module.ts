@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from "@nestjs/common";
+import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ProductModule } from "src/products/products.module";
 import { FilterDateModule } from "src/shared/filters/filter-date.module";
@@ -15,8 +15,6 @@ import { FaqProductMiddleware } from "./middleware/faq-product.middleware";
 })
 export class FaqModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(FaqProductMiddleware)
-      .forRoutes({ path: "faq/index", method: RequestMethod.POST });
+    consumer.apply(FaqProductMiddleware).forRoutes("faq/store", "faq/update");
   }
 }

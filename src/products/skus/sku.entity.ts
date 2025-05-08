@@ -1,13 +1,13 @@
 import { DiscountType } from "src/shared/enum/global-enum";
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Product } from "../products.entity";
 
 @Entity()
-export class Sku {
+export class ProductSku {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   sku: string;
 
   @Column()
@@ -20,8 +20,9 @@ export class Sku {
   discount: number | null;
 
   @Column({ type: "enum", enum: DiscountType, nullable: true })
-  discountType: DiscountType | null;
+  discountType: DiscountType;
 
   @OneToOne(() => Product, product => product.sku)
+  @JoinColumn()
   product: Product;
 }

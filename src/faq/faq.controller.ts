@@ -19,12 +19,13 @@ export class FaqController {
   @Post("/store")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public create(@Body() create: FaqDto, @Req() req: Request) {
+    console.log(req["product"]);
     return this.service.create({
-      select_questionable_type: create.select_questionable_type,
+      selectQuestionableType: create.selectQuestionableType,
       question: create.question,
       answer: create.answer,
       createdBy: req["createdBy"],
-      product: create.select_questionable_type === FaqList.Product ? req["product"] : null,
+      product: create.selectQuestionableType === FaqList.Product ? req["product"] : null,
     });
   }
 
@@ -33,11 +34,11 @@ export class FaqController {
   public async update(@Body() update: PatchFaqDto, @Req() req: Request) {
     return await this.service.update({
       id: update.id,
-      select_questionable_type: update.select_questionable_type,
+      selectQuestionableType: update.selectQuestionableType,
       question: update.question,
       answer: update.answer,
       createdBy: req["createdBy"],
-      product: update.select_questionable_type === FaqList.Product ? req["product"] : null,
+      product: update.selectQuestionableType === FaqList.Product ? req["product"] : null,
     });
   }
 

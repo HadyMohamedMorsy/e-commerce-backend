@@ -1,9 +1,22 @@
-import { PartialType } from "@nestjs/swagger";
-import { IsNotEmpty, IsNumber } from "class-validator";
-import { AttributeDto } from "./create.dto";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { Product } from "src/products/products.entity";
 
-export class PatchAttributeDto extends PartialType(AttributeDto) {
+export class PatchAttributeDto {
   @IsNumber()
   @IsNotEmpty()
   id: number;
+
+  @IsString()
+  @IsOptional()
+  name?: string;
+
+  @IsString()
+  @IsOptional()
+  value?: string;
+
+  @IsString()
+  @IsOptional()
+  image?: string;
+
+  product?: Product;
 }

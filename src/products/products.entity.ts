@@ -11,7 +11,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Attribute } from "./attributes/attribute.entity";
-import { Sku } from "./skus/sku.entity";
+import { ProductSku } from "./skus/sku.entity";
 
 @Entity("products")
 export class Product extends BaseMemberEntity {
@@ -34,8 +34,8 @@ export class Product extends BaseMemberEntity {
   @JoinTable({ name: "product_categories" })
   categories: Category[];
 
-  @OneToOne(() => Sku, sku => sku.product)
-  sku: Sku;
+  @OneToOne(() => ProductSku, sku => sku.product)
+  sku: ProductSku;
 
   @OneToMany(() => Attribute, attribute => attribute.product)
   attributes: Attribute[];
