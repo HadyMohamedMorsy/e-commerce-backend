@@ -1,12 +1,37 @@
 import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
 import { Roles } from "src/shared/decorators/roles.decorator";
+import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { ShipmentDto } from "./dtos/create.dto";
 import { PatchShipmentDto } from "./dtos/patch.dto";
 import { ShipmentService } from "./shipment.service";
 
 @Controller("shipment")
-export class ShipmentController {
+export class ShipmentController implements SelectOptions, RelationOptions {
   constructor(private readonly service: ShipmentService) {}
+
+  public selectOptions(): Record<string, boolean> {
+    return {
+      id: true,
+      created_at: true,
+      updated_at: true,
+      type: true,
+      shipmentPrice: true,
+    };
+  }
+
+  public getRelationOptions(): Record<string, any> {
+    return {
+      location: {
+        id: true,
+        name: true,
+      },
+      createdBy: {
+        id: true,
+        firstName: true,
+        lastName: true,
+      },
+    };
+  }
 
   @Post("/index")
   @Roles(
@@ -28,7 +53,6 @@ export class ShipmentController {
   public create(@Body() create: ShipmentDto, @Req() req: Request) {
     return this.service.create({
       type: create.type,
-      kgPrice: create.kgPrice,
       shipmentPrice: create.shipmentPrice,
       location: req["location"],
       createdBy: req["createdBy"],
@@ -41,7 +65,6 @@ export class ShipmentController {
     return await this.service.update({
       id: update.id,
       type: update.type,
-      kgPrice: update.kgPrice,
       shipmentPrice: update.shipmentPrice,
       location: req["location"],
       createdBy: req["createdBy"],

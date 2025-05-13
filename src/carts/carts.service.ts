@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ProductService } from "src/products/products.service";
-import { BaseService } from "src/shared/base/base-crud";
+import { BaseService } from "src/shared/base/base";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
 import { Repository } from "typeorm";
@@ -55,7 +55,7 @@ export class CartService
         total,
       });
 
-      return [updatedCart];
+      return updatedCart;
     });
   }
 }

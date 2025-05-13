@@ -1,12 +1,40 @@
 import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
 import { Roles } from "src/shared/decorators/roles.decorator";
+import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { ReviewDto } from "./dtos/create.dto";
 import { PatchReviewDto } from "./dtos/patch.dto";
 import { ReviewService } from "./review.service";
 
 @Controller("review")
-export class ReviewController {
+export class ReviewController implements SelectOptions, RelationOptions {
   constructor(private readonly service: ReviewService) {}
+
+  public selectOptions(): Record<string, boolean> {
+    return {
+      id: true,
+      created_at: true,
+      updated_at: true,
+      title: true,
+      comment: true,
+      rate: true,
+      isLiked: true,
+      likesCount: true,
+    };
+  }
+
+  public getRelationOptions(): Record<string, any> {
+    return {
+      createdBy: {
+        id: true,
+        firstName: true,
+        lastName: true,
+      },
+      product: {
+        id: true,
+        name: true,
+      },
+    };
+  }
 
   @Post("/index")
   @Roles(
@@ -26,32 +54,40 @@ export class ReviewController {
   @Post("/store")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public create(@Body() createDto: ReviewDto, @Req() req: Request) {
-    return this.service.create({
-      title: createDto.title,
-      comment: createDto.comment,
-      rate: createDto.rate,
-      isLiked: createDto.isLiked,
-      likesCount: createDto.likesCount,
-      isApproved: createDto.isApproved,
-      createdBy: req["createdBy"],
-      product: req["product"],
-    });
+    return this.service.create(
+      {
+        title: createDto.title,
+        comment: createDto.comment,
+        rate: createDto.rate,
+        isLiked: createDto.isLiked,
+        likesCount: createDto.likesCount,
+        isApproved: createDto.isApproved,
+        createdBy: req["createdBy"],
+        product: req["product"],
+      },
+      this.selectOptions(),
+      this.getRelationOptions(),
+    );
   }
 
   @Put("/update")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public async update(@Body() update: PatchReviewDto, @Req() req: Request) {
-    return await this.service.update({
-      id: update.id,
-      title: update.title,
-      comment: update.comment,
-      rate: update.rate,
-      isLiked: update.isLiked,
-      likesCount: update.likesCount,
-      isApproved: update.isApproved,
-      createdBy: req["createdBy"],
-      product: req["product"],
-    });
+    return await this.service.update(
+      {
+        id: update.id,
+        title: update.title,
+        comment: update.comment,
+        rate: update.rate,
+        isLiked: update.isLiked,
+        likesCount: update.likesCount,
+        isApproved: update.isApproved,
+        createdBy: req["createdBy"],
+        product: req["product"],
+      },
+      this.selectOptions(),
+      this.getRelationOptions(),
+    );
   }
 
   @Delete("/delete")

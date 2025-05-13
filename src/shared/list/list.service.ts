@@ -7,6 +7,7 @@ import {
   getCategoryTypeList,
   getCouponTypeList,
   getDiscountTypeList,
+  getFacialFeatureTypeList,
   getFaqList,
   getMediaTypeList,
   getRoleList,
@@ -25,6 +26,7 @@ export class ListService {
     categoryType: getCategoryTypeList(),
     couponType: getCouponTypeList(),
     discountType: getDiscountTypeList(),
+    facialFeatureType: getFacialFeatureTypeList(),
   };
 
   async getListsBySlug(slug: string) {
@@ -49,6 +51,10 @@ export class ListService {
       case "category":
         return {
           categoryType: this.lists.categoryType,
+        };
+      case "facialFeature":
+        return {
+          facialFeatureType: this.lists.facialFeatureType,
         };
       case "blog":
         return {

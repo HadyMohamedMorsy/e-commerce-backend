@@ -1,27 +1,27 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { BaseService } from "src/shared/base/base-crud";
+import { BaseService } from "src/shared/base/base";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
 import { Repository, SelectQueryBuilder } from "typeorm";
 import { TaxDto } from "./dtos/create.dto";
 import { PatchTaxDto } from "./dtos/patch.dto";
-import { Tax } from "./tax.entity";
+import { Taxes } from "./tax.entity";
 
 @Injectable()
 export class TaxService
-  extends BaseService<Tax, TaxDto, PatchTaxDto>
-  implements ICrudService<Tax, TaxDto, PatchTaxDto>
+  extends BaseService<Taxes, TaxDto, PatchTaxDto>
+  implements ICrudService<Taxes, TaxDto, PatchTaxDto>
 {
   constructor(
     apiFeaturesService: APIFeaturesService,
-    @InjectRepository(Tax)
-    repository: Repository<Tax>,
+    @InjectRepository(Taxes)
+    repository: Repository<Taxes>,
   ) {
     super(repository, apiFeaturesService);
   }
 
-  override queryRelation(queryBuilder: SelectQueryBuilder<any>) {
-    queryBuilder.leftJoinAndSelect("Tax.location", "location");
+  override queryRelationIndex(queryBuilder: SelectQueryBuilder<any>) {
+    queryBuilder.leftJoinAndSelect("e.country", "country");
   }
 }

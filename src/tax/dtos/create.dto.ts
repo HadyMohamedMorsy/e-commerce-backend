@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { User } from "src/users/user.entity";
 
@@ -8,6 +9,7 @@ export class TaxDto {
 
   @IsNumber()
   @IsNotEmpty()
+  @Type(() => Number)
   rate: number;
 
   @IsNumber()

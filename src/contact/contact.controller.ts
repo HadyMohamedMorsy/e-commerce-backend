@@ -1,24 +1,38 @@
 import { Body, Controller, Delete, HttpCode, Post, Put } from "@nestjs/common";
 import { Roles } from "src/shared/decorators/roles.decorator";
+import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { ContactsService } from "./contact.service";
 import { ContactDto } from "./dtos/create.dto";
 import { PatchContactDto } from "./dtos/patch.dto";
 
 @Controller("contact")
-export class ContactController {
+export class ContactController implements SelectOptions, RelationOptions {
   constructor(private readonly service: ContactsService) {}
 
+  public selectOptions(): Record<string, boolean> {
+    return {
+      id: true,
+      created_at: true,
+      updated_at: true,
+      name: true,
+      email: true,
+      phone: true,
+      subject: true,
+      message: true,
+    };
+  }
+
+  public getRelationOptions(): Record<string, any> {
+    return {
+      createdBy: {
+        id: true,
+        firstName: true,
+        lastName: true,
+      },
+    };
+  }
+
   @Post("/index")
-  @Roles(
-    "CEO",
-    "CUSTOMER",
-    "TECH_SUPPORT",
-    "STORE_MANAGER",
-    "SUPER_ADMIN",
-    "INVENTORY_MANAGER",
-    "CONTENT_MANAGER",
-    "SYSTEM_ADMIN",
-  )
   @HttpCode(200)
   public index(@Body() filter: any) {
     return this.service.findAll(filter);
@@ -35,13 +49,17 @@ export class ContactController {
     "SYSTEM_ADMIN",
   )
   public create(@Body() create: ContactDto) {
-    return this.service.create({
-      name: create.name,
-      email: create.email,
-      phone: create.phone,
-      subject: create.subject,
-      message: create.message,
-    });
+    return this.service.create(
+      {
+        name: create.name,
+        email: create.email,
+        phone: create.phone,
+        subject: create.subject,
+        message: create.message,
+      },
+      this.selectOptions(),
+      this.getRelationOptions(),
+    );
   }
 
   @Put("/update")
@@ -55,14 +73,18 @@ export class ContactController {
     "SYSTEM_ADMIN",
   )
   public async update(@Body() update: PatchContactDto) {
-    return await this.service.update({
-      id: update.id,
-      name: update.name,
-      email: update.email,
-      phone: update.phone,
-      subject: update.subject,
-      message: update.message,
-    });
+    return await this.service.update(
+      {
+        id: update.id,
+        name: update.name,
+        email: update.email,
+        phone: update.phone,
+        subject: update.subject,
+        message: update.message,
+      },
+      this.selectOptions(),
+      this.getRelationOptions(),
+    );
   }
 
   @Delete("/delete")

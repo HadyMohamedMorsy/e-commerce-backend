@@ -19,9 +19,6 @@ export class Review extends BaseMemberEntity {
   @Column({ type: "decimal", precision: 3, scale: 1 })
   rate: number;
 
-  @Column({ name: "is_liked", type: "boolean", default: false })
-  isLiked: boolean;
-
   @Column({ name: "likes_count" })
   likesCount: number;
 

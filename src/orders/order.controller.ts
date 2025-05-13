@@ -1,12 +1,35 @@
 import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
 import { Roles } from "src/shared/decorators/roles.decorator";
+import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { OrderDto } from "./dtos/create.dto";
 import { PatchOrderDto } from "./dtos/patch.dto";
 import { OrderService } from "./order.service";
 
 @Controller("order")
-export class OrderController {
+export class OrderController implements SelectOptions, RelationOptions {
   constructor(private readonly service: OrderService) {}
+
+  public selectOptions(): Record<string, boolean> {
+    return {
+      id: true,
+      created_at: true,
+      updated_at: true,
+      orderNumber: true,
+      totalAmount: true,
+      status: true,
+      createdBy: true,
+    };
+  }
+
+  public getRelationOptions(): Record<string, any> {
+    return {
+      createdBy: {
+        id: true,
+        firstName: true,
+        lastName: true,
+      },
+    };
+  }
 
   @Post("/index")
   @Roles(

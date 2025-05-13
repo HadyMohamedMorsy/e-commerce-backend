@@ -3,6 +3,7 @@ import {
   CategoryType,
   CouponType,
   DiscountType,
+  FacialFeatureType,
   FaqList,
   MediaType,
   PaymentStatus,
@@ -54,6 +55,10 @@ export function getCouponTypeList() {
 
 export function getDiscountTypeList() {
   return generateListFromEnum(DiscountType);
+}
+
+export function getFacialFeatureTypeList() {
+  return generateListFromEnum(FacialFeatureType);
 }
 
 export function generateListFromEnum<T extends Record<string, any>>(enumObj: T) {

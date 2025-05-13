@@ -32,6 +32,11 @@ export class CouponDto {
   minOrderItemCount: number;
 
   @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  numberOfUsers: number;
+
+  @IsNotEmpty()
   @IsBoolean()
   isActive: boolean = true;
 

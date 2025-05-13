@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { BaseService } from "src/shared/base/base-crud";
+import { BaseService } from "src/shared/base/base";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
 import { Repository, SelectQueryBuilder } from "typeorm";
@@ -21,8 +21,8 @@ export class BanksService
     super(repository, apiFeaturesService);
   }
 
-  override queryRelation(queryBuilder?: SelectQueryBuilder<any>, filteredRecord?: any) {
-    super.queryRelation(queryBuilder, filteredRecord);
+  override queryRelationIndex(queryBuilder?: SelectQueryBuilder<any>, filteredRecord?: any) {
+    super.queryRelationIndex(queryBuilder, filteredRecord);
     queryBuilder
       .leftJoin("e.country", "country")
       .addSelect(["country.id", "country.name"])

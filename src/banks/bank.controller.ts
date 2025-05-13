@@ -1,12 +1,54 @@
 import { Body, Controller, Delete, HttpCode, Patch, Post, Put, Req } from "@nestjs/common";
 import { Roles } from "src/shared/decorators/roles.decorator";
+import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { BanksService } from "./bank.service";
 import { BankDto } from "./dtos/create.dto";
 import { PatchBankDto } from "./dtos/patch.dto";
 
 @Controller("bank")
-export class BankController {
+export class BankController implements SelectOptions, RelationOptions {
   constructor(private readonly service: BanksService) {}
+
+  public selectOptions(): Record<string, boolean> {
+    return {
+      id: true,
+      created_at: true,
+      updated_at: true,
+      accountName: true,
+      accountNumber: true,
+      branchName: true,
+      bankName: true,
+      featuredImage: true,
+      iban: true,
+      swiftCode: true,
+    };
+  }
+
+  public getRelationOptions(): Record<string, any> {
+    return {
+      createdBy: {
+        id: true,
+        firstName: true,
+        lastName: true,
+      },
+      country: {
+        id: true,
+        name: true,
+      },
+      region: {
+        id: true,
+        name: true,
+      },
+      city: {
+        id: true,
+        name: true,
+      },
+      area: {
+        id: true,
+        name: true,
+      },
+    };
+  }
 
   @Post("/index")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")

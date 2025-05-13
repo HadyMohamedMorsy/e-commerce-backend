@@ -87,3 +87,21 @@ export enum DiscountType {
   PERCENTAGE = "percentage",
   FIXED = "fixed",
 }
+
+export enum FacialFeatureType {
+  BEARD = "beard",
+  MUSTACHE = "mustache",
+  GOATEE = "goatee",
+  SKIN_FACIAL_HAIR = "skin_facial_hair",
+  EYE_BROWS = "eye_brows",
+  NOSE = "nose",
+  HATES = "hates",
+  BODY_TYPE = "body_type",
+  SHOES = "shoes",
+  EYES = "eyes",
+  MOUTH = "mouth",
+  CHIN = "chin",
+  NECK = "neck",
+  BOTTOOMS = "bottooms",
+  TOPES = "topes",
+}

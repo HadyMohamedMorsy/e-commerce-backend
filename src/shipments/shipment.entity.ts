@@ -15,9 +15,6 @@ export class Shipment extends BaseMemberEntity {
   })
   type: Weight;
 
-  @Column({ name: "kg_price", type: "decimal", precision: 10, scale: 2 })
-  kgPrice: number;
-
   @Column({ name: "shipment_price", type: "decimal", precision: 10, scale: 2 })
   shipmentPrice: number;
 

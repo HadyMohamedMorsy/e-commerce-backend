@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Product } from "src/products/products.entity";
 import { ProductService } from "src/products/products.service";
-import { BaseService } from "src/shared/base/base-crud";
+import { BaseService } from "src/shared/base/base";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
 import { Repository } from "typeorm";
@@ -55,7 +55,7 @@ export class OrderService
     );
   }
 
-  override async create(createDto: OrderDto): Promise<Order[]> {
+  override async create(createDto: OrderDto): Promise<Order> {
     return this.repository.manager.transaction(async transactionalEntityManager => {
       const order = await transactionalEntityManager.save(Order, {
         ...createDto,
@@ -79,7 +79,7 @@ export class OrderService
         total,
       });
 
-      return [updatedOrder];
+      return updatedOrder;
     });
   }
 }

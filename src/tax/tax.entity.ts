@@ -2,8 +2,8 @@ import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Location } from "../locations/location.entity";
 
-@Entity("tax")
-export class Tax extends BaseMemberEntity {
+@Entity()
+export class Taxes extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

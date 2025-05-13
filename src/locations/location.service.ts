@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { BaseService } from "src/shared/base/base-crud";
+import { BaseService } from "src/shared/base/base";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
 import { Repository, SelectQueryBuilder } from "typeorm";
@@ -21,9 +21,9 @@ export class LocationService
     super(repository, apiFeaturesService);
   }
 
-  override queryRelation(queryBuilder?: SelectQueryBuilder<any>, filteredRecord?: any) {
+  override queryRelationIndex(queryBuilder?: SelectQueryBuilder<any>, filteredRecord?: any) {
     const parentId = filteredRecord?.parentId;
-    super.queryRelation(queryBuilder, filteredRecord);
+    super.queryRelationIndex(queryBuilder, filteredRecord);
 
     if (parentId) {
       queryBuilder.leftJoin("e.parent", "parent").andWhere("parent.id = :parentId", {

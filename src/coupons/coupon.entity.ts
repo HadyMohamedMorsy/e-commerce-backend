@@ -1,4 +1,5 @@
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { CouponType } from "src/shared/enum/global-enum";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("coupons")
@@ -9,8 +10,8 @@ export class Coupon extends BaseMemberEntity {
   @Column({ unique: true })
   code: string;
 
-  @Column({ name: "coupon_type" })
-  couponType: string;
+  @Column({ type: "enum", enum: CouponType, name: "coupon_type" })
+  couponType: CouponType;
 
   @Column({ type: "decimal", precision: 10, scale: 2 })
   discount: number;
@@ -35,6 +36,9 @@ export class Coupon extends BaseMemberEntity {
     default: 0,
   })
   minOrderItemCount: number;
+
+  @Column({ name: "number_of_users", default: 0 })
+  numberOfUsers: number;
 
   @Column({ name: "is_active" })
   isActive: boolean;

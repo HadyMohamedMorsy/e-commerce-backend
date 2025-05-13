@@ -25,7 +25,13 @@ export class UploadsController {
         files: 10,
       },
       fileFilter: (req, file, cb) => {
-        const allowedMimeTypes = ["image/jpeg", "image/png", "image/jpg", "application/pdf"];
+        const allowedMimeTypes = [
+          "image/jpeg",
+          "image/png",
+          "image/jpg",
+          "application/pdf",
+          "image/svg+xml",
+        ];
         if (allowedMimeTypes.includes(file.mimetype)) {
           cb(null, true);
         } else {
@@ -55,7 +61,7 @@ export class UploadsController {
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addFileTypeValidator({
-          fileType: /^(image\/jpe?g|image\/png|application\/pdf)$/i,
+          fileType: /^(image\/jpe?g|image\/png|application\/pdf|image\/svg\+xml)$/i,
         })
         .addMaxSizeValidator({
           maxSize: 307200,

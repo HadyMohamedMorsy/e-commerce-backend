@@ -9,11 +9,6 @@ export class ShipmentDto {
   @IsNumber()
   @IsPositive()
   @Type(() => Number)
-  kgPrice: number;
-
-  @IsNumber()
-  @IsPositive()
-  @Type(() => Number)
   shipmentPrice: number;
 
   @IsNumber()
