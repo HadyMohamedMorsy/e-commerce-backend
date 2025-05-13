@@ -1,13 +1,20 @@
-import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { UserDto } from "./dtos/create.dto";
 import { PatchUserDto } from "./dtos/patch.dto";
+import { User } from "./user.entity";
 import { UserService } from "./user.service";
 
 @Controller("user")
-export class UserController implements SelectOptions, RelationOptions {
-  constructor(private readonly service: UserService) {}
+export class UserController
+  extends BaseController<User, UserDto, PatchUserDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: UserService) {
+    super(service);
+  }
 
   public selectOptions(): Record<string, boolean> {
     return {
@@ -33,21 +40,6 @@ export class UserController implements SelectOptions, RelationOptions {
         lastName: true,
       },
     };
-  }
-
-  @Post("/index")
-  @Roles(
-    "CEO",
-    "TECH_SUPPORT",
-    "STORE_MANAGER",
-    "SUPER_ADMIN",
-    "INVENTORY_MANAGER",
-    "CONTENT_MANAGER",
-    "SYSTEM_ADMIN",
-  )
-  @HttpCode(200)
-  public index(@Body() filter: any) {
-    return this.service.findAll(filter);
   }
 
   @Post("/store")
@@ -91,9 +83,9 @@ export class UserController implements SelectOptions, RelationOptions {
     return await this.service.update(updateData, this.selectOptions(), this.getRelationOptions());
   }
 
-  @Delete("/delete")
-  @Roles("STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
-  public delete(@Body() id: number) {
-    return this.service.delete(id);
+  @Put("/change-status")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public changeStatus(@Body() update: { id: number; isActive: boolean }) {
+    return this.service.changeStatus(update.id, update.isActive);
   }
 }

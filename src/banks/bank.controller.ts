@@ -1,13 +1,20 @@
-import { Body, Controller, Delete, HttpCode, Patch, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Patch, Post, Put, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
+import { Bank } from "./bank.entity";
 import { BanksService } from "./bank.service";
 import { BankDto } from "./dtos/create.dto";
 import { PatchBankDto } from "./dtos/patch.dto";
 
 @Controller("bank")
-export class BankController implements SelectOptions, RelationOptions {
-  constructor(private readonly service: BanksService) {}
+export class BankController
+  extends BaseController<Bank, BankDto, PatchBankDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: BanksService) {
+    super(service);
+  }
 
   public selectOptions(): Record<string, boolean> {
     return {
@@ -50,13 +57,6 @@ export class BankController implements SelectOptions, RelationOptions {
     };
   }
 
-  @Post("/index")
-  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  @HttpCode(200)
-  public index(@Body() filter: any) {
-    return this.service.findAll(filter);
-  }
-
   @Post("/store")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public create(@Body() create: BankDto, @Req() req: Request) {
@@ -68,13 +68,18 @@ export class BankController implements SelectOptions, RelationOptions {
       featuredImage: create.featuredImage,
       iban: create.iban,
       swiftCode: create.swiftCode,
-      isActive: create.isActive,
       country: req["country"],
       region: req["region"],
       city: req["city"],
       area: req["area"],
       createdBy: req["createdBy"],
     } as BankDto);
+  }
+
+  @Patch("/change-active-status")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public async changeActiveStatus(@Body() data: { id: number; isActive: boolean }) {
+    return await this.service.changeStatus(data.id, data.isActive);
   }
 
   @Put("/update")
@@ -89,27 +94,11 @@ export class BankController implements SelectOptions, RelationOptions {
       featuredImage: update.featuredImage,
       iban: update.iban,
       swiftCode: update.swiftCode,
-      isActive: update.isActive,
       country: req["country"],
       region: req["region"],
       city: req["city"],
       area: req["area"],
       createdBy: req["createdBy"],
     });
-  }
-
-  @Patch("/change-active-status")
-  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  public async changeActiveStatus(@Body() data: { id: number; isActive: boolean }) {
-    return await this.service.update({
-      id: data.id,
-      isActive: data.isActive,
-    });
-  }
-
-  @Delete("/delete")
-  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  public delete(@Body() id: number) {
-    return this.service.delete(id);
   }
 }

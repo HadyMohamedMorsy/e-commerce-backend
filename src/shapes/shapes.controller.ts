@@ -1,13 +1,20 @@
-import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { CreateShapeDto } from "./dtos/create-shape.dto";
 import { PatchShapeDto } from "./dtos/patch-shape.dto";
+import { Shape } from "./shapes.entity";
 import { ShapesService } from "./shapes.service";
 
 @Controller("shapes")
-export class ShapesController implements SelectOptions, RelationOptions {
-  constructor(private readonly service: ShapesService) {}
+export class ShapesController
+  extends BaseController<Shape, CreateShapeDto, PatchShapeDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: ShapesService) {
+    super(service);
+  }
 
   public selectOptions(): Record<string, boolean> {
     return {
@@ -29,21 +36,6 @@ export class ShapesController implements SelectOptions, RelationOptions {
     };
   }
 
-  @Post("/index")
-  @Roles(
-    "CEO",
-    "TECH_SUPPORT",
-    "STORE_MANAGER",
-    "SUPER_ADMIN",
-    "INVENTORY_MANAGER",
-    "CONTENT_MANAGER",
-    "SYSTEM_ADMIN",
-  )
-  @HttpCode(200)
-  public index(@Body() filter: any) {
-    return this.service.findAll(filter);
-  }
-
   @Post("/store")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public create(@Body() createDto: CreateShapeDto, @Req() req: Request) {
@@ -63,11 +55,5 @@ export class ShapesController implements SelectOptions, RelationOptions {
       image: update.image,
       createdBy: req["createdBy"],
     });
-  }
-
-  @Delete("/delete")
-  @Roles("STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
-  public delete(@Body() id: number) {
-    return this.service.delete(id);
   }
 }

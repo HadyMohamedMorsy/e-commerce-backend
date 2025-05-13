@@ -1,13 +1,20 @@
-import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
+import { Category } from "./category.entity";
 import { CategoryService } from "./category.service";
 import { CategoryDto } from "./dtos/create.dto";
 import { PatchCategoryDto } from "./dtos/patch.dto";
 
 @Controller("category")
-export class CategoryController implements SelectOptions, RelationOptions {
-  constructor(private readonly service: CategoryService) {}
+export class CategoryController
+  extends BaseController<Category, CategoryDto, PatchCategoryDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: CategoryService) {
+    super(service);
+  }
 
   public selectOptions(): Record<string, boolean> {
     return {
@@ -29,21 +36,6 @@ export class CategoryController implements SelectOptions, RelationOptions {
         lastName: true,
       },
     };
-  }
-
-  @Post("/index")
-  @Roles(
-    "CEO",
-    "TECH_SUPPORT",
-    "STORE_MANAGER",
-    "SUPER_ADMIN",
-    "INVENTORY_MANAGER",
-    "CONTENT_MANAGER",
-    "SYSTEM_ADMIN",
-  )
-  @HttpCode(200)
-  public index(@Body() filter: any) {
-    return this.service.findAll(filter);
   }
 
   @Post("/store")
@@ -77,11 +69,5 @@ export class CategoryController implements SelectOptions, RelationOptions {
       this.selectOptions(),
       this.getRelationOptions(),
     );
-  }
-
-  @Delete("/delete")
-  @Roles("STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
-  public delete(@Body() id: number) {
-    return this.service.delete(id);
   }
 }

@@ -1,13 +1,20 @@
-import { Body, Controller, Delete, HttpCode, Patch, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Patch, Post, Put, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
+import { Blog } from "./blog.entity";
 import { BlogsService } from "./blog.service";
 import { BlogDto } from "./dtos/create.dto";
 import { PatchBlogDto } from "./dtos/patch.dto";
 
 @Controller("blog")
-export class BlogController implements SelectOptions, RelationOptions {
-  constructor(private readonly service: BlogsService) {}
+export class BlogController
+  extends BaseController<Blog, BlogDto, PatchBlogDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: BlogsService) {
+    super(service);
+  }
 
   public selectOptions(): Record<string, boolean> {
     return {
@@ -45,21 +52,6 @@ export class BlogController implements SelectOptions, RelationOptions {
         name: true,
       },
     };
-  }
-
-  @Post("/index")
-  @Roles(
-    "CEO",
-    "TECH_SUPPORT",
-    "STORE_MANAGER",
-    "SUPER_ADMIN",
-    "INVENTORY_MANAGER",
-    "CONTENT_MANAGER",
-    "SYSTEM_ADMIN",
-  )
-  @HttpCode(200)
-  public index(@Body() filter: any) {
-    return this.service.findAll(filter);
   }
 
   @Post("/store")
@@ -137,11 +129,5 @@ export class BlogController implements SelectOptions, RelationOptions {
       id: data.id,
       isFeatured: data.isFeatured,
     });
-  }
-
-  @Delete("/delete")
-  @Roles("STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
-  public delete(@Body() id: number) {
-    return this.service.delete(id);
   }
 }

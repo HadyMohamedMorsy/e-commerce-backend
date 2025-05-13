@@ -1,14 +1,21 @@
-import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { FaqList } from "src/shared/enum/global-enum";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { FaqDto } from "./dtos/create.dto";
 import { PatchFaqDto } from "./dtos/patch.dto";
+import { Faq } from "./faq.entity";
 import { FaqsService } from "./faq.service";
 
 @Controller("faq")
-export class FaqController implements SelectOptions, RelationOptions {
-  constructor(private readonly service: FaqsService) {}
+export class FaqController
+  extends BaseController<Faq, FaqDto, PatchFaqDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: FaqsService) {
+    super(service);
+  }
 
   public selectOptions(): Record<string, boolean> {
     return {
@@ -35,13 +42,6 @@ export class FaqController implements SelectOptions, RelationOptions {
         name: true,
       },
     };
-  }
-
-  @Post("/index")
-  @HttpCode(200)
-  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  public index(@Body() filter: any) {
-    return this.service.findAll(filter);
   }
 
   @Post("/store")
@@ -76,11 +76,5 @@ export class FaqController implements SelectOptions, RelationOptions {
       this.selectOptions(),
       this.getRelationOptions(),
     );
-  }
-
-  @Delete("/delete")
-  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  public delete(@Body() id: number) {
-    return this.service.delete(id);
   }
 }

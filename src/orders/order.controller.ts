@@ -1,13 +1,21 @@
-import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
+import { OrderStatus, PaymentStatus } from "src/shared/enum/global-enum";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { OrderDto } from "./dtos/create.dto";
 import { PatchOrderDto } from "./dtos/patch.dto";
+import { Order } from "./order.entity";
 import { OrderService } from "./order.service";
 
 @Controller("order")
-export class OrderController implements SelectOptions, RelationOptions {
-  constructor(private readonly service: OrderService) {}
+export class OrderController
+  extends BaseController<Order, OrderDto, PatchOrderDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: OrderService) {
+    super(service);
+  }
 
   public selectOptions(): Record<string, boolean> {
     return {
@@ -31,21 +39,6 @@ export class OrderController implements SelectOptions, RelationOptions {
     };
   }
 
-  @Post("/index")
-  @Roles(
-    "CEO",
-    "TECH_SUPPORT",
-    "STORE_MANAGER",
-    "SUPER_ADMIN",
-    "INVENTORY_MANAGER",
-    "CONTENT_MANAGER",
-    "SYSTEM_ADMIN",
-  )
-  @HttpCode(200)
-  public index(@Body() filter: any) {
-    return this.service.findAll(filter);
-  }
-
   @Post("/store")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public create(@Body() createDto: OrderDto, @Req() req: Request) {
@@ -55,15 +48,21 @@ export class OrderController implements SelectOptions, RelationOptions {
     });
   }
 
+  @Put("/change-order-status")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public changeOrderStatus(@Body() update: { id: number; status: OrderStatus }) {
+    return this.service.changeStatus(update.id, update.status);
+  }
+
+  @Put("/change-payment-status")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public changePaymentStatus(@Body() update: { id: number; status: PaymentStatus }) {
+    return this.service.changeStatus(update.id, update.status);
+  }
+
   @Put("/update")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public async update(@Body() update: PatchOrderDto) {
     return await this.service.update(update);
-  }
-
-  @Delete("/delete")
-  @Roles("STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
-  public delete(@Body() id: number) {
-    return this.service.delete(id);
   }
 }

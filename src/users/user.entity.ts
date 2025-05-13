@@ -75,6 +75,9 @@ export class User {
   @ManyToOne(() => User)
   createdBy: User;
 
+  @Column({ type: "boolean", default: true })
+  isActive: boolean;
+
   @CreateDateColumn({
     type: "timestamp",
     default: () => "CURRENT_TIMESTAMP",

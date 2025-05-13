@@ -1,13 +1,20 @@
-import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { WishlistDto } from "./dtos/create.dto";
 import { PatchWishlistsDto } from "./dtos/patch.dto";
 import { WishlistsService } from "./wishlist.service";
+import { Wishlist } from "./wishlists.entity";
 
 @Controller("wishlists")
-export class WishlistsController implements SelectOptions, RelationOptions {
-  constructor(private readonly service: WishlistsService) {}
+export class WishlistsController
+  extends BaseController<Wishlist, WishlistDto, PatchWishlistsDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: WishlistsService) {
+    super(service);
+  }
 
   public selectOptions(): Record<string, boolean> {
     return {
@@ -25,22 +32,6 @@ export class WishlistsController implements SelectOptions, RelationOptions {
         lastName: true,
       },
     };
-  }
-
-  @Post("/index")
-  @Roles(
-    "CEO",
-    "CUSTOMER",
-    "TECH_SUPPORT",
-    "STORE_MANAGER",
-    "SUPER_ADMIN",
-    "INVENTORY_MANAGER",
-    "CONTENT_MANAGER",
-    "SYSTEM_ADMIN",
-  )
-  @HttpCode(200)
-  public index(@Body() filter: any) {
-    return this.service.findAll(filter);
   }
 
   @Post("/store")
@@ -86,11 +77,5 @@ export class WishlistsController implements SelectOptions, RelationOptions {
       this.selectOptions(),
       this.getRelationOptions(),
     );
-  }
-
-  @Delete("/delete")
-  @Roles("STORE_MANAGER", "CUSTOMER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
-  public delete(@Body() id: number) {
-    return this.service.delete(id);
   }
 }

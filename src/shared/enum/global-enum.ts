@@ -10,6 +10,12 @@ export enum AuthType {
   None,
 }
 
+export enum OrderStatus {
+  PENDING = "pending",
+  COMPLETED = "completed",
+  CANCELLED = "cancelled",
+}
+
 export enum PaymentStatus {
   PENDING = "pending",
   COMPLETED = "completed",

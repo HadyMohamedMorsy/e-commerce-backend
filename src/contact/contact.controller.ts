@@ -1,13 +1,20 @@
-import { Body, Controller, Delete, HttpCode, Post, Put } from "@nestjs/common";
+import { Body, Controller, Post, Put } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
+import { Contact } from "./contact.entity";
 import { ContactsService } from "./contact.service";
 import { ContactDto } from "./dtos/create.dto";
 import { PatchContactDto } from "./dtos/patch.dto";
 
 @Controller("contact")
-export class ContactController implements SelectOptions, RelationOptions {
-  constructor(private readonly service: ContactsService) {}
+export class ContactController
+  extends BaseController<Contact, ContactDto, PatchContactDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: ContactsService) {
+    super(service);
+  }
 
   public selectOptions(): Record<string, boolean> {
     return {
@@ -30,12 +37,6 @@ export class ContactController implements SelectOptions, RelationOptions {
         lastName: true,
       },
     };
-  }
-
-  @Post("/index")
-  @HttpCode(200)
-  public index(@Body() filter: any) {
-    return this.service.findAll(filter);
   }
 
   @Post("/store")
@@ -85,11 +86,5 @@ export class ContactController implements SelectOptions, RelationOptions {
       this.selectOptions(),
       this.getRelationOptions(),
     );
-  }
-
-  @Delete("/delete")
-  @Roles("STORE_MANAGER", "CUSTOMER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
-  public delete(@Body() id: number) {
-    return this.service.delete(id);
   }
 }

@@ -1,13 +1,20 @@
-import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { ReviewDto } from "./dtos/create.dto";
 import { PatchReviewDto } from "./dtos/patch.dto";
+import { Review } from "./review.entity";
 import { ReviewService } from "./review.service";
 
 @Controller("review")
-export class ReviewController implements SelectOptions, RelationOptions {
-  constructor(private readonly service: ReviewService) {}
+export class ReviewController
+  extends BaseController<Review, ReviewDto, PatchReviewDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: ReviewService) {
+    super(service);
+  }
 
   public selectOptions(): Record<string, boolean> {
     return {
@@ -17,7 +24,6 @@ export class ReviewController implements SelectOptions, RelationOptions {
       title: true,
       comment: true,
       rate: true,
-      isLiked: true,
       likesCount: true,
     };
   }
@@ -36,21 +42,6 @@ export class ReviewController implements SelectOptions, RelationOptions {
     };
   }
 
-  @Post("/index")
-  @Roles(
-    "CEO",
-    "TECH_SUPPORT",
-    "STORE_MANAGER",
-    "SUPER_ADMIN",
-    "INVENTORY_MANAGER",
-    "CONTENT_MANAGER",
-    "SYSTEM_ADMIN",
-  )
-  @HttpCode(200)
-  public index(@Body() filter: any) {
-    return this.service.findAll(filter);
-  }
-
   @Post("/store")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public create(@Body() createDto: ReviewDto, @Req() req: Request) {
@@ -59,7 +50,6 @@ export class ReviewController implements SelectOptions, RelationOptions {
         title: createDto.title,
         comment: createDto.comment,
         rate: createDto.rate,
-        isLiked: createDto.isLiked,
         likesCount: createDto.likesCount,
         isApproved: createDto.isApproved,
         createdBy: req["createdBy"],
@@ -79,7 +69,6 @@ export class ReviewController implements SelectOptions, RelationOptions {
         title: update.title,
         comment: update.comment,
         rate: update.rate,
-        isLiked: update.isLiked,
         likesCount: update.likesCount,
         isApproved: update.isApproved,
         createdBy: req["createdBy"],
@@ -90,9 +79,15 @@ export class ReviewController implements SelectOptions, RelationOptions {
     );
   }
 
-  @Delete("/delete")
-  @Roles("STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
-  public delete(@Body() id: number) {
-    return this.service.delete(id);
+  @Put("/change-like-status")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public changeLikeStatus(@Body() update: { id: number; isLiked: boolean }) {
+    return this.service.changeStatus(update.id, update.isLiked);
+  }
+
+  @Put("/change-approve-status")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public changeApproveStatus(@Body() update: { id: number; isApproved: boolean }) {
+    return this.service.changeStatus(update.id, update.isApproved);
   }
 }

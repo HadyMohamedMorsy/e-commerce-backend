@@ -1,13 +1,20 @@
-import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { TaxDto } from "./dtos/create.dto";
 import { PatchTaxDto } from "./dtos/patch.dto";
+import { Taxes } from "./tax.entity";
 import { TaxService } from "./tax.service";
 
 @Controller("tax")
-export class TaxController implements SelectOptions, RelationOptions {
-  constructor(private readonly service: TaxService) {}
+export class TaxController
+  extends BaseController<Taxes, TaxDto, PatchTaxDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: TaxService) {
+    super(service);
+  }
 
   public selectOptions(): Record<string, boolean> {
     return {
@@ -31,20 +38,6 @@ export class TaxController implements SelectOptions, RelationOptions {
         name: true,
       },
     };
-  }
-  @Post("/index")
-  @Roles(
-    "CEO",
-    "TECH_SUPPORT",
-    "STORE_MANAGER",
-    "SUPER_ADMIN",
-    "INVENTORY_MANAGER",
-    "CONTENT_MANAGER",
-    "SYSTEM_ADMIN",
-  )
-  @HttpCode(200)
-  public index(@Body() filter: any) {
-    return this.service.findAll(filter);
   }
 
   @Post("/store")
@@ -76,11 +69,5 @@ export class TaxController implements SelectOptions, RelationOptions {
       this.selectOptions(),
       this.getRelationOptions(),
     );
-  }
-
-  @Delete("/delete")
-  @Roles("STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
-  public delete(@Body() id: number) {
-    return this.service.delete(id);
   }
 }

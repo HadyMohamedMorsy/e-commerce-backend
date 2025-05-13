@@ -1,13 +1,20 @@
-import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { SubCategoryDto } from "./dtos/create.dto";
 import { PatchSubCategoryDto } from "./dtos/patch.dto";
+import { SubCategory } from "./sub-category.entity";
 import { SubCategoryService } from "./sub-category.service";
 
 @Controller("sub-category")
-export class SubCategoryController implements SelectOptions, RelationOptions {
-  constructor(private readonly service: SubCategoryService) {}
+export class SubCategoryController
+  extends BaseController<SubCategory, SubCategoryDto, PatchSubCategoryDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: SubCategoryService) {
+    super(service);
+  }
 
   public selectOptions(): Record<string, boolean> {
     return {
@@ -33,13 +40,6 @@ export class SubCategoryController implements SelectOptions, RelationOptions {
         name: true,
       },
     };
-  }
-
-  @Post("/index")
-  @HttpCode(200)
-  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  public index(@Body() filter: any) {
-    return this.service.findAll(filter);
   }
 
   @Post("/store")
@@ -75,11 +75,5 @@ export class SubCategoryController implements SelectOptions, RelationOptions {
       this.selectOptions(),
       this.getRelationOptions(),
     );
-  }
-
-  @Delete("/delete")
-  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  public delete(@Body() id: number) {
-    return this.service.delete(id);
   }
 }

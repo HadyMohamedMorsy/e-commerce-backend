@@ -1,13 +1,20 @@
-import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { ShipmentDto } from "./dtos/create.dto";
 import { PatchShipmentDto } from "./dtos/patch.dto";
+import { Shipment } from "./shipment.entity";
 import { ShipmentService } from "./shipment.service";
 
 @Controller("shipment")
-export class ShipmentController implements SelectOptions, RelationOptions {
-  constructor(private readonly service: ShipmentService) {}
+export class ShipmentController
+  extends BaseController<Shipment, ShipmentDto, PatchShipmentDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: ShipmentService) {
+    super(service);
+  }
 
   public selectOptions(): Record<string, boolean> {
     return {
@@ -33,21 +40,6 @@ export class ShipmentController implements SelectOptions, RelationOptions {
     };
   }
 
-  @Post("/index")
-  @Roles(
-    "CEO",
-    "TECH_SUPPORT",
-    "STORE_MANAGER",
-    "SUPER_ADMIN",
-    "INVENTORY_MANAGER",
-    "CONTENT_MANAGER",
-    "SYSTEM_ADMIN",
-  )
-  @HttpCode(200)
-  public index(@Body() filter: any) {
-    return this.service.findAll(filter);
-  }
-
   @Post("/store")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public create(@Body() create: ShipmentDto, @Req() req: Request) {
@@ -69,11 +61,5 @@ export class ShipmentController implements SelectOptions, RelationOptions {
       location: req["location"],
       createdBy: req["createdBy"],
     });
-  }
-
-  @Delete("/delete")
-  @Roles("STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
-  public delete(@Body() id: number) {
-    return this.service.delete(id);
   }
 }

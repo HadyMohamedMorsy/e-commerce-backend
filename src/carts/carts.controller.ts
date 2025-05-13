@@ -1,26 +1,15 @@
-import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
+import { Cart } from "./cart.entity";
 import { CartService } from "./carts.service";
 import { CartDto } from "./dtos/create.dto";
 import { PatchCartDto } from "./dtos/patch.dto";
 
 @Controller("cart")
-export class CartController {
-  constructor(private readonly service: CartService) {}
-
-  @Post("/index")
-  @Roles(
-    "CEO",
-    "TECH_SUPPORT",
-    "STORE_MANAGER",
-    "SUPER_ADMIN",
-    "INVENTORY_MANAGER",
-    "CONTENT_MANAGER",
-    "SYSTEM_ADMIN",
-  )
-  @HttpCode(200)
-  public index(@Body() filter: any) {
-    return this.service.findAll(filter);
+export class CartController extends BaseController<Cart, CartDto, PatchCartDto> {
+  constructor(protected readonly service: CartService) {
+    super(service);
   }
 
   @Post("/store")
@@ -42,11 +31,5 @@ export class CartController {
       user: req["createdBy"],
       createdBy: req["createdBy"],
     });
-  }
-
-  @Delete("/delete")
-  @Roles("STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
-  public delete(@Body() id: number) {
-    return this.service.delete(id);
   }
 }

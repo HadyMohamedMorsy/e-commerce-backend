@@ -1,13 +1,20 @@
-import { Body, Controller, Delete, Get, HttpCode, Post, Put, Query, Req } from "@nestjs/common";
+import { Body, Controller, Get, Post, Put, Query, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { LocationDto } from "./dtos/create.dto";
 import { PatchLocationDto } from "./dtos/patch.dto";
+import { Location } from "./location.entity";
 import { LocationService } from "./location.service";
 
 @Controller("location")
-export class LocationController implements SelectOptions, RelationOptions {
-  constructor(private readonly service: LocationService) {}
+export class LocationController
+  extends BaseController<Location, LocationDto, PatchLocationDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: LocationService) {
+    super(service);
+  }
 
   public selectOptions(): Record<string, boolean> {
     return {
@@ -30,21 +37,6 @@ export class LocationController implements SelectOptions, RelationOptions {
         name: true,
       },
     };
-  }
-
-  @Post("/index")
-  @Roles(
-    "CEO",
-    "TECH_SUPPORT",
-    "STORE_MANAGER",
-    "SUPER_ADMIN",
-    "INVENTORY_MANAGER",
-    "CONTENT_MANAGER",
-    "SYSTEM_ADMIN",
-  )
-  @HttpCode(200)
-  public index(@Body() filter: any) {
-    return this.service.findAll(filter);
   }
 
   @Post("/store")
@@ -74,12 +66,6 @@ export class LocationController implements SelectOptions, RelationOptions {
       this.selectOptions(),
       this.getRelationOptions(),
     );
-  }
-
-  @Delete("/delete")
-  @Roles("STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
-  public delete(@Body() id: number) {
-    return this.service.delete(id);
   }
 
   @Get("select-options")

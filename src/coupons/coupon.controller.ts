@@ -1,13 +1,20 @@
-import { Body, Controller, Delete, HttpCode, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
+import { Coupon } from "./coupon.entity";
 import { CouponsService } from "./coupon.service";
 import { CouponDto } from "./dtos/create.dto";
 import { PatchCouponDto } from "./dtos/patch.dto";
 
 @Controller("coupon")
-export class CouponController implements SelectOptions, RelationOptions {
-  constructor(private readonly service: CouponsService) {}
+export class CouponController
+  extends BaseController<Coupon, CouponDto, PatchCouponDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: CouponsService) {
+    super(service);
+  }
 
   public selectOptions(): Record<string, boolean> {
     return {
@@ -35,13 +42,6 @@ export class CouponController implements SelectOptions, RelationOptions {
         lastName: true,
       },
     };
-  }
-
-  @Post("/index")
-  @HttpCode(200)
-  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  public index(@Body() filter: any) {
-    return this.service.findAll(filter);
   }
 
   @Post("/store")
@@ -91,11 +91,5 @@ export class CouponController implements SelectOptions, RelationOptions {
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public changeStatus(@Body() update: PatchCouponDto) {
     return this.service.changeStatus(update.id, update.isActive);
-  }
-
-  @Delete("/delete")
-  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  public delete(@Body() id: number) {
-    return this.service.delete(id);
   }
 }
