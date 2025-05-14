@@ -31,10 +31,6 @@ export class ReviewDto {
   rate: number;
 
   @IsOptional()
-  @IsBoolean()
-  isLiked?: boolean = false;
-
-  @IsOptional()
   @IsInt()
   likesCount?: number;
 

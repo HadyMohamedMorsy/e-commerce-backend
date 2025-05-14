@@ -12,8 +12,17 @@ export class Attribute {
   @Column()
   value: string;
 
-  @Column({ nullable: true })
+  @Column({ default: null })
   image: string;
+
+  @Column({ type: "json", default: null })
+  images: string[];
+
+  @Column({ default: 0, nullable: true })
+  priceChange: number;
+
+  @Column({ default: 0, nullable: true })
+  quantity: number;
 
   @ManyToOne(() => Product, product => product.attributes)
   product: Product;

@@ -82,12 +82,18 @@ export class ReviewController
   @Put("/change-like-status")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public changeLikeStatus(@Body() update: { id: number; isLiked: boolean }) {
-    return this.service.changeStatus(update.id, update.isLiked);
+    return this.service.changeStatus(update.id, update.isLiked, "isLiked", {
+      id: true,
+      isLiked: true,
+    });
   }
 
   @Put("/change-approve-status")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public changeApproveStatus(@Body() update: { id: number; isApproved: boolean }) {
-    return this.service.changeStatus(update.id, update.isApproved);
+    return this.service.changeStatus(update.id, update.isApproved, "isApproved", {
+      id: true,
+      isApproved: true,
+    });
   }
 }

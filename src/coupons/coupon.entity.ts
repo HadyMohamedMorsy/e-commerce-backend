@@ -40,6 +40,6 @@ export class Coupon extends BaseMemberEntity {
   @Column({ name: "number_of_users", default: 0 })
   numberOfUsers: number;
 
-  @Column({ name: "is_active" })
+  @Column({ name: "is_active", default: true })
   isActive: boolean;
 }

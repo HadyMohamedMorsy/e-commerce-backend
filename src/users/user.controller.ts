@@ -86,6 +86,9 @@ export class UserController
   @Put("/change-status")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public changeStatus(@Body() update: { id: number; isActive: boolean }) {
-    return this.service.changeStatus(update.id, update.isActive);
+    return this.service.changeStatus(update.id, update.isActive, "isActive", {
+      id: true,
+      isActive: true,
+    });
   }
 }

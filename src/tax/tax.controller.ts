@@ -70,4 +70,13 @@ export class TaxController
       this.getRelationOptions(),
     );
   }
+
+  @Post("/change-active-status")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public async changeActiveStatus(@Body() update: { id: number; isActive: boolean }) {
+    return await this.service.changeStatus(update.id, update.isActive, "isActive", {
+      id: true,
+      isActive: true,
+    });
+  }
 }

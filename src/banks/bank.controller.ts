@@ -79,7 +79,10 @@ export class BankController
   @Patch("/change-active-status")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public async changeActiveStatus(@Body() data: { id: number; isActive: boolean }) {
-    return await this.service.changeStatus(data.id, data.isActive);
+    return await this.service.changeStatus(data.id, data.isActive, "isActive", {
+      id: true,
+      isActive: true,
+    });
   }
 
   @Put("/update")

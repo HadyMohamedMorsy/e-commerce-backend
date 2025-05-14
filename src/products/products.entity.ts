@@ -25,6 +25,12 @@ export class Product extends BaseMemberEntity {
   description: string;
 
   @Column("varchar", { nullable: true })
+  metaTitle: string;
+
+  @Column("varchar", { nullable: true })
+  metaDescription: string;
+
+  @Column("varchar", { nullable: true })
   summary: string;
 
   @Column("varchar", { nullable: true })

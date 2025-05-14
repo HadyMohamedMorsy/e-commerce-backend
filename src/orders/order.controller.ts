@@ -51,13 +51,19 @@ export class OrderController
   @Put("/change-order-status")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public changeOrderStatus(@Body() update: { id: number; status: OrderStatus }) {
-    return this.service.changeStatus(update.id, update.status);
+    return this.service.changeStatus(update.id, update.status, "status", {
+      id: true,
+      status: true,
+    });
   }
 
   @Put("/change-payment-status")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public changePaymentStatus(@Body() update: { id: number; status: PaymentStatus }) {
-    return this.service.changeStatus(update.id, update.status);
+    return this.service.changeStatus(update.id, update.status, "paymentStatus", {
+      id: true,
+      paymentStatus: true,
+    });
   }
 
   @Put("/update")

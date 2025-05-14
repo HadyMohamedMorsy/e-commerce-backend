@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { Product } from "src/products/products.entity";
 
 export class PatchAttributeDto {
@@ -17,6 +17,18 @@ export class PatchAttributeDto {
   @IsString()
   @IsOptional()
   image?: string;
+
+  @IsArray()
+  @IsOptional()
+  images?: string[];
+
+  @IsNumber()
+  @IsOptional()
+  priceChange?: number;
+
+  @IsNumber()
+  @IsOptional()
+  quantity?: number;
 
   product?: Product;
 }

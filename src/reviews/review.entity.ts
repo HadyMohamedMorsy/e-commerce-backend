@@ -13,6 +13,9 @@ export class Review extends BaseMemberEntity {
   @Column({ name: "is_approved", type: "boolean", default: false })
   isApproved: boolean;
 
+  @Column({ name: "is_liked", type: "boolean", default: false })
+  isLiked: boolean;
+
   @Column({ type: "text" })
   comment: string;
 

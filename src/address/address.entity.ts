@@ -37,6 +37,9 @@ export class Address extends BaseMemberEntity {
   @Column({ nullable: true })
   landmark?: string;
 
+  @Column({ name: "is_default", default: false })
+  isDefault: boolean;
+
   @Column({ name: "phone_number" })
   phoneNumber: string;
 }

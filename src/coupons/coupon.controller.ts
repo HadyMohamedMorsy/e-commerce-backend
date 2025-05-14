@@ -87,9 +87,12 @@ export class CouponController
     );
   }
 
-  @Post("/change-status")
+  @Post("/change-active-status")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public changeStatus(@Body() update: PatchCouponDto) {
-    return this.service.changeStatus(update.id, update.isActive);
+    return this.service.changeStatus(update.id, update.isActive, "isActive", {
+      id: true,
+      isActive: true,
+    });
   }
 }

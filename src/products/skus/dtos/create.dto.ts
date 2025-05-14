@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { Product } from "src/products/products.entity";
 import { DiscountType } from "src/shared/enum/global-enum";
 
@@ -26,6 +26,10 @@ export class SkuDto {
   @IsEnum(DiscountType)
   @IsOptional()
   discountType: DiscountType;
+
+  @IsBoolean()
+  @IsOptional()
+  isOutOfStock: boolean;
 
   product: Product;
 }

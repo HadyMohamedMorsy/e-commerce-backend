@@ -57,7 +57,10 @@ export class AddressController
   @Patch("/change-default-status")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public async changeDefaultStatus(@Body() data: { id: number; isDefault: boolean }) {
-    return await this.service.changeStatus(data.id, data.isDefault);
+    return await this.service.changeStatus(data.id, data.isDefault, "isDefault", {
+      id: true,
+      isDefault: true,
+    });
   }
 
   @Post("/store")

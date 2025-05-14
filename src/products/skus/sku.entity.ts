@@ -10,11 +10,20 @@ export class ProductSku {
   @Column({ unique: true })
   sku: string;
 
-  @Column()
+  @Column({ default: 0 })
   price: number;
 
-  @Column()
+  @Column({ default: 0 })
   quantity: number;
+
+  @Column("boolean", { default: false })
+  isOutOfStock: boolean;
+
+  @Column("boolean", { default: false })
+  isFeatured: boolean;
+
+  @Column("boolean", { default: false })
+  isOffered: boolean;
 
   @Column({ type: "decimal", precision: 5, scale: 2, nullable: true })
   discount: number | null;
