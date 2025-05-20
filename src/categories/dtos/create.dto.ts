@@ -13,6 +13,14 @@ export class CategoryDto {
   categoryType: CategoryType;
 
   @IsString()
+  @IsNotEmpty()
+  slug: string;
+
+  @IsString()
+  @IsOptional()
+  icon?: string;
+
+  @IsString()
   @IsOptional()
   description?: string;
 

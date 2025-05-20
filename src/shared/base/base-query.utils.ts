@@ -41,4 +41,43 @@ export abstract class BaseQueryUtils<T> {
   protected queryRelationIndex(queryBuilder?: SelectQueryBuilder<T>, filteredRecord?: any) {
     queryBuilder.leftJoin("e.createdBy", "ec").addSelect(["ec.id", "ec.firstName", "ec.lastName"]);
   }
+
+  // front query filters
+  protected applySearch(queryBuilder: any, search?: string) {
+    if (search) {
+      queryBuilder.where("e.name LIKE :search", { search: `%${search}%` });
+    }
+    return queryBuilder;
+  }
+
+  protected applyFilters(queryBuilder: any, filters?: Record<string, any>) {
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          queryBuilder.andWhere(`e.${key} = :${key}`, { [key]: value });
+        }
+      });
+    }
+    return queryBuilder;
+  }
+
+  protected applySorting(queryBuilder: any, sort?: { field: string; order: "ASC" | "DESC" }) {
+    if (sort) {
+      queryBuilder.orderBy(`e.${sort.field}`, sort.order);
+    }
+    return queryBuilder;
+  }
+
+  protected applyPagination(queryBuilder: any, page: number, limit: number) {
+    const skip = (page - 1) * limit;
+    return queryBuilder.skip(skip).take(limit);
+  }
+
+  protected applySelect(queryBuilder: SelectQueryBuilder<T>, selectOptions: string[]) {
+    if (selectOptions && selectOptions.length) {
+      const selectFields = selectOptions.map(field => `e.${field}`);
+      queryBuilder.select(selectFields);
+    }
+    return queryBuilder;
+  }
 }

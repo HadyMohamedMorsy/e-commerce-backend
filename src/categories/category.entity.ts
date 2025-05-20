@@ -14,6 +14,12 @@ export class Category extends BaseMemberEntity {
   @Column("varchar")
   name: string;
 
+  @Column("varchar", { nullable: true, unique: true })
+  slug: string;
+
+  @Column("varchar", { nullable: true })
+  icon: string;
+
   @Column({
     type: "enum",
     enum: CategoryType,

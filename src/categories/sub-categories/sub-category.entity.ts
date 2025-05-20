@@ -15,6 +15,12 @@ export class SubCategory extends BaseMemberEntity {
   })
   name: string;
 
+  @Column("varchar", { nullable: true, unique: true })
+  slug: string;
+
+  @Column("varchar", { nullable: true })
+  icon: string;
+
   @Column({
     type: "enum",
     enum: CategoryType,

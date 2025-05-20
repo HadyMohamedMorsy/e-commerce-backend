@@ -5,6 +5,14 @@ import { APIFeaturesService } from "../filters/filter.service";
 import { ICrudService } from "../interfaces/crud-service.interface";
 import { BaseQueryUtils } from "./base-query.utils";
 
+interface PaginationResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 export abstract class BaseService<T, CreateDto, UpdateDto>
   extends BaseQueryUtils<T>
   implements ICrudService<T, CreateDto, UpdateDto>
@@ -88,5 +96,48 @@ export abstract class BaseService<T, CreateDto, UpdateDto>
 
   async findByIds(ids: number[]): Promise<T[]> {
     return this.repository.findBy({ id: In(ids) } as any);
+  }
+
+  public async findFront(query: {
+    query?: {
+      search?: string;
+      filters?: Record<string, any>;
+      page?: number;
+      limit?: number;
+      sort?: { field: string; order: "ASC" | "DESC" };
+      select?: string[];
+      isPagination?: string;
+    };
+  }): Promise<any> {
+    const queryParams = query.query;
+    const { search, filters, page = 1, limit = 10, sort, select, isPagination } = queryParams;
+    console.log(queryParams);
+    let queryBuilder = this.repository.createQueryBuilder("e");
+    queryBuilder = this.applySearch(queryBuilder, search);
+    queryBuilder = this.applyFilters(queryBuilder, filters);
+    queryBuilder = this.applySorting(queryBuilder, sort);
+    queryBuilder = this.applyPagination(queryBuilder, page, limit);
+    queryBuilder = this.applySelect(queryBuilder, select);
+
+    const [filteredRecord, totalRecords] = await queryBuilder.getManyAndCount();
+
+    return isPagination === "true"
+      ? this.paginationResponse(filteredRecord, totalRecords, page, limit)
+      : { data: filteredRecord };
+  }
+
+  private paginationResponse(
+    data: T[],
+    total: number,
+    page: number,
+    limit: number,
+  ): PaginationResponse<T> {
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 }

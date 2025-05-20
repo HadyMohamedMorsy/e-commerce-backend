@@ -13,6 +13,14 @@ export class SubCategoryDto {
   @IsNotEmpty()
   categoryId: number;
 
+  @IsString()
+  @IsNotEmpty()
+  slug: string;
+
+  @IsString()
+  @IsOptional()
+  icon?: string;
+
   @IsEnum(CategoryType)
   @IsNotEmpty()
   categoryType: CategoryType;

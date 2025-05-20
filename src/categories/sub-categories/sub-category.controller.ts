@@ -25,6 +25,8 @@ export class SubCategoryController
       description: true,
       image: true,
       categoryType: true,
+      slug: true,
+      icon: true,
     };
   }
 
@@ -52,6 +54,8 @@ export class SubCategoryController
         image: create.image,
         categoryType: create.categoryType,
         category: req["category"],
+        slug: create.slug,
+        icon: create.icon,
         createdBy: req["createdBy"],
       } as SubCategoryDto,
       this.selectOptions(),
@@ -70,6 +74,8 @@ export class SubCategoryController
         image: update.image,
         categoryType: update.categoryType,
         category: req["category"],
+        slug: update.slug,
+        icon: update.icon,
         createdBy: req["createdBy"],
       },
       this.selectOptions(),

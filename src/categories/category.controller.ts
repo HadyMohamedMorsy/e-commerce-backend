@@ -25,6 +25,8 @@ export class CategoryController
       description: true,
       categoryType: true,
       image: true,
+      slug: true,
+      icon: true,
     };
   }
 
@@ -47,6 +49,8 @@ export class CategoryController
         description: create.description,
         categoryType: create.categoryType,
         image: create.image,
+        slug: create.slug,
+        icon: create.icon,
         createdBy: req["createdBy"],
       },
       this.selectOptions(),
@@ -64,7 +68,9 @@ export class CategoryController
         description: update.description,
         categoryType: update.categoryType,
         image: update.image,
-        createdBy: req["update"],
+        slug: update.slug,
+        icon: update.icon,
+        createdBy: req["updatedBy"],
       },
       this.selectOptions(),
       this.getRelationOptions(),
