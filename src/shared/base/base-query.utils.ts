@@ -69,8 +69,18 @@ export abstract class BaseQueryUtils<T> {
   }
 
   protected applyPagination(queryBuilder: any, page: number, limit: number) {
-    const skip = (page - 1) * limit;
-    return queryBuilder.skip(skip).take(limit);
+    if (page && limit) {
+      const skip = (page - 1) * limit;
+      return queryBuilder.skip(skip).take(limit);
+    }
+    return queryBuilder;
+  }
+
+  protected applyLimit(queryBuilder: any, limit: number) {
+    if (limit) {
+      return queryBuilder.take(limit);
+    }
+    return queryBuilder;
   }
 
   protected applySelect(queryBuilder: SelectQueryBuilder<T>, selectOptions: string[]) {

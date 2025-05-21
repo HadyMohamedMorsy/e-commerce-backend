@@ -88,4 +88,22 @@ export class SkuController extends BaseController<ProductSku, SkuDto, PatchSkuDt
       isOffered: true,
     });
   }
+
+  @Patch("/change-best-seller-status")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public async changeBestSellerStatus(@Body() update: { id: number; isBestSeller: boolean }) {
+    return await this.service.changeStatus(update.id, update.isBestSeller, "isBestSeller", {
+      id: true,
+      isBestSeller: true,
+    });
+  }
+
+  @Patch("/change-new-status")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public async changeNewStatus(@Body() update: { id: number; isNew: boolean }) {
+    return await this.service.changeStatus(update.id, update.isNew, "isNew", {
+      id: true,
+      isNew: true,
+    });
+  }
 }

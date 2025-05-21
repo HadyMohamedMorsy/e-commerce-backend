@@ -98,6 +98,41 @@ export abstract class BaseService<T, CreateDto, UpdateDto>
     return this.repository.findBy({ id: In(ids) } as any);
   }
 
+  protected applyRelations(
+    queryBuilder: any,
+    relations?: {
+      [key: string]: {
+        select?: string[];
+        filters?: {
+          [key: string]: any;
+        };
+      };
+    },
+  ) {
+    if (!relations) return queryBuilder;
+
+    Object.entries(relations).forEach(([relation, options]) => {
+      queryBuilder.leftJoin(`e.${relation}`, relation);
+
+      if (options.filters) {
+        Object.entries(options.filters).forEach(([field, value]) => {
+          if (value !== undefined && value !== null) {
+            queryBuilder.andWhere(`${relation}.${field} = :${relation}_${field}`, {
+              [`${relation}_${field}`]: value,
+            });
+          }
+        });
+      }
+
+      if (options.select && options.select.length > 0) {
+        const selectedFields = options.select.map(field => `${relation}.${field}`);
+        queryBuilder.addSelect(selectedFields);
+      }
+    });
+
+    return queryBuilder;
+  }
+
   public async findFront(query: {
     query?: {
       search?: string;
@@ -106,19 +141,37 @@ export abstract class BaseService<T, CreateDto, UpdateDto>
       limit?: number;
       sort?: { field: string; order: "ASC" | "DESC" };
       select?: string[];
+      relations?: {
+        [key: string]: {
+          select?: string[];
+          filters?: {
+            [key: string]: any;
+          };
+        };
+      };
       isPagination?: string;
     };
   }): Promise<any> {
     const queryParams = query.query;
-    const { search, filters, page = 1, limit = 10, sort, select, isPagination } = queryParams;
-    console.log(queryParams);
+    const {
+      search,
+      filters,
+      page = 1,
+      limit = 10,
+      sort,
+      select,
+      relations,
+      isPagination,
+    } = queryParams;
+
     let queryBuilder = this.repository.createQueryBuilder("e");
+    queryBuilder = this.applyRelations(queryBuilder, relations);
     queryBuilder = this.applySearch(queryBuilder, search);
     queryBuilder = this.applyFilters(queryBuilder, filters);
     queryBuilder = this.applySorting(queryBuilder, sort);
-    queryBuilder = this.applyPagination(queryBuilder, page, limit);
+    queryBuilder = isPagination === "true" && this.applyPagination(queryBuilder, page, limit);
+    queryBuilder = isPagination === "false" && this.applyLimit(queryBuilder, limit);
     queryBuilder = this.applySelect(queryBuilder, select);
-
     const [filteredRecord, totalRecords] = await queryBuilder.getManyAndCount();
 
     return isPagination === "true"

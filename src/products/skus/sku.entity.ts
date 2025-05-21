@@ -25,6 +25,12 @@ export class ProductSku {
   @Column("boolean", { default: false })
   isOffered: boolean;
 
+  @Column("boolean", { default: false })
+  isNew: boolean;
+
+  @Column("boolean", { default: false })
+  isBestSeller: boolean;
+
   @Column({ type: "decimal", precision: 5, scale: 2, nullable: true })
   discount: number | null;
 
