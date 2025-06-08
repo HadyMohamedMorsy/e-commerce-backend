@@ -1,6 +1,8 @@
-import { Body, Controller, Patch, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, Put, Req } from "@nestjs/common";
 import { BaseController } from "src/shared/base/base.controller";
+import { Auth } from "src/shared/decorators/auth.decorator";
 import { Roles } from "src/shared/decorators/roles.decorator";
+import { AuthType } from "src/shared/enum/global-enum";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { Blog } from "./blog.entity";
 import { BlogsService } from "./blog.service";
@@ -86,7 +88,7 @@ export class BlogController
   @Put("/update")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public async update(@Body() update: PatchBlogDto, @Req() req: Request) {
-    return await this.service.update(
+    return await this.service.updateBlog(
       {
         id: update.id,
         order: update.order,
@@ -105,6 +107,7 @@ export class BlogController
         featuredImages: update.featuredImages,
         thumb: update.thumb,
         mediaType: update.mediaType,
+        blog: req["blog"],
         categories: req["categories"],
         createdBy: req["createdBy"],
       },
@@ -129,5 +132,11 @@ export class BlogController
       id: data.id,
       isFeatured: data.isFeatured,
     });
+  }
+
+  @Get("/by-slug/:slug")
+  @Auth(AuthType.None)
+  public async getBlogBySlugWithRelated(@Param("slug") slug: string) {
+    return await this.service.getBlogBySlugWithRelated(slug);
   }
 }

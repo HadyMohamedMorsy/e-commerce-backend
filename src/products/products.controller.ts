@@ -1,41 +1,48 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Put, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
+import { Auth } from "src/shared/decorators/auth.decorator";
 import { Roles } from "src/shared/decorators/roles.decorator";
+import { AuthType } from "src/shared/enum/global-enum";
+import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { ProductDto } from "./dtos/create.dto";
 import { PatchProductDto } from "./dtos/patch.dto";
+import { Product } from "./products.entity";
 import { ProductService } from "./products.service";
 
 @Controller("product")
-export class ProductController {
-  constructor(private readonly service: ProductService) {}
-
-  @Post("/index")
-  @Roles(
-    "CEO",
-    "TECH_SUPPORT",
-    "STORE_MANAGER",
-    "SUPER_ADMIN",
-    "INVENTORY_MANAGER",
-    "CONTENT_MANAGER",
-    "SYSTEM_ADMIN",
-  )
-  @HttpCode(200)
-  public index(@Body() filter: any) {
-    return this.service.findAll(filter);
+export class ProductController
+  extends BaseController<Product, ProductDto, PatchProductDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: ProductService) {
+    super(service);
+  }
+  selectOptions(): Record<string, boolean> {
+    return {
+      id: true,
+      name: true,
+      description: true,
+      summary: true,
+      metaTitle: true,
+      metaDescription: true,
+      cover: true,
+    };
   }
 
-  @Get("/:id")
-  @Roles(
-    "CEO",
-    "TECH_SUPPORT",
-    "STORE_MANAGER",
-    "SUPER_ADMIN",
-    "INVENTORY_MANAGER",
-    "CONTENT_MANAGER",
-    "CEO",
-    "SYSTEM_ADMIN",
-  )
-  public async getById(@Param("id") id: number) {
-    return this.service.findOne(id);
+  getRelationOptions(): Record<string, any> {
+    return {
+      createdBy: {
+        id: true,
+        firstName: true,
+        lastName: true,
+      },
+    };
+  }
+
+  @Get("/by-slug/:slug")
+  @Auth(AuthType.None)
+  async getProductBySlug(@Param("slug") slug: string) {
+    return this.service.getProductBySlug(slug);
   }
 
   @Post("/store")
@@ -45,6 +52,10 @@ export class ProductController {
       name: createDto.name,
       description: createDto.description,
       summary: createDto.summary,
+      slug: createDto.slug,
+      metaTitle: createDto.metaTitle,
+      images: createDto.images,
+      metaDescription: createDto.metaDescription,
       cover: createDto.cover,
       categories: req["categories"],
       createdBy: req["createdBy"],
@@ -60,14 +71,13 @@ export class ProductController {
       description: update.description,
       summary: update.summary,
       cover: update.cover,
+      product: req["product"],
+      slug: update.slug,
+      images: update.images,
+      metaTitle: update.metaTitle,
+      metaDescription: update.metaDescription,
       categories: req["categories"],
       createdBy: req["createdBy"],
     });
-  }
-
-  @Delete("/delete")
-  @Roles("STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "CEO", "SYSTEM_ADMIN")
-  public delete(@Body() id: number) {
-    return this.service.delete(id);
   }
 }

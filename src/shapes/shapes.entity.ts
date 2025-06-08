@@ -1,6 +1,7 @@
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { FacialFeatureType } from "src/shared/enum/global-enum";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/users/user.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("shapes")
 export class Shape extends BaseMemberEntity {
@@ -16,4 +17,7 @@ export class Shape extends BaseMemberEntity {
 
   @Column({ nullable: true })
   image: string;
+
+  @ManyToOne(() => User, user => user.id, { onDelete: "SET NULL" })
+  createdBy: User;
 }

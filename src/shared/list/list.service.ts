@@ -10,6 +10,7 @@ import {
   getFacialFeatureTypeList,
   getFaqList,
   getMediaTypeList,
+  getNameTypeList,
   getRoleList,
   getWeight,
 } from "../utilties/get-flobal-list-from-enum.utils";
@@ -27,6 +28,7 @@ export class ListService {
     couponType: getCouponTypeList(),
     discountType: getDiscountTypeList(),
     facialFeatureType: getFacialFeatureTypeList(),
+    nameTypes: getNameTypeList(),
   };
 
   async getListsBySlug(slug: string) {
@@ -66,6 +68,10 @@ export class ListService {
         return {
           category: await this.categoryService.getCategoriesByType(CategoryType.PRODUCT),
           discountType: this.lists.discountType,
+        };
+      case "product-attributes":
+        return {
+          nameTypes: this.lists.nameTypes,
         };
       default:
         throw new Error(`Slug "${slug}" not supported`);

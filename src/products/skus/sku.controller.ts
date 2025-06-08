@@ -15,8 +15,6 @@ export class SkuController extends BaseController<ProductSku, SkuDto, PatchSkuDt
   public selectOptions(): Record<string, boolean> {
     return {
       id: true,
-      created_at: true,
-      updated_at: true,
       sku: true,
       price: true,
       quantity: true,

@@ -25,6 +25,22 @@ export class ProductDto {
   @IsNotEmpty()
   categoryIds: number[];
 
+  @IsString()
+  @IsNotEmpty()
+  slug?: string;
+
+  @IsString()
+  @IsOptional()
+  metaTitle?: string;
+
+  @IsArray()
+  @IsNotEmpty()
+  images: string[];
+
+  @IsString()
+  @IsOptional()
+  metaDescription?: string;
+
   categories: Category[];
 
   createdBy: User;

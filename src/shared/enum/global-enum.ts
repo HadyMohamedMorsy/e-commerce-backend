@@ -78,6 +78,10 @@ export enum CategoryType {
   BLOG = "blog",
 }
 
+export enum NameType {
+  PAPER = "paper",
+}
+
 export enum ArticleType {
   ARTICLE = "article",
   VIDEO = "video",

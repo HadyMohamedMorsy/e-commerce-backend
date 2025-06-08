@@ -50,7 +50,12 @@ export abstract class BaseQueryUtils<T> {
     return queryBuilder;
   }
 
-  protected applyFilters(queryBuilder: any, filters?: Record<string, any>) {
+  protected applyFilters(
+    queryBuilder: any,
+    filters?: Record<string, any>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    customFilters?: Record<string, any>,
+  ) {
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
@@ -68,17 +73,22 @@ export abstract class BaseQueryUtils<T> {
     return queryBuilder;
   }
 
-  protected applyPagination(queryBuilder: any, page: number, limit: number) {
-    if (page && limit) {
+  protected applyPagination(
+    queryBuilder: SelectQueryBuilder<T>,
+    page: number,
+    limit: number,
+    isPagination: string,
+  ) {
+    if (isPagination === "true" && page && limit) {
       const skip = (page - 1) * limit;
       return queryBuilder.skip(skip).take(limit);
     }
     return queryBuilder;
   }
 
-  protected applyLimit(queryBuilder: any, limit: number) {
-    if (limit) {
-      return queryBuilder.take(limit);
+  protected applyLimit(queryBuilder: SelectQueryBuilder<T>, limit: number, isPagination: string) {
+    if (isPagination === "false" && limit) {
+      return queryBuilder.skip(0).take(limit);
     }
     return queryBuilder;
   }

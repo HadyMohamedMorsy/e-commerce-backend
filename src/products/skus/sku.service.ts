@@ -21,8 +21,8 @@ export class SkuService
     super(repository, apiFeaturesService);
   }
 
-  queryRelation(queryBuilder: SelectQueryBuilder<ProductSku>, filterData: any) {
-    queryBuilder.leftJoinAndSelect("ProductSku.product", "product");
+  override queryRelationIndex(queryBuilder: SelectQueryBuilder<ProductSku>, filterData: any) {
+    queryBuilder.leftJoin("e.product", "product").addSelect(["product.id", "product.name"]);
 
     if (filterData.productId) {
       queryBuilder.andWhere("product.id = :productId", { productId: filterData.productId });

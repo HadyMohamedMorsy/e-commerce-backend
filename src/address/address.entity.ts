@@ -42,4 +42,7 @@ export class Address extends BaseMemberEntity {
 
   @Column({ name: "phone_number" })
   phoneNumber: string;
+
+  @ManyToOne(() => User, user => user.id, { onDelete: "SET NULL" })
+  createdBy: User;
 }

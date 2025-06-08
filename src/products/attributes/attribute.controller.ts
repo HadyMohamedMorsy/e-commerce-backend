@@ -25,7 +25,6 @@ export class AttributeController
       quantity: true,
       images: true,
       image: true,
-      isActive: true,
     };
   }
 
@@ -45,9 +44,9 @@ export class AttributeController
       createDto =>
         ({
           name: createDto.name,
-          value: createDto.value,
           priceChange: createDto.priceChange,
           quantity: createDto.quantity,
+          value: createDto.value,
           images: createDto.images,
           image: createDto.image,
           product: req["product"],
@@ -63,10 +62,10 @@ export class AttributeController
     const attributesToUpdate = updates.map(update => ({
       id: update.id,
       name: update.name,
+      value: update.value,
       priceChange: update.priceChange,
       quantity: update.quantity,
       images: update.images,
-      value: update.value,
       image: update.image,
       product: req["product"],
     }));

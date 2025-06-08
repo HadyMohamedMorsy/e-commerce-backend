@@ -1,9 +1,10 @@
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { DiscountType } from "src/shared/enum/global-enum";
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Product } from "../products.entity";
 
 @Entity()
-export class ProductSku {
+export class ProductSku extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -37,7 +38,7 @@ export class ProductSku {
   @Column({ type: "enum", enum: DiscountType, nullable: true })
   discountType: DiscountType;
 
-  @OneToOne(() => Product, product => product.sku)
+  @OneToOne(() => Product, product => product.sku, { onDelete: "CASCADE" })
   @JoinColumn()
   product: Product;
 }

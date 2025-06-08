@@ -21,8 +21,8 @@ export class AttributeService
     super(repository, apiFeaturesService);
   }
 
-  queryRelation(queryBuilder: SelectQueryBuilder<Attribute>, filterData: any) {
-    queryBuilder.leftJoinAndSelect("Attribute.product", "product");
+  override queryRelationIndex(queryBuilder: SelectQueryBuilder<Attribute>, filterData: any) {
+    queryBuilder.leftJoin("e.product", "product").addSelect(["product.id", "product.name"]);
 
     if (filterData.productId) {
       queryBuilder.andWhere("product.id = :productId", { productId: filterData.productId });

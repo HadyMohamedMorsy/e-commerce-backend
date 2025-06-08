@@ -1,12 +1,17 @@
-import { Injectable, NestMiddleware } from "@nestjs/common";
+import { Injectable, NestMiddleware, NotFoundException } from "@nestjs/common";
 import { NextFunction, Request, Response } from "express";
 import { CategoryService } from "src/categories/category.service";
+import { BlogsService } from "../blog.service";
 
 @Injectable()
 export class BlogCategoryMiddleware implements NestMiddleware {
-  constructor(private readonly categoryService: CategoryService) {}
+  constructor(
+    private readonly categoryService: CategoryService,
+    private readonly blogService: BlogsService,
+  ) {}
   async use(req: Request, res: Response, next: NextFunction) {
-    const { categoryIds } = req.body;
+    const { categoryIds, id } = req.body;
+    const method = req.method;
 
     if (categoryIds && Array.isArray(categoryIds)) {
       try {
@@ -16,6 +21,14 @@ export class BlogCategoryMiddleware implements NestMiddleware {
         console.error("Error fetching categories:", error);
         req["categories"] = [];
       }
+    }
+
+    if (method === "PUT") {
+      const blog = await this.blogService.findOne(id);
+      if (!blog) {
+        throw new NotFoundException(`Product with id ${id} not found`);
+      }
+      req["blog"] = blog;
     }
 
     next();

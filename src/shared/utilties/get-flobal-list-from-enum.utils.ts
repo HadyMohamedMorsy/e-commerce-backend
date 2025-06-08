@@ -6,6 +6,7 @@ import {
   FacialFeatureType,
   FaqList,
   MediaType,
+  NameType,
   PaymentStatus,
   Role,
   Status,
@@ -59,6 +60,10 @@ export function getDiscountTypeList() {
 
 export function getFacialFeatureTypeList() {
   return generateListFromEnum(FacialFeatureType);
+}
+
+export function getNameTypeList() {
+  return generateListFromEnum(NameType);
 }
 
 export function generateListFromEnum<T extends Record<string, any>>(enumObj: T) {

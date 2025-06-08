@@ -3,7 +3,8 @@ import { Blog } from "src/blogs/blog.entity";
 import { Product } from "src/products/products.entity";
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { CategoryType } from "src/shared/enum/global-enum";
-import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/users/user.entity";
+import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { SubCategory } from "./sub-categories/sub-category.entity";
 
 @Entity("categories")
@@ -42,4 +43,7 @@ export class Category extends BaseMemberEntity {
 
   @OneToMany(() => SubCategory, subCategory => subCategory.category)
   subCategories: SubCategory[];
+
+  @ManyToOne(() => User, user => user.id, { onDelete: "SET NULL" })
+  createdBy: User;
 }

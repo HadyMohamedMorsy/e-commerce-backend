@@ -1,6 +1,7 @@
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { CouponType } from "src/shared/enum/global-enum";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/users/user.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("coupons")
 export class Coupon extends BaseMemberEntity {
@@ -42,4 +43,7 @@ export class Coupon extends BaseMemberEntity {
 
   @Column({ name: "is_active", default: true })
   isActive: boolean;
+
+  @ManyToOne(() => User, user => user.id, { onDelete: "SET NULL" })
+  createdBy: User;
 }

@@ -19,4 +19,7 @@ export class Wishlist extends BaseMemberEntity {
 
   @Column({ type: "boolean", default: true })
   isFav: boolean;
+
+  @ManyToOne(() => User, user => user.id, { onDelete: "SET NULL" })
+  createdBy: User;
 }

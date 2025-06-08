@@ -1,4 +1,5 @@
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { User } from "src/users/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Location } from "../locations/location.entity";
 
@@ -19,4 +20,7 @@ export class Taxes extends BaseMemberEntity {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @ManyToOne(() => User, user => user.id, { onDelete: "SET NULL" })
+  createdBy: User;
 }

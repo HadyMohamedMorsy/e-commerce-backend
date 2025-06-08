@@ -1,6 +1,7 @@
 import { Category } from "src/categories/category.entity";
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/users/user.entity";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("blogs")
 export class Blog extends BaseMemberEntity {
@@ -64,4 +65,7 @@ export class Blog extends BaseMemberEntity {
   @ManyToMany(() => Category, category => category.blogs)
   @JoinTable({ name: "blog_categories" })
   categories: Category[];
+
+  @ManyToOne(() => User, user => user.id, { onDelete: "SET NULL" })
+  createdBy: User;
 }

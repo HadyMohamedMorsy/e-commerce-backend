@@ -1,5 +1,6 @@
 import { Location } from "src/locations/location.entity";
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { User } from "src/users/user.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 @Entity("banks")
 export class Bank extends BaseMemberEntity {
@@ -41,4 +42,7 @@ export class Bank extends BaseMemberEntity {
 
   @ManyToOne(() => Location)
   area: Location;
+
+  @ManyToOne(() => User, user => user.id, { onDelete: "SET NULL" })
+  createdBy: User;
 }

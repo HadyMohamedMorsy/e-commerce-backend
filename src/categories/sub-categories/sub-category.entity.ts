@@ -1,6 +1,7 @@
 // src/categories/category.entity.ts
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { CategoryType } from "src/shared/enum/global-enum";
+import { User } from "src/users/user.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Category } from "../category.entity";
 
@@ -40,4 +41,7 @@ export class SubCategory extends BaseMemberEntity {
 
   @Column({ nullable: true })
   image?: string;
+
+  @ManyToOne(() => User, user => user.id, { onDelete: "SET NULL" })
+  createdBy: User;
 }

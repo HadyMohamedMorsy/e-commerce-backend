@@ -1,5 +1,6 @@
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { Weight } from "src/shared/enum/global-enum";
+import { User } from "src/users/user.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Location } from "../locations/location.entity";
 
@@ -20,4 +21,7 @@ export class Shipment extends BaseMemberEntity {
 
   @ManyToOne(() => Location, location => location.shipments)
   location: Location;
+
+  @ManyToOne(() => User, user => user.id, { onDelete: "SET NULL" })
+  createdBy: User;
 }

@@ -8,9 +8,6 @@ import { BaseQueryUtils } from "./base-query.utils";
 interface PaginationResponse<T> {
   data: T[];
   total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
 }
 
 export abstract class BaseService<T, CreateDto, UpdateDto>
@@ -110,7 +107,6 @@ export abstract class BaseService<T, CreateDto, UpdateDto>
     },
   ) {
     if (!relations) return queryBuilder;
-
     Object.entries(relations).forEach(([relation, options]) => {
       queryBuilder.leftJoin(`e.${relation}`, relation);
 
@@ -137,6 +133,7 @@ export abstract class BaseService<T, CreateDto, UpdateDto>
     query?: {
       search?: string;
       filters?: Record<string, any>;
+      customFilters?: Record<string, any>;
       page?: number;
       limit?: number;
       sort?: { field: string; order: "ASC" | "DESC" };
@@ -156,6 +153,7 @@ export abstract class BaseService<T, CreateDto, UpdateDto>
     const {
       search,
       filters,
+      customFilters,
       page = 1,
       limit = 10,
       sort,
@@ -165,32 +163,24 @@ export abstract class BaseService<T, CreateDto, UpdateDto>
     } = queryParams;
 
     let queryBuilder = this.repository.createQueryBuilder("e");
-    queryBuilder = this.applyRelations(queryBuilder, relations);
     queryBuilder = this.applySearch(queryBuilder, search);
-    queryBuilder = this.applyFilters(queryBuilder, filters);
+    queryBuilder = this.applyFilters(queryBuilder, filters, customFilters);
     queryBuilder = this.applySorting(queryBuilder, sort);
-    queryBuilder = isPagination === "true" && this.applyPagination(queryBuilder, page, limit);
-    queryBuilder = isPagination === "false" && this.applyLimit(queryBuilder, limit);
+    queryBuilder = this.applyPagination(queryBuilder, +page, +limit, isPagination);
+    queryBuilder = this.applyLimit(queryBuilder, +limit, isPagination);
     queryBuilder = this.applySelect(queryBuilder, select);
+    queryBuilder = this.applyRelations(queryBuilder, relations);
     const [filteredRecord, totalRecords] = await queryBuilder.getManyAndCount();
 
     return isPagination === "true"
-      ? this.paginationResponse(filteredRecord, totalRecords, page, limit)
+      ? this.paginationResponse(filteredRecord, totalRecords)
       : { data: filteredRecord };
   }
 
-  private paginationResponse(
-    data: T[],
-    total: number,
-    page: number,
-    limit: number,
-  ): PaginationResponse<T> {
+  private paginationResponse(data: T[], total: number): PaginationResponse<T> {
     return {
       data,
       total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
     };
   }
 }
