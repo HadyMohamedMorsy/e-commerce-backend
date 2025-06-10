@@ -3,18 +3,16 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
-  Inject,
   Post,
   Req,
   UnauthorizedException,
 } from "@nestjs/common";
 
-import { CACHE_MANAGER } from "@nestjs/cache-manager";
-import { Cache } from "cache-manager";
 import { Auth } from "src/shared/decorators/auth.decorator";
 import { AuthType } from "src/shared/enum/global-enum";
 import { RefreshTokenDto } from "./dtos/refresh-token.dto";
 import { SignInDto } from "./dtos/signin.dto";
+import { VerifyTokenDto } from "./dtos/verify-token.dto";
 import { AuthService } from "./providers/auth.service";
 
 @Controller("auth")
@@ -24,8 +22,6 @@ export class AuthController {
      * Injecting Auth Service
      */
     private readonly authService: AuthService,
-
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   @Post("login")
@@ -42,11 +38,17 @@ export class AuthController {
     return this.authService.refreshToken(refreshTokenDto);
   }
 
+  @Post("verify")
+  @HttpCode(HttpStatus.OK)
+  @Auth(AuthType.None)
+  async verifyToken(@Body() verifyTokenDto: VerifyTokenDto) {
+    return this.authService.verifyToken(verifyTokenDto.token);
+  }
+
   @Post("logout")
   async logout(@Req() req: any) {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) throw new UnauthorizedException("Invalid Token");
-    await this.cacheManager.reset();
 
     return {
       data: true,

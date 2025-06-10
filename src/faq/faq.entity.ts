@@ -1,19 +1,11 @@
 import { Product } from "src/products/products.entity";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { FaqList } from "src/shared/enum/global-enum";
 import { User } from "src/users/user.entity";
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("faqs")
-export class Faq {
+export class Faq extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id?: number | null;
 
@@ -31,25 +23,10 @@ export class Faq {
   @Column({ type: "text", nullable: true })
   answer: string | null;
 
-  @ManyToOne(() => User)
-  createdBy: User;
-
-  @OneToOne(() => Product, { nullable: true })
+  @OneToOne(() => Product, { nullable: true, onDelete: "CASCADE" })
   @JoinColumn()
   product: Product;
 
-  @CreateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
-    name: "created_at",
-  })
-  createdAt: Date;
-
-  @UpdateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
-    name: "updated_at",
-  })
-  updatedAt: Date;
+  @ManyToOne(() => User, { nullable: true, onDelete: "SET NULL" })
+  createdBy: User;
 }

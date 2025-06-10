@@ -12,7 +12,7 @@ export abstract class BaseController<T, CreateDto, UpdateDto> {
   @HttpCode(200)
   @Auth(AuthType.None)
   public async findAll(@Query() query: any) {
-    return this.service.findFront(query);
+    return await this.service.findFront(query);
   }
 
   @Post("/index")

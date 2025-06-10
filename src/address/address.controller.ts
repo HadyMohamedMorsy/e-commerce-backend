@@ -74,6 +74,7 @@ export class AddressController
     "SYSTEM_ADMIN",
   )
   public create(@Body() create: AddressDto, @Req() req: Request) {
+    console.log(create);
     return this.service.create(
       {
         title: create.title,

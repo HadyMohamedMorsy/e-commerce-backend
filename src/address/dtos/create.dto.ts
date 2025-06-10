@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { Location } from "src/locations/location.entity";
 import { User } from "src/users/user.entity";
@@ -17,18 +18,22 @@ export class AddressDto {
 
   @IsNotEmpty()
   @IsNumber()
+  @Type(() => Number)
   countryId: number;
 
   @IsNotEmpty()
   @IsNumber()
+  @Type(() => Number)
   regionId: number;
 
   @IsNotEmpty()
   @IsNumber()
+  @Type(() => Number)
   cityId: number;
 
   @IsNotEmpty()
   @IsNumber()
+  @Type(() => Number)
   areaId: number;
 
   country: Location;

@@ -32,10 +32,10 @@ export class Category extends BaseMemberEntity {
   @Column("varchar", { nullable: true })
   description: string;
 
-  @ManyToMany(() => Product, product => product.categories)
+  @ManyToMany(() => Product, product => product.categories, { onDelete: "CASCADE" })
   products: Product[];
 
-  @ManyToMany(() => Blog, blog => blog.categories)
+  @ManyToMany(() => Blog, blog => blog.categories, { onDelete: "CASCADE" })
   blogs: Blog[];
 
   @Column({ nullable: true })

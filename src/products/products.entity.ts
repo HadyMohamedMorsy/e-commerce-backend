@@ -23,7 +23,7 @@ export class Product extends BaseMemberEntity {
   @Column("varchar")
   name: string;
 
-  @Column("varchar", { unique: true })
+  @Column("varchar", { unique: true, nullable: true })
   slug: string;
 
   @Column("varchar", { nullable: true })
@@ -47,7 +47,7 @@ export class Product extends BaseMemberEntity {
   @Column({ type: "decimal", precision: 5, scale: 2, nullable: true })
   rating: number;
 
-  @ManyToMany(() => Category, category => category.products)
+  @ManyToMany(() => Category, category => category.products, { onDelete: "CASCADE" })
   @JoinTable({ name: "product_categories" })
   categories: Category[];
 
