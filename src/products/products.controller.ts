@@ -23,6 +23,7 @@ export class ProductController
       name: true,
       description: true,
       summary: true,
+      images: true,
       metaTitle: true,
       metaDescription: true,
       cover: true,
