@@ -27,6 +27,7 @@ import { OrderModule } from "./orders/order.module";
 import { AttributeModule } from "./products/attributes/attribute.module";
 import { ProductModule } from "./products/products.module";
 import { SkuModule } from "./products/skus/sku.module";
+import { SpecificationModule } from "./products/specifications/specification.module";
 import { ReviewModule } from "./reviews/review.module";
 import { ShapesModule } from "./shapes/shapes.module";
 import appConfig from "./shared/config/app.config";
@@ -56,6 +57,7 @@ const ENV = process.env.NODE_ENV;
     LocationModule,
     ShipmentModule,
     BlogModule,
+    SpecificationModule,
     OrderModule,
     ContactModule,
     AddressModule,

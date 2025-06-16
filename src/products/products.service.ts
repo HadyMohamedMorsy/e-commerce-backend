@@ -48,14 +48,19 @@ export class ProductService
   async getProductBySlug(slug: string) {
     const product = await this.repository.findOne({
       where: { slug },
-      relations: ["categories", "sku", "attributes", "createdBy"],
+      relations: [
+        "categories",
+        "sku",
+        "reviews",
+        "reviews.createdBy",
+        "specifications",
+        "attributes",
+        "createdBy",
+      ],
     });
 
-    if (!product) {
-      return null;
-    }
+    if (!product) return null;
 
-    // Get related products based on categories
     const categoryIds = product.categories.map(category => category.id);
     const relatedProducts = await this.repository
       .createQueryBuilder("product")

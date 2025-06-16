@@ -1,5 +1,6 @@
 // src/products/entities/product.entity.ts
 import { Category } from "src/categories/category.entity";
+import { Review } from "src/reviews/review.entity";
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { User } from "src/users/user.entity";
 import {
@@ -14,6 +15,7 @@ import {
 } from "typeorm";
 import { Attribute } from "./attributes/attribute.entity";
 import { ProductSku } from "./skus/sku.entity";
+import { Specification } from "./specifications/specification.entity";
 
 @Entity("products")
 export class Product extends BaseMemberEntity {
@@ -44,6 +46,9 @@ export class Product extends BaseMemberEntity {
   @Column({ type: "json", default: null })
   images: string[];
 
+  @OneToMany(() => Specification, specification => specification.product)
+  specifications: Specification[];
+
   @Column({ type: "decimal", precision: 5, scale: 2, nullable: true })
   rating: number;
 
@@ -53,6 +58,9 @@ export class Product extends BaseMemberEntity {
 
   @OneToOne(() => ProductSku, sku => sku.product)
   sku: ProductSku;
+
+  @OneToMany(() => Review, review => review.product)
+  reviews: Review[];
 
   @OneToMany(() => Attribute, attribute => attribute.product)
   attributes: Attribute[];

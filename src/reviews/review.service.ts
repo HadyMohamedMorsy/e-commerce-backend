@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { BaseService } from "src/shared/base/base";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
-import { Repository } from "typeorm";
+import { Repository, SelectQueryBuilder } from "typeorm";
 import { ReviewDto } from "./dtos/create.dto";
 import { PatchReviewDto } from "./dtos/patch.dto";
 import { Review } from "./review.entity";
@@ -19,5 +19,10 @@ export class ReviewService
     repository: Repository<Review>,
   ) {
     super(repository, apiFeaturesService);
+  }
+
+  override queryRelationIndex(queryBuilder: SelectQueryBuilder<Review>) {
+    queryBuilder.leftJoin("e.createdBy", "ec").addSelect(["ec.id", "ec.firstName", "ec.lastName"]);
+    queryBuilder.leftJoin("e.product", "ep").addSelect(["ep.id", "ep.name"]);
   }
 }

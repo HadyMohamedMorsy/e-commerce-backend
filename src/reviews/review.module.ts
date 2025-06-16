@@ -15,6 +15,6 @@ import { ReviewService } from "./review.service";
 })
 export class ReviewModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(ProductMiddleware).forRoutes("reviews/store", "reviews/update");
+    consumer.apply(ProductMiddleware).forRoutes("review/store", "review/update");
   }
 }

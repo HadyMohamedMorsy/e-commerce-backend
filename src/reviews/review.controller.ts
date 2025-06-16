@@ -19,12 +19,9 @@ export class ReviewController
   public selectOptions(): Record<string, boolean> {
     return {
       id: true,
-      created_at: true,
-      updated_at: true,
-      title: true,
       comment: true,
       rate: true,
-      likesCount: true,
+      isApproved: true,
     };
   }
 
@@ -47,10 +44,8 @@ export class ReviewController
   public create(@Body() createDto: ReviewDto, @Req() req: Request) {
     return this.service.create(
       {
-        title: createDto.title,
         comment: createDto.comment,
         rate: createDto.rate,
-        likesCount: createDto.likesCount,
         isApproved: createDto.isApproved,
         createdBy: req["createdBy"],
         product: req["product"],
@@ -66,10 +61,8 @@ export class ReviewController
     return await this.service.update(
       {
         id: update.id,
-        title: update.title,
         comment: update.comment,
         rate: update.rate,
-        likesCount: update.likesCount,
         isApproved: update.isApproved,
         createdBy: req["createdBy"],
         product: req["product"],
@@ -77,15 +70,6 @@ export class ReviewController
       this.selectOptions(),
       this.getRelationOptions(),
     );
-  }
-
-  @Put("/change-like-status")
-  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  public changeLikeStatus(@Body() update: { id: number; isLiked: boolean }) {
-    return this.service.changeStatus(update.id, update.isLiked, "isLiked", {
-      id: true,
-      isLiked: true,
-    });
   }
 
   @Put("/change-approve-status")

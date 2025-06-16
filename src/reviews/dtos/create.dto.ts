@@ -1,21 +1,9 @@
-import {
-  IsBoolean,
-  IsInt,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  Max,
-  Min,
-} from "class-validator";
+import { Type } from "class-transformer";
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min } from "class-validator";
 import { Product } from "src/products/products.entity";
 import { User } from "src/users/user.entity";
 
 export class ReviewDto {
-  @IsNotEmpty()
-  @IsString()
-  title: string;
-
   @IsOptional()
   @IsBoolean()
   isApproved: boolean = false;
@@ -26,15 +14,11 @@ export class ReviewDto {
 
   @IsNotEmpty()
   @IsNumber()
+  @Type(() => Number)
   @Min(0)
   @Max(5)
   rate: number;
 
-  @IsOptional()
-  @IsInt()
-  likesCount?: number;
-
   createdBy: User;
-
   product: Product;
 }
