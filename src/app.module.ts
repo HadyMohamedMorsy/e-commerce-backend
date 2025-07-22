@@ -21,6 +21,7 @@ import { CategoryModule } from "./categories/category.module";
 import { SubCategoryModule } from "./categories/sub-categories/sub-category.module";
 import { ContactModule } from "./contact/contact.module";
 import { CouponModule } from "./coupons/coupon.module";
+import { DashboardModule } from "./dashboard/dashboard.module";
 import { FaqModule } from "./faq/faq.module";
 import { LocationModule } from "./locations/location.module";
 import { OrderModule } from "./orders/order.module";
@@ -32,6 +33,7 @@ import { ReviewModule } from "./reviews/review.module";
 import { ShapesModule } from "./shapes/shapes.module";
 import appConfig from "./shared/config/app.config";
 import databaseConfig from "./shared/config/database.config";
+import emailConfig from "./shared/config/email.config";
 import { FilterDateModule } from "./shared/filters/filter-date.module";
 import { APIFeaturesService } from "./shared/filters/filter.service";
 import { UploadsModule } from "./shared/global-api/uploads/uploads.module";
@@ -40,6 +42,7 @@ import { ListModule } from "./shared/list/list.module";
 import { LanMiddleware } from "./shared/middleware/lang.middleware";
 import { LocationResolutionMiddleware } from "./shared/middleware/location-selected.middleware";
 import { UserMiddleware } from "./shared/middleware/user.middleware";
+import { EmailModule } from "./shared/services/email.module";
 import enviromentValidation from "./shared/validations/env.validation";
 import { ShipmentModule } from "./shipments/shipment.module";
 import { TaxModule } from "./tax/tax.module";
@@ -49,6 +52,7 @@ import { WishlistsModule } from "./wishlist/wishlists.module";
 const ENV = process.env.NODE_ENV;
 @Module({
   imports: [
+    EmailModule,
     UploadsModule,
     FilterDateModule,
     UserModule,
@@ -57,6 +61,7 @@ const ENV = process.env.NODE_ENV;
     LocationModule,
     ShipmentModule,
     BlogModule,
+    DashboardModule,
     SpecificationModule,
     OrderModule,
     ContactModule,
@@ -86,7 +91,7 @@ const ENV = process.env.NODE_ENV;
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: !ENV ? ".env" : `.env.${ENV}`,
-      load: [appConfig, databaseConfig],
+      load: [appConfig, databaseConfig, emailConfig],
       validationSchema: enviromentValidation,
     }),
     ServeStaticModule.forRoot({
@@ -134,7 +139,10 @@ export class AppModule {
     consumer.apply(LanMiddleware).forRoutes("*");
     consumer
       .apply(UserMiddleware)
-      .exclude({ path: "auth/login", method: RequestMethod.ALL })
+      .exclude(
+        { path: "auth/login", method: RequestMethod.ALL },
+        { path: "contact/store", method: RequestMethod.ALL },
+      )
       .forRoutes(
         { path: "*/store", method: RequestMethod.POST },
         { path: "*/update", method: RequestMethod.POST },

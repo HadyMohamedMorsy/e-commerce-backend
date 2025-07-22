@@ -1,6 +1,8 @@
-import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Get, Post, Put, Req } from "@nestjs/common";
 import { BaseController } from "src/shared/base/base.controller";
+import { Auth } from "src/shared/decorators/auth.decorator";
 import { Roles } from "src/shared/decorators/roles.decorator";
+import { AuthType, CategoryType } from "src/shared/enum/global-enum";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { Category } from "./category.entity";
 import { CategoryService } from "./category.service";
@@ -75,5 +77,37 @@ export class CategoryController
       this.selectOptions(),
       this.getRelationOptions(),
     );
+  }
+
+  @Get("/product")
+  @Auth(AuthType.None)
+  public async getProductCategories() {
+    return await this.service.findFront({
+      query: {
+        filters: { categoryType: CategoryType.PRODUCT },
+        relations: {
+          subCategories: {
+            select: ["id", "name", "slug", "icon", "image", "description"],
+          },
+        },
+        isPagination: "false",
+      },
+    });
+  }
+
+  @Get("/blog")
+  @Auth(AuthType.None)
+  public async getBlogCategories() {
+    return await this.service.findFront({
+      query: {
+        filters: { categoryType: CategoryType.BLOG },
+        relations: {
+          subCategories: {
+            select: ["id", "name", "slug", "icon", "image", "description"],
+          },
+        },
+        isPagination: "false",
+      },
+    });
   }
 }

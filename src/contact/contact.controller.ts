@@ -1,7 +1,9 @@
 import { Body, Controller, Post, Put } from "@nestjs/common";
 import { BaseController } from "src/shared/base/base.controller";
-import { Roles } from "src/shared/decorators/roles.decorator";
+import { Auth } from "src/shared/decorators/auth.decorator";
+import { AuthType } from "src/shared/enum/global-enum";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
+import { EmailService } from "src/shared/services/email.service";
 import { Contact } from "./contact.entity";
 import { ContactsService } from "./contact.service";
 import { ContactDto } from "./dtos/create.dto";
@@ -12,15 +14,16 @@ export class ContactController
   extends BaseController<Contact, ContactDto, PatchContactDto>
   implements SelectOptions, RelationOptions
 {
-  constructor(protected readonly service: ContactsService) {
+  constructor(
+    protected readonly service: ContactsService,
+    private readonly emailService: EmailService,
+  ) {
     super(service);
   }
 
   public selectOptions(): Record<string, boolean> {
     return {
       id: true,
-      created_at: true,
-      updated_at: true,
       name: true,
       email: true,
       phone: true,
@@ -40,17 +43,9 @@ export class ContactController
   }
 
   @Post("/store")
-  @Roles(
-    "CEO",
-    "CUSTOMER",
-    "TECH_SUPPORT",
-    "STORE_MANAGER",
-    "SUPER_ADMIN",
-    "CONTENT_MANAGER",
-    "SYSTEM_ADMIN",
-  )
-  public create(@Body() create: ContactDto) {
-    return this.service.create(
+  @Auth(AuthType.None)
+  public async create(@Body() create: ContactDto) {
+    const contact = await this.service.create(
       {
         name: create.name,
         email: create.email,
@@ -59,20 +54,20 @@ export class ContactController
         message: create.message,
       },
       this.selectOptions(),
-      this.getRelationOptions(),
     );
+
+    // Send thank you email
+    try {
+      await this.emailService.sendContactThankYou(create.email, create.name, create.subject);
+    } catch (error) {
+      console.error("Failed to send thank you email:", error);
+    }
+
+    return contact;
   }
 
   @Put("/update")
-  @Roles(
-    "CEO",
-    "CUSTOMER",
-    "TECH_SUPPORT",
-    "STORE_MANAGER",
-    "SUPER_ADMIN",
-    "CONTENT_MANAGER",
-    "SYSTEM_ADMIN",
-  )
+  @Auth(AuthType.None)
   public async update(@Body() update: PatchContactDto) {
     return await this.service.update(
       {
@@ -84,7 +79,6 @@ export class ContactController
         message: update.message,
       },
       this.selectOptions(),
-      this.getRelationOptions(),
     );
   }
 }

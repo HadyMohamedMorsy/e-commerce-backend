@@ -7,7 +7,8 @@ import { BaseQueryUtils } from "./base-query.utils";
 
 interface PaginationResponse<T> {
   data: T[];
-  total: number;
+  recordsFiltered: number;
+  totalRecords: number;
 }
 
 export abstract class BaseService<T, CreateDto, UpdateDto>
@@ -150,29 +151,27 @@ export abstract class BaseService<T, CreateDto, UpdateDto>
     };
   }): Promise<any> {
     const queryParams = query.query;
-    const {
-      search,
-      filters,
-      customFilters,
-      page = 1,
-      limit = 10,
-      sort,
-      select,
-      relations,
-      isPagination,
-    } = queryParams;
 
     let queryBuilder = this.repository.createQueryBuilder("e");
-    queryBuilder = this.applySearch(queryBuilder, search);
-    queryBuilder = this.applyFilters(queryBuilder, filters, customFilters);
-    queryBuilder = this.applySorting(queryBuilder, sort);
-    queryBuilder = this.applyPagination(queryBuilder, +page, +limit, isPagination);
-    queryBuilder = this.applyLimit(queryBuilder, +limit, isPagination);
-    queryBuilder = this.applySelect(queryBuilder, select);
-    queryBuilder = this.applyRelations(queryBuilder, relations);
+    queryBuilder = this.applySearch(queryBuilder, queryParams?.search || "");
+    queryBuilder = this.applyFilters(
+      queryBuilder,
+      queryParams?.filters,
+      queryParams?.customFilters,
+    );
+    queryBuilder = this.applySorting(queryBuilder, queryParams?.sort);
+    queryBuilder = this.applyPagination(
+      queryBuilder,
+      +queryParams?.page,
+      +queryParams?.limit,
+      queryParams?.isPagination,
+    );
+    queryBuilder = this.applyLimit(queryBuilder, +queryParams?.limit, queryParams?.isPagination);
+    queryBuilder = this.applySelect(queryBuilder, queryParams?.select);
+    queryBuilder = this.applyRelations(queryBuilder, queryParams?.relations);
     const [filteredRecord, totalRecords] = await queryBuilder.getManyAndCount();
 
-    return isPagination === "true"
+    return queryParams?.isPagination === "true"
       ? this.paginationResponse(filteredRecord, totalRecords)
       : { data: filteredRecord };
   }
@@ -180,7 +179,8 @@ export abstract class BaseService<T, CreateDto, UpdateDto>
   private paginationResponse(data: T[], total: number): PaginationResponse<T> {
     return {
       data,
-      total,
+      recordsFiltered: data.length,
+      totalRecords: +total,
     };
   }
 }

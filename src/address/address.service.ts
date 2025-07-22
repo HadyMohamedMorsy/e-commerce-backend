@@ -20,4 +20,86 @@ export class AddressesService
   ) {
     super(repository, apiFeaturesService);
   }
+
+  async setDefaultAddress(addressId: number, userId: number): Promise<Address> {
+    const userAddresses = await this.repository.find({
+      where: { user: { id: userId } },
+    });
+
+    for (const address of userAddresses) {
+      await this.update(
+        { id: address.id, isDefault: false },
+        {
+          id: true,
+          title: true,
+          addressLine1: true,
+          addressLine2: true,
+          postalCode: true,
+          landmark: true,
+          isDefault: true,
+          phoneNumber: true,
+        },
+        {
+          createdBy: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+          country: {
+            id: true,
+            name: true,
+          },
+          region: {
+            id: true,
+            name: true,
+          },
+          city: {
+            id: true,
+            name: true,
+          },
+          area: {
+            id: true,
+            name: true,
+          },
+        },
+      );
+    }
+
+    return this.update(
+      { id: addressId, isDefault: true },
+      {
+        id: true,
+        title: true,
+        addressLine1: true,
+        addressLine2: true,
+        postalCode: true,
+        landmark: true,
+        isDefault: true,
+        phoneNumber: true,
+      },
+      {
+        createdBy: {
+          id: true,
+          firstName: true,
+          lastName: true,
+        },
+        country: {
+          id: true,
+          name: true,
+        },
+        region: {
+          id: true,
+          name: true,
+        },
+        city: {
+          id: true,
+          name: true,
+        },
+        area: {
+          id: true,
+          name: true,
+        },
+      },
+    );
+  }
 }

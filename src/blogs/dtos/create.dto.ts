@@ -1,7 +1,22 @@
 import { Type } from "class-transformer";
-import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import {
+  IsArray,
+  IsBoolean,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+  Min,
+} from "class-validator";
 import { Category } from "src/categories/category.entity";
 import { User } from "src/users/user.entity";
+
+export enum BlogSortOrder {
+  ASC = "asc",
+  DESC = "desc",
+}
 
 export class BlogDto {
   @IsOptional()
@@ -78,7 +93,60 @@ export class BlogDto {
   @IsString()
   video?: string;
 
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  views?: number;
+
   categories: Category[];
 
   createdBy: User;
+}
+
+export class BlogFilterDto {
+  @IsString()
+  @IsOptional()
+  categorySlug?: string;
+
+  @IsString()
+  @IsOptional()
+  postType?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  @Type(() => Boolean)
+  isFeatured?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  @Type(() => Boolean)
+  isPublished?: boolean;
+
+  @IsString()
+  @IsOptional()
+  mediaType?: string;
+
+  @IsString()
+  @IsOptional()
+  search?: string;
+
+  @IsNumber()
+  @IsOptional()
+  @IsPositive()
+  @Type(() => Number)
+  length?: number;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  @Type(() => Number)
+  start?: number;
+
+  @IsEnum(BlogSortOrder)
+  @IsOptional()
+  sort?: BlogSortOrder;
+
+  @IsString()
+  @IsOptional()
+  sortBy?: string;
 }

@@ -14,9 +14,9 @@ export class Contact extends BaseMemberEntity {
   email: string;
 
   @Column({ nullable: true })
-  phone?: string;
+  phone?: number;
 
-  @Column()
+  @Column({ nullable: true })
   subject: string;
 
   @Column({ type: "text" })

@@ -8,21 +8,30 @@ export class ProductMiddleware implements NestMiddleware {
 
   async use(req: Request, res: Response, next: NextFunction) {
     if (req.body.productId) {
-      try {
-        const product = await this.productService.findOne(req.body.productId);
-
-        if (!product) {
-          throw new NotFoundException(`Product with ID ${req.body.productId} not found`);
-        }
-
-        req["product"] = product;
-      } catch (error) {
-        if (error instanceof NotFoundException) {
-          throw error;
-        }
-        throw new Error(`Error validating product: ${error.message}`);
-      }
+      await this.validateAndSetProduct(req, "id", req.body.productId);
+    } else if (req.body.slug) {
+      await this.validateAndSetProduct(req, "slug", req.body.slug);
     }
     next();
+  }
+
+  private async validateAndSetProduct(req: Request, type: "id" | "slug", value: string | number) {
+    try {
+      const product =
+        type === "id"
+          ? await this.productService.findOne(value as number)
+          : await this.productService.findProductBySlug(value as string);
+
+      if (!product) {
+        throw new NotFoundException(`Product with ${type} ${value} not found`);
+      }
+
+      req["product"] = product;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new Error(`Error validating product: ${error.message}`);
+    }
   }
 }

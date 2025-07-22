@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, Param, Patch, Post, Put, Req } from "@nestjs/common";
 import { BaseController } from "src/shared/base/base.controller";
 import { Auth } from "src/shared/decorators/auth.decorator";
 import { Roles } from "src/shared/decorators/roles.decorator";
@@ -6,7 +6,7 @@ import { AuthType } from "src/shared/enum/global-enum";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { Blog } from "./blog.entity";
 import { BlogsService } from "./blog.service";
-import { BlogDto } from "./dtos/create.dto";
+import { BlogDto, BlogFilterDto } from "./dtos/create.dto";
 import { PatchBlogDto } from "./dtos/patch.dto";
 
 @Controller("blog")
@@ -137,9 +137,23 @@ export class BlogController
     });
   }
 
+  @Post("/filter")
+  @HttpCode(200)
+  @Auth(AuthType.None)
+  async filterBlogs(@Body() filterDto: BlogFilterDto) {
+    return this.service.filterBlogs(filterDto);
+  }
+
   @Get("/by-slug/:slug")
   @Auth(AuthType.None)
   public async getBlogBySlugWithRelated(@Param("slug") slug: string) {
     return await this.service.getBlogBySlugWithRelated(slug);
+  }
+
+  @Get("/increment-views/:slug")
+  @HttpCode(200)
+  @Auth(AuthType.None)
+  public async incrementViews(@Param("slug") slug: string) {
+    return await this.service.incrementViews(slug);
   }
 }

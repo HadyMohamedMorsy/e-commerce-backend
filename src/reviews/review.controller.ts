@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Patch, Post, Put, Req } from "@nestjs/common";
 import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
@@ -72,7 +72,7 @@ export class ReviewController
     );
   }
 
-  @Put("/change-approve-status")
+  @Patch("/change-approve-status")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public changeApproveStatus(@Body() update: { id: number; isApproved: boolean }) {
     return this.service.changeStatus(update.id, update.isApproved, "isApproved", {

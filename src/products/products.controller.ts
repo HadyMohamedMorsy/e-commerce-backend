@@ -1,10 +1,10 @@
-import { Body, Controller, Get, Param, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, Param, Post, Put, Req } from "@nestjs/common";
 import { BaseController } from "src/shared/base/base.controller";
 import { Auth } from "src/shared/decorators/auth.decorator";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { AuthType } from "src/shared/enum/global-enum";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
-import { ProductDto } from "./dtos/create.dto";
+import { ProductDto, ProductFilterDto } from "./dtos/create.dto";
 import { PatchProductDto } from "./dtos/patch.dto";
 import { Product } from "./products.entity";
 import { ProductService } from "./products.service";
@@ -17,6 +17,7 @@ export class ProductController
   constructor(protected readonly service: ProductService) {
     super(service);
   }
+
   selectOptions(): Record<string, boolean> {
     return {
       id: true,
@@ -27,6 +28,7 @@ export class ProductController
       metaTitle: true,
       metaDescription: true,
       cover: true,
+      slug: true,
     };
   }
 
@@ -44,6 +46,13 @@ export class ProductController
   @Auth(AuthType.None)
   async getProductBySlug(@Param("slug") slug: string) {
     return this.service.getProductBySlug(slug);
+  }
+
+  @Post("/filter")
+  @HttpCode(200)
+  @Auth(AuthType.None)
+  async filterProducts(@Body() filterDto: ProductFilterDto) {
+    return this.service.filterProducts(filterDto);
   }
 
   @Post("/store")

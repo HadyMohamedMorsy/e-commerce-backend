@@ -63,6 +63,22 @@ export class AddressController
     });
   }
 
+  @Patch("/set-default-address")
+  @Roles(
+    "CEO",
+    "CUSTOMER",
+    "TECH_SUPPORT",
+    "STORE_MANAGER",
+    "SUPER_ADMIN",
+    "CONTENT_MANAGER",
+    "SYSTEM_ADMIN",
+  )
+  public async setDefaultAddress(@Body() data: { addressId: number }, @Req() req: Request) {
+    const userId = req["createdBy"]?.id;
+    if (!userId) throw new Error("User not found in request");
+    return await this.service.setDefaultAddress(data.addressId, userId);
+  }
+
   @Post("/store")
   @Roles(
     "CEO",
@@ -73,26 +89,27 @@ export class AddressController
     "CONTENT_MANAGER",
     "SYSTEM_ADMIN",
   )
-  public create(@Body() create: AddressDto, @Req() req: Request) {
-    console.log(create);
-    return this.service.create(
+  public async create(@Body() create: AddressDto, @Req() req: Request) {
+    const createdAddress = await this.service.create(
       {
-        title: create.title,
-        addressLine1: create.addressLine1,
-        addressLine2: create.addressLine2,
+        ...create,
         country: req["country"],
         region: req["region"],
         city: req["city"],
         area: req["area"],
-        postalCode: create.postalCode,
-        landmark: create.landmark,
-        phoneNumber: create.phoneNumber,
         createdBy: req["createdBy"],
         user: req["createdBy"],
       } as AddressDto,
       this.selectOptions(),
       this.getRelationOptions(),
     );
+
+    // If the new address should be default, set it as default
+    if (create.isDefault) {
+      return await this.service.setDefaultAddress(createdAddress.id, req["createdBy"].id);
+    }
+
+    return createdAddress;
   }
 
   @Put("/update")

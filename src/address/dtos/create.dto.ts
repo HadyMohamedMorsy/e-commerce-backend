@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { Location } from "src/locations/location.entity";
 import { User } from "src/users/user.entity";
 
@@ -55,6 +55,11 @@ export class AddressDto {
   @IsNotEmpty()
   @IsString()
   phoneNumber: string;
+
+  @IsOptional()
+  @IsBoolean()
+  @Type(() => Boolean)
+  isDefault?: boolean;
 
   createdBy: User;
 

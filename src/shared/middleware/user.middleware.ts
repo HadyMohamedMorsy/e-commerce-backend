@@ -8,7 +8,6 @@ export class UserMiddleware implements NestMiddleware {
 
   async use(req: Request, res: Response, next: NextFunction) {
     const userId = req.headers["user-id"];
-
     if (!userId) {
       throw new BadRequestException("Missing user-id in headers");
     }
