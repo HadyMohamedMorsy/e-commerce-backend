@@ -14,6 +14,8 @@ import { UserService } from "./user.service";
 })
 export class UserModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(PasswordMiddleware).forRoutes("user/store", "user/update");
+    consumer
+      .apply(PasswordMiddleware)
+      .forRoutes("user/store", "user/update", "user/update-password");
   }
 }

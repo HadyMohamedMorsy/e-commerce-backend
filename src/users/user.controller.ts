@@ -4,6 +4,7 @@ import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { UserDto } from "./dtos/create.dto";
 import { PatchUserDto } from "./dtos/patch.dto";
+import { UpdatePasswordDto } from "./dtos/update-password.dto";
 import { User } from "./user.entity";
 import { UserService } from "./user.service";
 
@@ -90,5 +91,11 @@ export class UserController
       id: true,
       isActive: true,
     });
+  }
+
+  @Put("/update-password")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public async updatePassword(@Body() updatePasswordDto: UpdatePasswordDto, @Req() req: Request) {
+    return await this.service.updatePassword(updatePasswordDto.id, req["password"]);
   }
 }

@@ -51,7 +51,6 @@ export class UserDto {
   role?: Role;
 
   @IsString()
-  @MaxLength(11)
   phoneNumber: string;
 
   @IsString()

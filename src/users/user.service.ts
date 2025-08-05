@@ -37,4 +37,14 @@ export class UserService
       ],
     });
   }
+
+  public async updatePassword(id: number, hashedPassword: string) {
+    const user = await this.repository.findOne({ where: { id } });
+    if (!user) {
+      throw new UnauthorizedException(`User with id ${id} not found`);
+    }
+
+    user.password = hashedPassword;
+    return await this.repository.save(user);
+  }
 }
