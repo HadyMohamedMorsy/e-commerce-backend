@@ -23,6 +23,7 @@ import { ContactModule } from "./contact/contact.module";
 import { CouponModule } from "./coupons/coupon.module";
 import { DashboardModule } from "./dashboard/dashboard.module";
 import { FaqModule } from "./faq/faq.module";
+import { GeneralSettingsModule } from "./general-settings/settings.module";
 import { LocationModule } from "./locations/location.module";
 import { OrderModule } from "./orders/order.module";
 import { AttributeModule } from "./products/attributes/attribute.module";
@@ -43,6 +44,7 @@ import { LanMiddleware } from "./shared/middleware/lang.middleware";
 import { LocationResolutionMiddleware } from "./shared/middleware/location-selected.middleware";
 import { UserMiddleware } from "./shared/middleware/user.middleware";
 import { EmailModule } from "./shared/services/email.module";
+import { SharedModule } from "./shared/shared.module";
 import enviromentValidation from "./shared/validations/env.validation";
 import { ShipmentModule } from "./shipments/shipment.module";
 import { TaxModule } from "./tax/tax.module";
@@ -52,6 +54,7 @@ import { WishlistsModule } from "./wishlist/wishlists.module";
 const ENV = process.env.NODE_ENV;
 @Module({
   imports: [
+    SharedModule,
     EmailModule,
     UploadsModule,
     FilterDateModule,
@@ -73,6 +76,7 @@ const ENV = process.env.NODE_ENV;
     ReviewModule,
     ShapesModule,
     ListModule,
+    GeneralSettingsModule,
     WishlistsModule,
     CategoryModule,
     SubCategoryModule,

@@ -47,4 +47,22 @@ export class UserService
     user.password = hashedPassword;
     return await this.repository.save(user);
   }
+
+  public async findByEmail(email: string): Promise<User | null> {
+    return await this.repository.findOne({ where: { email } });
+  }
+
+  public async updateGoogleId(id: number, googleId: string): Promise<void> {
+    const user = await this.repository.findOne({ where: { id } });
+    if (!user) {
+      throw new UnauthorizedException(`User with id ${id} not found`);
+    }
+
+    user.googleId = googleId;
+    await this.repository.save(user);
+  }
+
+  public async findByGoogleId(googleId: string): Promise<User | null> {
+    return await this.repository.findOne({ where: { googleId } });
+  }
 }

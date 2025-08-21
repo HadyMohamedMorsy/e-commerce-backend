@@ -3,8 +3,13 @@ import { ConfigType } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { UserService } from "src/users/user.service";
 import jwtConfig from "../config/jwt.config";
+import { ForgetPasswordDto } from "../dtos/forget-password.dto";
+import { GoogleOAuthCallbackDto } from "../dtos/google-oauth.dto";
+import { ResetPasswordDto } from "../dtos/reset-password.dto";
 import { SignInDto } from "../dtos/signin.dto";
 import { ActiveUserData } from "../interfaces/active-user-data.interface";
+import { GoogleOAuthProvider } from "./google-oauth.provider";
+import { PasswordResetProvider } from "./password-reset.provider";
 import { SignInProvider } from "./sign-in.provider";
 
 @Injectable()
@@ -23,6 +28,10 @@ export class AuthService {
 
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
+
+    private readonly passwordResetProvider: PasswordResetProvider,
+
+    private readonly googleOAuthProvider: GoogleOAuthProvider,
   ) {}
 
   public async signIn(signInDto: SignInDto) {
@@ -54,5 +63,25 @@ export class AuthService {
     } catch (error) {
       throw new UnauthorizedException("Invalid token");
     }
+  }
+
+  public async forgetPassword(forgetPasswordDto: ForgetPasswordDto): Promise<void> {
+    await this.passwordResetProvider.generateResetToken(forgetPasswordDto.email);
+  }
+
+  public async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
+    await this.passwordResetProvider.resetPassword(
+      resetPasswordDto.token,
+      resetPasswordDto.newPassword,
+    );
+  }
+
+  public async validateResetToken(token: string): Promise<boolean> {
+    return await this.passwordResetProvider.validateResetToken(token);
+  }
+
+  public async googleOAuthLogin(googleData: GoogleOAuthCallbackDto) {
+    const user = await this.googleOAuthProvider.validateGoogleUser(googleData);
+    return await this.googleOAuthProvider.generateTokensForGoogleUser(user);
   }
 }

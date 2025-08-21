@@ -66,6 +66,14 @@ export class User {
   })
   password: string;
 
+  @Column({
+    type: "varchar",
+    length: 96,
+    nullable: true,
+    name: "google_id",
+  })
+  googleId: string;
+
   @Column({ type: "enum", enum: UserStatus, nullable: true })
   type: UserStatus;
 
