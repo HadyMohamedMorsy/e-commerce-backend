@@ -41,12 +41,36 @@ export class GeneralSettings extends BaseMemberEntity {
   @Column({ nullable: true })
   google_analytics_id: string;
 
+  @Column({ nullable: true })
+  facebook_pixel_id: string;
+
+  @Column({ nullable: true })
+  snapchat_pixel_id: string;
+
+  @Column({ nullable: true })
+  init_tiktok_id: string;
+
   // Omnisend Integration
   @Column({ nullable: true })
   omnisend_api_key: string;
 
   @Column({ nullable: true, default: false })
   omnisend_enabled: boolean;
+
+  @Column({ nullable: true, default: false })
+  gtm_enabled: boolean;
+
+  @Column({ nullable: true, default: false })
+  google_analytics_enabled: boolean;
+
+  @Column({ nullable: true, default: false })
+  facebook_pixel_enabled: boolean;
+
+  @Column({ nullable: true, default: false })
+  snapchat_pixel_enabled: boolean;
+
+  @Column({ nullable: true, default: false })
+  init_tiktok_enabled: boolean;
 
   // Social Media
   @Column({ nullable: true })
@@ -73,13 +97,10 @@ export class GeneralSettings extends BaseMemberEntity {
   smtp_port: number;
 
   @Column({ nullable: true })
-  smtp_username: string;
+  smtp_email: string;
 
   @Column({ nullable: true })
   smtp_password: string;
-
-  @Column({ nullable: true })
-  smtp_encryption: string;
 
   // Maintenance Mode
   @Column({ nullable: true, default: false })
@@ -87,6 +108,26 @@ export class GeneralSettings extends BaseMemberEntity {
 
   @Column({ nullable: true, type: "text" })
   maintenance_message: string;
+
+  // Google OAuth Settings
+  @Column({ nullable: true })
+  client_id_google: string;
+
+  @Column({ nullable: true })
+  client_secret_google: string;
+
+  @Column({ nullable: true })
+  client_callback_url_google: string;
+
+  // Facebook OAuth Settings
+  @Column({ nullable: true })
+  client_id_facebook: string;
+
+  @Column({ nullable: true })
+  client_secret_facebook: string;
+
+  @Column({ nullable: true })
+  client_callback_url_facebook: string;
 
   @ManyToOne(() => User, { onDelete: "CASCADE" })
   createdBy: User;

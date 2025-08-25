@@ -1,5 +1,6 @@
 // src/products/entities/product.entity.ts
 import { Category } from "src/categories/category.entity";
+import { Faq } from "src/faq/faq.entity";
 import { Review } from "src/reviews/review.entity";
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { User } from "src/users/user.entity";
@@ -58,6 +59,9 @@ export class Product extends BaseMemberEntity {
 
   @OneToOne(() => ProductSku, sku => sku.product)
   sku: ProductSku;
+
+  @OneToMany(() => Faq, faq => faq.products)
+  faq: Faq[];
 
   @OneToMany(() => Review, review => review.product)
   reviews: Review[];

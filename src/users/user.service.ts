@@ -65,4 +65,18 @@ export class UserService
   public async findByGoogleId(googleId: string): Promise<User | null> {
     return await this.repository.findOne({ where: { googleId } });
   }
+
+  public async updateFacebookId(id: number, facebookId: string): Promise<void> {
+    const user = await this.repository.findOne({ where: { id } });
+    if (!user) {
+      throw new UnauthorizedException(`User with id ${id} not found`);
+    }
+
+    user.facebookId = facebookId;
+    await this.repository.save(user);
+  }
+
+  public async findByFacebookId(facebookId: string): Promise<User | null> {
+    return await this.repository.findOne({ where: { facebookId } });
+  }
 }

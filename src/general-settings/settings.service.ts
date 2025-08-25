@@ -30,4 +30,32 @@ export class GeneralSettingsService
       },
     });
   }
+
+  // Get Google OAuth settings
+  public async getGoogleOAuthSettings() {
+    const settings = await this.findAll({});
+    if (settings && settings.length > 0) {
+      const googleSettings = settings[0];
+      return {
+        client_id_google: googleSettings.client_id_google,
+        client_secret_google: googleSettings.client_secret_google,
+        client_callback_url_google: googleSettings.client_callback_url_google,
+      };
+    }
+    return null;
+  }
+
+  // Get Facebook OAuth settings
+  public async getFacebookOAuthSettings() {
+    const settings = await this.findAll({});
+    if (settings && settings.length > 0) {
+      const facebookSettings = settings[0];
+      return {
+        client_id_facebook: facebookSettings.client_id_facebook,
+        client_secret_facebook: facebookSettings.client_secret_facebook,
+        client_callback_url_facebook: facebookSettings.client_callback_url_facebook,
+      };
+    }
+    return null;
+  }
 }

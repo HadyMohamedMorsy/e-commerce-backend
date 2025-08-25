@@ -18,7 +18,8 @@ import { RefreshTokenDto } from "./dtos/refresh-token.dto";
 import { ResetPasswordDto } from "./dtos/reset-password.dto";
 import { SignInDto } from "./dtos/signin.dto";
 import { VerifyTokenDto } from "./dtos/verify-token.dto";
-import { GoogleOAuthGuard } from "./guards/google-oauth.guard";
+import { FacebookAuthGuard } from "./guards/facebook-oauth.guard";
+import { GoogleAuthGuard } from "./guards/google-oauth.guard";
 import { AuthService } from "./providers/auth.service";
 
 @Controller("auth")
@@ -93,11 +94,35 @@ export class AuthController {
 
   @Get("google/callback")
   @Auth(AuthType.None)
-  @UseGuards(GoogleOAuthGuard)
+  @UseGuards(GoogleAuthGuard)
   async googleAuthCallback(@Req() req: any, @Res() res: any) {
     try {
       const user = req.user;
       const result = await this.authService.googleOAuthLogin(user);
+
+      // Redirect to frontend with tokens
+      const redirectUrl =
+        `${process.env.FRONTEND_URL || "http://localhost:3000"}/auth/callback?` +
+        `access_token=${result.access_token}&` +
+        `refresh_token=${result.refreshToken}&` +
+        `user_id=${user.id}`;
+
+      res.redirect(redirectUrl);
+    } catch (error) {
+      const errorUrl =
+        `${process.env.FRONTEND_URL || "http://localhost:3000"}/auth/error?` +
+        `message=${encodeURIComponent(error.message)}`;
+      res.redirect(errorUrl);
+    }
+  }
+
+  @Get("facebook/callback")
+  @Auth(AuthType.None)
+  @UseGuards(FacebookAuthGuard)
+  async facebookAuthCallback(@Req() req: any, @Res() res: any) {
+    try {
+      const user = req.user;
+      const result = await this.authService.facebookOAuthLogin(user);
 
       // Redirect to frontend with tokens
       const redirectUrl =

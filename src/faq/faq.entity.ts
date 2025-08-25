@@ -2,7 +2,7 @@ import { Product } from "src/products/products.entity";
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { FaqList } from "src/shared/enum/global-enum";
 import { User } from "src/users/user.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("faqs")
 export class Faq extends BaseMemberEntity {
@@ -23,9 +23,8 @@ export class Faq extends BaseMemberEntity {
   @Column({ type: "text", nullable: true })
   answer: string | null;
 
-  @OneToOne(() => Product, { nullable: true, onDelete: "CASCADE" })
-  @JoinColumn()
-  product: Product;
+  @ManyToOne(() => Product, { nullable: true, onDelete: "CASCADE" })
+  products: Product[];
 
   @ManyToOne(() => User, { nullable: true, onDelete: "SET NULL" })
   createdBy: User;

@@ -3,11 +3,13 @@ import { ConfigType } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { UserService } from "src/users/user.service";
 import jwtConfig from "../config/jwt.config";
+import { FacebookOAuthCallbackDto } from "../dtos/facebook-oauth.dto";
 import { ForgetPasswordDto } from "../dtos/forget-password.dto";
 import { GoogleOAuthCallbackDto } from "../dtos/google-oauth.dto";
 import { ResetPasswordDto } from "../dtos/reset-password.dto";
 import { SignInDto } from "../dtos/signin.dto";
 import { ActiveUserData } from "../interfaces/active-user-data.interface";
+import { FacebookOAuthProvider } from "./facebook-oauth.provider";
 import { GoogleOAuthProvider } from "./google-oauth.provider";
 import { PasswordResetProvider } from "./password-reset.provider";
 import { SignInProvider } from "./sign-in.provider";
@@ -32,6 +34,8 @@ export class AuthService {
     private readonly passwordResetProvider: PasswordResetProvider,
 
     private readonly googleOAuthProvider: GoogleOAuthProvider,
+
+    private readonly facebookOAuthProvider: FacebookOAuthProvider,
   ) {}
 
   public async signIn(signInDto: SignInDto) {
@@ -83,5 +87,10 @@ export class AuthService {
   public async googleOAuthLogin(googleData: GoogleOAuthCallbackDto) {
     const user = await this.googleOAuthProvider.validateGoogleUser(googleData);
     return await this.googleOAuthProvider.generateTokensForGoogleUser(user);
+  }
+
+  public async facebookOAuthLogin(facebookData: FacebookOAuthCallbackDto) {
+    const user = await this.facebookOAuthProvider.validateFacebookUser(facebookData);
+    return await this.facebookOAuthProvider.generateTokensForFacebookUser(user);
   }
 }

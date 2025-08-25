@@ -1,11 +1,11 @@
 import { Injectable, OnModuleInit } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import { Strategy, VerifyCallback } from "passport-google-oauth20";
+import { Strategy, VerifyCallback } from "passport-facebook";
 import { GeneralSettingsService } from "src/general-settings/settings.service";
 
 @Injectable()
-export class GoogleOAuthStrategy
-  extends PassportStrategy(Strategy, "google")
+export class FacebookOAuthStrategy
+  extends PassportStrategy(Strategy, "facebook")
   implements OnModuleInit
 {
   private strategy: Strategy;
@@ -16,37 +16,39 @@ export class GoogleOAuthStrategy
     super({
       clientID: "temp-client-id",
       clientSecret: "temp-client-secret",
-      callbackURL: "http://localhost:3001/api/auth/google/redirect",
-      scope: ["profile", "email"],
+      callbackURL: "http://localhost:3001/api/auth/facebook/redirect",
+      scope: ["email", "public_profile"],
+      profileFields: ["id", "emails", "name", "photos"],
     });
     this.initializationPromise = this.initializeStrategy();
   }
 
   private async initializeStrategy(): Promise<void> {
     try {
-      const googleSettings = await this.generalSettingsService.getGoogleOAuthSettings();
+      const facebookSettings = await this.generalSettingsService.getFacebookOAuthSettings();
 
       if (
-        googleSettings &&
-        googleSettings.client_id_google &&
-        googleSettings.client_secret_google
+        facebookSettings &&
+        facebookSettings.client_id_facebook &&
+        facebookSettings.client_secret_facebook
       ) {
         // Create new strategy with database settings
         this.strategy = new Strategy(
           {
-            clientID: googleSettings.client_id_google,
-            clientSecret: googleSettings.client_secret_google,
+            clientID: facebookSettings.client_id_facebook,
+            clientSecret: facebookSettings.client_secret_facebook,
             callbackURL:
-              googleSettings.client_callback_url_google ||
-              "http://localhost:3001/api/auth/google/redirect",
-            scope: ["profile", "email"],
+              facebookSettings.client_callback_url_facebook ||
+              "http://localhost:3001/api/auth/facebook/redirect",
+            scope: ["email", "public_profile"],
+            profileFields: ["id", "emails", "name", "photos"],
           },
           this.validate.bind(this),
         );
         this.isConfigured = true;
       }
     } catch (error) {
-      console.error("Failed to load Google OAuth settings from database:", error);
+      console.error("Failed to load Facebook OAuth settings from database:", error);
     }
   }
 
@@ -63,11 +65,11 @@ export class GoogleOAuthStrategy
     const { id, emails, name, photos } = profile;
 
     const user = {
-      googleId: id,
-      email: emails[0].value,
-      firstName: name.givenName,
-      lastName: name.familyName,
-      avatar: photos[0].value,
+      facebookId: id,
+      email: emails?.[0]?.value || null,
+      firstName: name?.givenName || "",
+      lastName: name?.familyName || "",
+      avatar: photos?.[0]?.value || null,
       accessToken,
     };
 

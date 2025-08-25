@@ -26,6 +26,7 @@ import { FaqModule } from "./faq/faq.module";
 import { GeneralSettingsModule } from "./general-settings/settings.module";
 import { LocationModule } from "./locations/location.module";
 import { OrderModule } from "./orders/order.module";
+import { PaymentMethodModule } from "./payment-methods/payment-method.module";
 import { AttributeModule } from "./products/attributes/attribute.module";
 import { ProductModule } from "./products/products.module";
 import { SkuModule } from "./products/skus/sku.module";
@@ -34,7 +35,6 @@ import { ReviewModule } from "./reviews/review.module";
 import { ShapesModule } from "./shapes/shapes.module";
 import appConfig from "./shared/config/app.config";
 import databaseConfig from "./shared/config/database.config";
-import emailConfig from "./shared/config/email.config";
 import { FilterDateModule } from "./shared/filters/filter-date.module";
 import { APIFeaturesService } from "./shared/filters/filter.service";
 import { UploadsModule } from "./shared/global-api/uploads/uploads.module";
@@ -83,6 +83,7 @@ const ENV = process.env.NODE_ENV;
     AuthModule,
     AttributeModule,
     SkuModule,
+    PaymentMethodModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, "..", "uploads"),
       serveRoot: "/uploads",
@@ -95,7 +96,7 @@ const ENV = process.env.NODE_ENV;
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: !ENV ? ".env" : `.env.${ENV}`,
-      load: [appConfig, databaseConfig, emailConfig],
+      load: [appConfig, databaseConfig],
       validationSchema: enviromentValidation,
     }),
     ServeStaticModule.forRoot({

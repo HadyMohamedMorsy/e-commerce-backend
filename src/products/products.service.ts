@@ -58,6 +58,7 @@ export class ProductService
       .leftJoinAndSelect("product.sku", "sku")
       .leftJoinAndSelect("product.specifications", "specifications")
       .leftJoinAndSelect("product.attributes", "attributes")
+      .leftJoinAndSelect("product.faq", "faqs")
       .leftJoinAndSelect("product.createdBy", "createdBy")
       .leftJoinAndSelect("product.reviews", "reviews", "reviews.isApproved = :isApproved", {
         isApproved: true,

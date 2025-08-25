@@ -74,6 +74,14 @@ export class User {
   })
   googleId: string;
 
+  @Column({
+    type: "varchar",
+    length: 96,
+    nullable: true,
+    name: "facebook_id",
+  })
+  facebookId: string;
+
   @Column({ type: "enum", enum: UserStatus, nullable: true })
   type: UserStatus;
 

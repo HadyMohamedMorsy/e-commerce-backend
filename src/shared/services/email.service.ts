@@ -1,34 +1,65 @@
 import { MailerService } from "@nestjs-modules/mailer";
-import { Inject, Injectable } from "@nestjs/common";
-import { ConfigType } from "@nestjs/config";
-import emailConfig from "../config/email.config";
+import { Injectable } from "@nestjs/common";
+import { EmailConfigService } from "./email-config.service";
 
 @Injectable()
 export class EmailService {
   constructor(
     private readonly mailerService: MailerService,
-    @Inject(emailConfig.KEY)
-    private readonly emailConfiguration: ConfigType<typeof emailConfig>,
+    private readonly emailConfigService: EmailConfigService,
   ) {}
 
   async sendContactThankYou(email: string, name: string, subject: string): Promise<void> {
     const htmlContent = this.generateThankYouTemplate(name, subject);
+    const emailConfig = await this.emailConfigService.getEmailConfig();
 
     await this.mailerService.sendMail({
       to: email,
       subject: "Thank You for Contacting Azalove",
       html: htmlContent,
+      from: emailConfig.defaults.from,
     });
   }
 
   async sendPasswordResetEmail(email: string, name: string, token: string): Promise<void> {
     const htmlContent = this.generatePasswordResetTemplate(name, token);
+    const emailConfig = await this.emailConfigService.getEmailConfig();
 
     await this.mailerService.sendMail({
       to: email,
       subject: "Reset Your Azalove Password",
       html: htmlContent,
+      from: emailConfig.defaults.from,
     });
+  }
+
+  async getEmailConfiguration() {
+    return await this.emailConfigService.getEmailConfig();
+  }
+
+  async testEmailConfiguration(testEmail: string): Promise<boolean> {
+    try {
+      const emailConfig = await this.emailConfigService.getEmailConfig();
+
+      await this.mailerService.sendMail({
+        to: testEmail,
+        subject: "Email Configuration Test - Azalove",
+        html: `
+          <h2>Email Configuration Test</h2>
+          <p>This is a test email to verify your email configuration is working correctly.</p>
+          <p><strong>SMTP Host:</strong> ${emailConfig.transport.host}</p>
+          <p><strong>SMTP Port:</strong> ${emailConfig.transport.port}</p>
+          <p><strong>From Email:</strong> ${emailConfig.defaults.from}</p>
+          <p>If you receive this email, your email configuration is working properly!</p>
+        `,
+        from: emailConfig.defaults.from,
+      });
+
+      return true;
+    } catch (error) {
+      console.error("Email configuration test failed:", error);
+      return false;
+    }
   }
 
   private generateThankYouTemplate(name: string, subject: string): string {

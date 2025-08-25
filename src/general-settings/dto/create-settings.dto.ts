@@ -60,6 +60,18 @@ export class CreateGeneralSettingsDto {
   @IsOptional()
   google_analytics_id?: string;
 
+  @IsString()
+  @IsOptional()
+  facebook_pixel_id?: string;
+
+  @IsString()
+  @IsOptional()
+  snapchat_pixel_id?: string;
+
+  @IsString()
+  @IsOptional()
+  init_tiktok_id?: string;
+
   // Omnisend Integration
   @IsString()
   @IsOptional()
@@ -68,6 +80,26 @@ export class CreateGeneralSettingsDto {
   @IsBoolean()
   @IsOptional()
   omnisend_enabled?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  gtm_enabled?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  facebook_pixel_enabled?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  snapchat_pixel_enabled?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  init_tiktok_enabled?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  google_analytics_enabled?: boolean;
 
   // Social Media
   @IsUrl()
@@ -105,15 +137,11 @@ export class CreateGeneralSettingsDto {
 
   @IsString()
   @IsOptional()
-  smtp_username?: string;
+  smtp_email?: string;
 
   @IsString()
   @IsOptional()
   smtp_password?: string;
-
-  @IsString()
-  @IsOptional()
-  smtp_encryption?: string;
 
   // Maintenance Mode
   @IsBoolean()
@@ -123,6 +151,19 @@ export class CreateGeneralSettingsDto {
   @IsString()
   @IsOptional()
   maintenance_message?: string;
+
+  // Google OAuth Settings
+  @IsString()
+  @IsOptional()
+  client_id_google?: string;
+
+  @IsString()
+  @IsOptional()
+  client_secret_google?: string;
+
+  @IsUrl()
+  @IsOptional()
+  client_callback_url_google?: string;
 
   createdBy: User;
 }
