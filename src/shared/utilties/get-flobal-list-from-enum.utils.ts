@@ -9,6 +9,7 @@ import {
   NameType,
   PaymentStatus,
   Role,
+  ShapeType,
   Status,
   UserStatus,
   Weight,
@@ -64,6 +65,14 @@ export function getFacialFeatureTypeList() {
 
 export function getNameTypeList() {
   return generateListFromEnum(NameType);
+}
+
+export function getShapeTypeList() {
+  return generateListFromEnum(ShapeType);
+}
+
+export function generateShapeTypeList() {
+  return generateListFromEnum(FacialFeatureType);
 }
 
 export function generateListFromEnum<T extends Record<string, any>>(enumObj: T) {

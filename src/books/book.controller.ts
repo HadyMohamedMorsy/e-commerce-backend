@@ -23,6 +23,7 @@ export class BookController
       updated_at: true,
       title: true,
       description: true,
+      type: true,
       price: true,
       svg: true,
       createdBy: true,
@@ -45,7 +46,7 @@ export class BookController
     return this.service.create(
       {
         title: create.title,
-        description: create.description,
+        type: create.type,
         price: create.price,
         svg: create.svg,
         createdBy: req["createdBy"],
@@ -62,7 +63,7 @@ export class BookController
       {
         id: update.id,
         title: update.title,
-        description: update.description,
+        type: update.type,
         price: update.price,
         svg: update.svg,
         createdBy: req["createdBy"],

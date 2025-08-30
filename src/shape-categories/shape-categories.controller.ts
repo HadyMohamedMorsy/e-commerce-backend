@@ -1,8 +1,9 @@
-import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Get, Post, Put, Req } from "@nestjs/common";
 import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { CreateShapeCategoryDto } from "./dtos/create.dto";
+import { GroupedShapeCategoryResponseDto } from "./dtos/grouped-response.dto";
 import { PatchShapeCategoryDto } from "./dtos/patch.dto";
 import { ShapeCategory } from "./shape-categories.entity";
 import { ShapeCategoryService } from "./shape-categories.service";
@@ -22,6 +23,7 @@ export class ShapeCategoryController
       created_at: true,
       updated_at: true,
       type: true,
+      shapeType: true,
       name: true,
       shapes: true,
       createdBy: true,
@@ -48,6 +50,7 @@ export class ShapeCategoryController
   public create(@Body() createDto: CreateShapeCategoryDto, @Req() req: Request) {
     return this.service.create({
       type: createDto.type,
+      shapeType: createDto.shapeType,
       name: createDto.name,
       createdBy: req["createdBy"],
     } as CreateShapeCategoryDto);
@@ -59,8 +62,14 @@ export class ShapeCategoryController
     return await this.service.update({
       id: update.id,
       type: update.type,
+      shapeType: update.shapeType,
       name: update.name,
       createdBy: req["createdBy"],
     });
+  }
+
+  @Get("/grouped")
+  public async getGroupedShapeCategories(): Promise<GroupedShapeCategoryResponseDto[]> {
+    return await this.service.getGroupedShapeCategories();
   }
 }

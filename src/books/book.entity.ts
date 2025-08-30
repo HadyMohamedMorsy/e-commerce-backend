@@ -11,11 +11,11 @@ export class Book extends BaseMemberEntity {
   @Column({ type: "varchar", length: 255, nullable: false })
   title: string;
 
-  @Column({ type: "text", nullable: true })
-  description: string;
-
   @Column({ type: "decimal", precision: 10, scale: 2, nullable: false })
   price: number;
+
+  @Column({ type: "varchar", length: 255, nullable: false, enum: ["cover", "page"] })
+  type: "cover" | "page";
 
   @Column({ type: "varchar", length: 500, nullable: true })
   svg: string;

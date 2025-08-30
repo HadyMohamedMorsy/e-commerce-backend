@@ -12,6 +12,7 @@ import {
   getMediaTypeList,
   getNameTypeList,
   getRoleList,
+  getShapeTypeList,
   getWeight,
 } from "../utilties/get-flobal-list-from-enum.utils";
 
@@ -29,6 +30,7 @@ export class ListService {
     discountType: getDiscountTypeList(),
     facialFeatureType: getFacialFeatureTypeList(),
     nameTypes: getNameTypeList(),
+    shapeType: getShapeTypeList(),
   };
 
   async getListsBySlug(slug: string) {
@@ -50,13 +52,19 @@ export class ListService {
           couponType: this.lists.couponType,
           discountType: this.lists.discountType,
         };
-      case "category":
+      case "shapeCategoryType":
         return {
-          categoryType: this.lists.categoryType,
+          shapeType: this.lists.shapeType,
+          facialFeatureType: this.lists.facialFeatureType,
         };
       case "facialFeature":
         return {
+          shapeType: this.lists.shapeType,
           facialFeatureType: this.lists.facialFeatureType,
+        };
+      case "category":
+        return {
+          categoryType: this.lists.categoryType,
         };
       case "blog":
         return {

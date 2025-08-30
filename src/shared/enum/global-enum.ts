@@ -99,6 +99,18 @@ export enum DiscountType {
 }
 
 export enum FacialFeatureType {
-  WOMAN = "woman",
-  MAN = "man",
+  Layer4 = "Layer_4",
+  Layer2 = "Layer_2",
+}
+
+export enum ShapeType {
+  NORMAL = "normal",
+  GIRL_S_BODY = "Girl_s_body",
+  WEIGHT_GAIN = "Weight_gain",
+  AVERAGE_WEIGHT = "Average_weight",
+  SLIM = "slim",
+  middle = "middle",
+  NATURAL = "natural",
+  VERY_FAT = "Very_fat",
+  SLIM_2 = "slim-2",
 }

@@ -5,6 +5,7 @@ import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
 import { Repository } from "typeorm";
 import { CreateShapeCategoryDto } from "./dtos/create.dto";
+import { GroupedShapeCategoryResponseDto } from "./dtos/grouped-response.dto";
 import { PatchShapeCategoryDto } from "./dtos/patch.dto";
 import { ShapeCategory } from "./shape-categories.entity";
 
@@ -19,5 +20,41 @@ export class ShapeCategoryService
     repository: Repository<ShapeCategory>,
   ) {
     super(repository, apiFeaturesService);
+  }
+
+  async getGroupedShapeCategories(): Promise<GroupedShapeCategoryResponseDto[]> {
+    const shapeCategories = await this.repository.find({
+      select: ["id", "type", "shapeType", "name"],
+      order: {
+        type: "ASC",
+        shapeType: "ASC",
+        name: "ASC",
+      },
+    });
+
+    const groupedData: GroupedShapeCategoryResponseDto[] = [];
+    const seen = new Set();
+
+    for (const category of shapeCategories) {
+      const key = `${category.type}-${category.shapeType}`;
+
+      if (!seen.has(key)) {
+        seen.add(key);
+
+        // Find all names for this type and shapeType combination
+        const items = shapeCategories
+          .filter(cat => cat.type === category.type && cat.shapeType === category.shapeType)
+          .map(cat => cat.name);
+
+        groupedData.push({
+          id: category.id,
+          type: category.type,
+          shapeType: category.shapeType,
+          items: items,
+        });
+      }
+    }
+
+    return groupedData;
   }
 }

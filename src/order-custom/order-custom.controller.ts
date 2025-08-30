@@ -7,7 +7,7 @@ import { PatchOrderCustomDto } from "./dtos/patch.dto";
 import { OrderCustom } from "./order-custom.entity";
 import { OrderCustomService } from "./order-custom.service";
 
-@Controller("order-customs")
+@Controller("custom-orders")
 export class OrderCustomController
   extends BaseController<OrderCustom, OrderCustomDto, PatchOrderCustomDto>
   implements SelectOptions, RelationOptions

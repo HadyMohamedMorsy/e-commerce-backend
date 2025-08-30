@@ -8,10 +8,6 @@ export class BookDto {
   title?: string;
 
   @IsOptional()
-  @IsString()
-  description?: string;
-
-  @IsOptional()
   @IsNumber()
   @IsNotEmpty()
   price?: number;
@@ -19,6 +15,10 @@ export class BookDto {
   @IsOptional()
   @IsString()
   svg?: string;
+
+  @IsOptional()
+  @IsString()
+  type?: "cover" | "page";
 
   createdBy: User;
 }

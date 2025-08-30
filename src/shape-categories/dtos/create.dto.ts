@@ -1,11 +1,15 @@
 import { IsEnum, IsNotEmpty, IsString } from "class-validator";
-import { FacialFeatureType } from "src/shared/enum/global-enum";
+import { FacialFeatureType, ShapeType } from "src/shared/enum/global-enum";
 import { User } from "src/users/user.entity";
 
 export class CreateShapeCategoryDto {
   @IsEnum(FacialFeatureType)
   @IsNotEmpty()
   type: FacialFeatureType;
+
+  @IsEnum(ShapeType)
+  @IsNotEmpty()
+  shapeType: string;
 
   @IsString()
   @IsNotEmpty()
