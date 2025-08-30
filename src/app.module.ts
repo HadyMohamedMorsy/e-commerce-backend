@@ -7,6 +7,7 @@ import { ServeStaticModule } from "@nestjs/serve-static";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { join } from "path";
 import { AddressModule } from "./address/address.module";
+import { AnswerModule } from "./answers/answer.module";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { AuthModule } from "./auth/auth.module";
@@ -16,6 +17,7 @@ import { AuthenticationGuard } from "./auth/guards/authentication/authentication
 import { RolesGuard } from "./auth/guards/roles/roles.guard";
 import { BankModule } from "./banks/bank.module";
 import { BlogModule } from "./blogs/blog.module";
+import { BookModule } from "./books/book.module";
 import { CartModule } from "./carts/carts.module";
 import { CategoryModule } from "./categories/category.module";
 import { SubCategoryModule } from "./categories/sub-categories/sub-category.module";
@@ -25,13 +27,16 @@ import { DashboardModule } from "./dashboard/dashboard.module";
 import { FaqModule } from "./faq/faq.module";
 import { GeneralSettingsModule } from "./general-settings/settings.module";
 import { LocationModule } from "./locations/location.module";
+import { OrderCustomModule } from "./order-custom/order-custom.module";
 import { OrderModule } from "./orders/order.module";
 import { PaymentMethodModule } from "./payment-methods/payment-method.module";
 import { AttributeModule } from "./products/attributes/attribute.module";
 import { ProductModule } from "./products/products.module";
 import { SkuModule } from "./products/skus/sku.module";
 import { SpecificationModule } from "./products/specifications/specification.module";
+import { QuizModule } from "./quiz/quiz.module";
 import { ReviewModule } from "./reviews/review.module";
+import { ShapeCategoryModule } from "./shape-categories/shape-categories.module";
 import { ShapesModule } from "./shapes/shapes.module";
 import appConfig from "./shared/config/app.config";
 import databaseConfig from "./shared/config/database.config";
@@ -70,6 +75,11 @@ const ENV = process.env.NODE_ENV;
     ContactModule,
     AddressModule,
     TaxModule,
+    BookModule,
+    QuizModule,
+    AnswerModule,
+    OrderCustomModule,
+    ShapeCategoryModule,
     CouponModule,
     BankModule,
     ProductModule,

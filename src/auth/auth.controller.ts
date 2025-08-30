@@ -2,8 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  HttpCode,
-  HttpStatus,
   Post,
   Req,
   Res,
@@ -24,29 +22,21 @@ import { AuthService } from "./providers/auth.service";
 
 @Controller("auth")
 export class AuthController {
-  constructor(
-    /*
-     * Injecting Auth Service
-     */
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post("login")
-  @HttpCode(HttpStatus.OK)
   @Auth(AuthType.None)
   public signIn(@Body() signInDto: SignInDto) {
     return this.authService.signIn(signInDto);
   }
 
-  @Auth(AuthType.None)
-  @HttpCode(HttpStatus.OK) // changed since the default is 201
   @Post("refresh-tokens")
+  @Auth(AuthType.None)
   refreshTokens(@Body() refreshTokenDto: RefreshTokenDto) {
     return this.authService.refreshToken(refreshTokenDto);
   }
 
-  @Post("verify")
-  @HttpCode(HttpStatus.OK)
+  @Post("verify-token")
   @Auth(AuthType.None)
   async verifyToken(@Body() verifyTokenDto: VerifyTokenDto) {
     return this.authService.verifyToken(verifyTokenDto.token);
@@ -63,7 +53,6 @@ export class AuthController {
   }
 
   @Post("forget-password")
-  @HttpCode(HttpStatus.OK)
   @Auth(AuthType.None)
   async forgetPassword(@Body() forgetPasswordDto: ForgetPasswordDto) {
     await this.authService.forgetPassword(forgetPasswordDto);
@@ -73,22 +62,11 @@ export class AuthController {
   }
 
   @Post("reset-password")
-  @HttpCode(HttpStatus.OK)
   @Auth(AuthType.None)
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     await this.authService.resetPassword(resetPasswordDto);
     return {
       message: "Password has been successfully reset.",
-    };
-  }
-
-  @Post("validate-reset-token")
-  @HttpCode(HttpStatus.OK)
-  @Auth(AuthType.None)
-  async validateResetToken(@Body() body: { token: string }) {
-    const isValid = await this.authService.validateResetToken(body.token);
-    return {
-      valid: isValid,
     };
   }
 

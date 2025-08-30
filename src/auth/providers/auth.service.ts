@@ -47,26 +47,27 @@ export class AuthService {
   }
 
   public async verifyToken(token: string) {
-    try {
-      const payload = await this.jwtService.verifyAsync<ActiveUserData>(token, {
-        secret: this.jwtConfiguration.secret,
-        audience: this.jwtConfiguration.audience,
-        issuer: this.jwtConfiguration.issuer,
-      });
+    const payload = await this.jwtService.verifyAsync<ActiveUserData>(token, {
+      secret: this.jwtConfiguration.secret,
+      audience: this.jwtConfiguration.audience,
+      issuer: this.jwtConfiguration.issuer,
+    });
 
-      const user = await this.usersService.findOne(payload.sub);
-      if (!user) {
-        throw new UnauthorizedException("User not found");
-      }
-
-      return {
-        valid: true,
-        user,
-      };
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      throw new UnauthorizedException("Invalid token");
+    const user = await this.usersService.findOne(payload.sub, {
+      id: true,
+      email: true,
+      firstName: true,
+      lastName: true,
+      role: true,
+    });
+    if (!user) {
+      throw new UnauthorizedException("User not found");
     }
+
+    return {
+      valid: true,
+      user,
+    };
   }
 
   public async forgetPassword(forgetPasswordDto: ForgetPasswordDto): Promise<void> {
