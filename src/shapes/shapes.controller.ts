@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Get, Post, Put, Req } from "@nestjs/common";
 import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
@@ -22,6 +22,9 @@ export class ShapesController
       created_at: true,
       updated_at: true,
       type: true,
+      name: true,
+      colorCode: true,
+      shapeType: true,
       image: true,
     };
   }
@@ -41,7 +44,10 @@ export class ShapesController
   public create(@Body() createDto: CreateShapeDto, @Req() req: Request) {
     return this.service.create({
       type: createDto.type,
+      name: createDto.name,
+      colorCode: createDto.colorCode,
       image: createDto.image,
+      shapeType: createDto.shapeType,
       createdBy: req["createdBy"],
     } as CreateShapeDto);
   }
@@ -52,8 +58,16 @@ export class ShapesController
     return await this.service.update({
       id: update.id,
       type: update.type,
+      name: update.name,
+      colorCode: update.colorCode,
       image: update.image,
+      shapeType: update.shapeType,
       createdBy: req["createdBy"],
     });
+  }
+
+  @Get("/grouped")
+  public async getGroupedShapes() {
+    return await this.service.getGroupedShapes();
   }
 }

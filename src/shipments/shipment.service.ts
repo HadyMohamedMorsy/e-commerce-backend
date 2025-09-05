@@ -25,4 +25,29 @@ export class ShipmentService
     super.queryRelationIndex(queryBuilder, filteredRecord);
     queryBuilder.leftJoin("e.location", "location").addSelect(["location.id", "location.name"]);
   }
+
+  async getFinalShipmentByLocation(locationId: number): Promise<Shipment | null> {
+    const queryBuilder = this.repository.createQueryBuilder("shipment");
+
+    queryBuilder
+      .leftJoin("shipment.location", "location")
+      .leftJoin("shipment.createdBy", "createdBy")
+      .where("location.id = :locationId", { locationId })
+      .select([
+        "shipment.id",
+        "shipment.type",
+        "shipment.shipmentPrice",
+        "shipment.created_at",
+        "shipment.updated_at",
+        "location.id",
+        "location.name",
+        "createdBy.id",
+        "createdBy.firstName",
+        "createdBy.lastName",
+      ])
+      .orderBy("shipment.shipmentPrice", "ASC")
+      .limit(1);
+
+    return await queryBuilder.getOne();
+  }
 }

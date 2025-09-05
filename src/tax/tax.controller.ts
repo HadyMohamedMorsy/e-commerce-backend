@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Patch, Post, Put, Req } from "@nestjs/common";
 import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
@@ -71,7 +71,7 @@ export class TaxController
     );
   }
 
-  @Post("/change-active-status")
+  @Patch("/change-active-status")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public async changeActiveStatus(@Body() update: { id: number; isActive: boolean }) {
     return await this.service.changeStatus(update.id, update.isActive, "isActive", {

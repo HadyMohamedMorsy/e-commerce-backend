@@ -20,6 +20,9 @@ export class Coupon extends BaseMemberEntity {
   @Column({ name: "discount_type" })
   discountType: string;
 
+  @Column({ name: "used_count", default: 0 })
+  usedCount: number;
+
   @Column({ name: "expiry_date", type: "timestamp" })
   expiryDate: string;
 

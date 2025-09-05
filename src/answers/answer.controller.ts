@@ -35,12 +35,11 @@ export class AnswerController
       },
       quiz: {
         id: true,
-        questions: true,
+        question: true,
       },
       book: {
         id: true,
         title: true,
-        description: true,
       },
     };
   }
@@ -51,6 +50,8 @@ export class AnswerController
     return this.service.create(
       {
         answerText: create.answerText,
+        quiz: req["question"],
+        book: req["book"],
         createdBy: req["createdBy"],
       },
       this.selectOptions(),
@@ -64,6 +65,8 @@ export class AnswerController
     return await this.service.update(
       {
         id: update.id,
+        quiz: req["question"],
+        book: req["book"],
         answerText: update.answerText,
         createdBy: req["createdBy"],
       },

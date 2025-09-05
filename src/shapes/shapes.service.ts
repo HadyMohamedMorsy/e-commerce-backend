@@ -16,4 +16,63 @@ export class ShapesService extends BaseService<Shape, CreateShapeDto, PatchShape
   ) {
     super(repository, apiFeaturesService);
   }
+
+  async getGroupedShapes() {
+    const shapes = await this.repository.find({
+      select: ["id", "name", "type", "shapeType", "colorCode", "image"],
+    });
+
+    // Get unique shape types for bodyTypes
+    const uniqueShapeTypes = [...new Set(shapes.map(shape => shape.shapeType))];
+
+    // Create bodyTypes array
+    const bodyTypes = uniqueShapeTypes.map(shapeType => ({
+      id: shapeType,
+      label: this.formatLabel(shapeType),
+    }));
+
+    // Group shapes by shapeType for bodyShapes
+    const bodyShapes = {};
+    uniqueShapeTypes.forEach(shapeType => {
+      const shapesOfType = shapes.filter(shape => shape.shapeType === shapeType);
+      bodyShapes[shapeType] = shapesOfType.map(shape => ({
+        id: shape.id.toString(),
+        label: shape.name,
+        type: shape.type,
+        bodyType: shape.shapeType,
+        colorCode: shape.colorCode,
+        svg: this.removeSvgTags(shape.image),
+      }));
+    });
+
+    // Get unique colors for bodyColors
+    const bodyColors = [...new Set(shapes.map(shape => shape.colorCode).filter(color => color))];
+
+    // Get unique types for types array
+    const types = [...new Set(shapes.map(shape => shape.type).filter(type => type))];
+
+    return {
+      bodyTypes,
+      bodyShapes,
+      bodyColors,
+      types,
+    };
+  }
+
+  private formatLabel(shapeType: string): string {
+    return shapeType
+      .split("_")
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
+  }
+
+  private removeSvgTags(svgString: string): string {
+    if (!svgString) return "";
+
+    // Remove opening and closing SVG tags
+    return svgString
+      .replace(/^<svg[^>]*>/, "")
+      .replace(/<\/svg>$/, "")
+      .trim();
+  }
 }

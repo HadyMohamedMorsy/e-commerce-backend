@@ -1,14 +1,21 @@
-import { Module } from "@nestjs/common";
+import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { Book } from "src/books/book.entity";
+import { Quiz } from "src/quiz/quiz.entity";
 import { FilterDateModule } from "src/shared/filters/filter-date.module";
 import { AnswerController } from "./answer.controller";
 import { Answer } from "./answer.entity";
 import { AnswerService } from "./answer.service";
+import { AnswerValidationMiddleware } from "./middleware/answer-validation.middleware";
 
 @Module({
-  imports: [FilterDateModule, TypeOrmModule.forFeature([Answer])],
+  imports: [FilterDateModule, TypeOrmModule.forFeature([Answer, Quiz, Book])],
   controllers: [AnswerController],
   providers: [AnswerService],
   exports: [AnswerService],
 })
-export class AnswerModule {}
+export class AnswerModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AnswerValidationMiddleware).forRoutes("answers/store", "answers/update");
+  }
+}

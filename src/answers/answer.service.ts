@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { BaseService } from "src/shared/base/base";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
-import { Repository } from "typeorm";
+import { Repository, SelectQueryBuilder } from "typeorm";
 import { Answer } from "./answer.entity";
 import { AnswerDto } from "./dtos/create.dto";
 import { PatchAnswerDto } from "./dtos/patch.dto";
@@ -19,5 +19,11 @@ export class AnswerService
     repository: Repository<Answer>,
   ) {
     super(repository, apiFeaturesService);
+  }
+
+  override queryRelationIndex(queryBuilder?: SelectQueryBuilder<any>, filteredRecord?: any) {
+    super.queryRelationIndex(queryBuilder, filteredRecord);
+    queryBuilder.leftJoinAndSelect("e.quiz", "quiz");
+    queryBuilder.leftJoinAndSelect("e.book", "book");
   }
 }

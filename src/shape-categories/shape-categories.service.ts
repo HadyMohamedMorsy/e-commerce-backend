@@ -57,4 +57,18 @@ export class ShapeCategoryService
 
     return groupedData;
   }
+
+  async getShapeCategoriesWithNameValue(): Promise<{ label: string; value: string }[]> {
+    const shapeCategories = await this.repository.find({
+      select: ["name"],
+      order: {
+        name: "ASC",
+      },
+    });
+
+    return shapeCategories.map(category => ({
+      label: category.name,
+      value: category.name,
+    }));
+  }
 }

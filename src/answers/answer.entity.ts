@@ -15,7 +15,7 @@ export class Answer extends BaseMemberEntity {
   @ManyToOne(() => Quiz, quiz => quiz.answers)
   quiz: Quiz;
 
-  @ManyToOne(() => Book)
+  @ManyToOne(() => Book, book => book.answers)
   book: Book;
 
   @ManyToOne(() => User, { nullable: true, onDelete: "SET NULL" })

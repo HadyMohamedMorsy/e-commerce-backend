@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Get, Post, Put, Req } from "@nestjs/common";
 import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
@@ -22,6 +22,7 @@ export class QuizController
       created_at: true,
       updated_at: true,
       question: true,
+      questionType: true,
       createdBy: true,
     };
   }
@@ -42,6 +43,7 @@ export class QuizController
     return this.service.create(
       {
         question: create.question,
+        questionType: create.questionType,
         createdBy: req["createdBy"],
       },
       this.selectOptions(),
@@ -56,10 +58,16 @@ export class QuizController
       {
         id: update.id,
         question: update.question,
+        questionType: update.questionType,
         createdBy: req["createdBy"],
       },
       this.selectOptions(),
       this.getRelationOptions(),
     );
+  }
+
+  @Get("/questions-with-answers")
+  public async getQuestionsWithAnswers() {
+    return await this.service.getQuestionsWithAnswers();
   }
 }

@@ -22,7 +22,6 @@ export class BookController
       created_at: true,
       updated_at: true,
       title: true,
-      description: true,
       type: true,
       price: true,
       svg: true,
@@ -71,5 +70,10 @@ export class BookController
       this.selectOptions(),
       this.getRelationOptions(),
     );
+  }
+
+  @Post("/finder")
+  public async finder(@Body() body: any) {
+    return await this.service.finder(body);
   }
 }

@@ -7,6 +7,18 @@ export class CreateShapeDto {
   type: string;
 
   @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  shapeType: string;
+
+  @IsString()
+  @IsNotEmpty()
+  colorCode: string;
+
+  @IsString()
   @IsOptional()
   image?: string;
 

@@ -1,4 +1,4 @@
-import { Body, Controller, Patch, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, Put, Req } from "@nestjs/common";
 import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
@@ -142,5 +142,19 @@ export class AddressController
       this.selectOptions(),
       this.getRelationOptions(),
     );
+  }
+
+  @Get("/:id/shipment")
+  @Roles(
+    "CEO",
+    "CUSTOMER",
+    "TECH_SUPPORT",
+    "STORE_MANAGER",
+    "SUPER_ADMIN",
+    "CONTENT_MANAGER",
+    "SYSTEM_ADMIN",
+  )
+  public async getFinalShipmentByAddress(@Param("id") id: number) {
+    return await this.service.getFinalShipmentByAddressId(id);
   }
 }

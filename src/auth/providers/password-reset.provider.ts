@@ -22,31 +22,24 @@ export class PasswordResetProvider {
     // Find user by email
     try {
       const user = await this.userService.findOneByEmail(email);
-
-      // Generate a random token
       const token = randomBytes(32).toString("hex");
-
-      // Set expiration time (1 hour from now)
       const expiresAt = new Date();
       expiresAt.setHours(expiresAt.getHours() + 1);
 
-      // Save the token
       const resetToken = this.passwordResetTokenRepository.create({
         token,
         expiresAt,
-        userId: user.id,
+        user,
       });
 
       await this.passwordResetTokenRepository.save(resetToken);
 
-      // Send email with reset link
       await this.emailService.sendPasswordResetEmail(
         user.email,
         user.firstName || user.username,
         token,
       );
     } catch {
-      // Don't reveal if user exists or not for security
       return;
     }
   }
@@ -73,8 +66,8 @@ export class PasswordResetProvider {
     // Hash the new password
     const hashedPassword = await this.hashingProvider.hashPassword(newPassword);
 
-    // Update user password using UserService
-    await this.userService.updatePassword(resetToken.userId, hashedPassword);
+    // Update user password using UserService - get user ID from the token relation
+    await this.userService.updatePassword(resetToken.user.id, hashedPassword);
 
     // Mark token as used
     await this.passwordResetTokenRepository.update(resetToken.id, {
@@ -82,23 +75,33 @@ export class PasswordResetProvider {
     });
   }
 
-  async validateResetToken(token: string): Promise<boolean> {
+  async validateResetToken(token: string): Promise<{ valid: boolean; user?: any }> {
     const resetToken = await this.passwordResetTokenRepository.findOne({
       where: { token },
+      relations: ["user"],
     });
 
     if (!resetToken) {
-      return false;
+      return { valid: false };
     }
 
     if (resetToken.isUsed) {
-      return false;
+      return { valid: false };
     }
 
     if (resetToken.expiresAt < new Date()) {
-      return false;
+      return { valid: false };
     }
 
-    return true;
+    // Return user information (excluding sensitive data)
+    const user = {
+      id: resetToken.user.id,
+      email: resetToken.user.email,
+      firstName: resetToken.user.firstName,
+      lastName: resetToken.user.lastName,
+      username: resetToken.user.username,
+    };
+
+    return { valid: true, user };
   }
 }

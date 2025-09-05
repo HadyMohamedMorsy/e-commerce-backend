@@ -8,6 +8,7 @@ import {
   MediaType,
   NameType,
   PaymentStatus,
+  QuestionType,
   Role,
   ShapeType,
   Status,
@@ -69,6 +70,10 @@ export function getNameTypeList() {
 
 export function getShapeTypeList() {
   return generateListFromEnum(ShapeType);
+}
+
+export function getQuestionTypeList() {
+  return generateListFromEnum(QuestionType);
 }
 
 export function generateShapeTypeList() {

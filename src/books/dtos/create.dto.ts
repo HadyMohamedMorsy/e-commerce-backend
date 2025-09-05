@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { User } from "src/users/user.entity";
 
@@ -10,6 +11,7 @@ export class BookDto {
   @IsOptional()
   @IsNumber()
   @IsNotEmpty()
+  @Type(() => Number)
   price?: number;
 
   @IsOptional()

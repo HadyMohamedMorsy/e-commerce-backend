@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Patch, Post, Put, Req } from "@nestjs/common";
 import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
@@ -6,6 +6,7 @@ import { Coupon } from "./coupon.entity";
 import { CouponsService } from "./coupon.service";
 import { CouponDto } from "./dtos/create.dto";
 import { PatchCouponDto } from "./dtos/patch.dto";
+import { ValidateCouponDto } from "./dtos/validate-coupon.dto";
 
 @Controller("coupon")
 export class CouponController
@@ -87,12 +88,17 @@ export class CouponController
     );
   }
 
-  @Post("/change-active-status")
+  @Patch("/change-active-status")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public changeStatus(@Body() update: PatchCouponDto) {
     return this.service.changeStatus(update.id, update.isActive, "isActive", {
       id: true,
       isActive: true,
     });
+  }
+
+  @Post("/validate")
+  public async validateCoupon(@Body() validateDto: ValidateCouponDto) {
+    return await this.service.validateCoupon(validateDto);
   }
 }

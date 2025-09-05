@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -13,6 +14,7 @@ import { Auth } from "src/shared/decorators/auth.decorator";
 import { AuthType } from "src/shared/enum/global-enum";
 import { ForgetPasswordDto } from "./dtos/forget-password.dto";
 import { RefreshTokenDto } from "./dtos/refresh-token.dto";
+import { RegisterDto } from "./dtos/register.dto";
 import { ResetPasswordDto } from "./dtos/reset-password.dto";
 import { SignInDto } from "./dtos/signin.dto";
 import { VerifyTokenDto } from "./dtos/verify-token.dto";
@@ -23,6 +25,12 @@ import { AuthService } from "./providers/auth.service";
 @Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Post("register")
+  @Auth(AuthType.None)
+  public register(@Body() registerDto: RegisterDto) {
+    return this.authService.register(registerDto);
+  }
 
   @Post("login")
   @Auth(AuthType.None)
@@ -67,6 +75,22 @@ export class AuthController {
     await this.authService.resetPassword(resetPasswordDto);
     return {
       message: "Password has been successfully reset.",
+    };
+  }
+
+  @Post("validate-reset-token")
+  @Auth(AuthType.None)
+  async validateResetToken(@Body() body: { token: string }) {
+    const result = await this.authService.validateResetToken(body.token);
+
+    if (!result.valid) {
+      throw new BadRequestException("Token is invalid or expired");
+    }
+
+    return {
+      valid: result.valid,
+      user: result.user,
+      message: "Token is valid",
     };
   }
 

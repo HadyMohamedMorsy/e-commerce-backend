@@ -1,7 +1,6 @@
-import { ShapeCategory } from "src/shape-categories/shape-categories.entity";
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { User } from "src/users/user.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("shapes")
 export class Shape extends BaseMemberEntity {
@@ -11,9 +10,17 @@ export class Shape extends BaseMemberEntity {
   @Column({ nullable: true })
   image: string;
 
-  @ManyToOne(() => ShapeCategory, shapeCategory => shapeCategory.shapes)
-  @JoinColumn({ name: "shapeCategoryId" })
-  shapeCategory: ShapeCategory;
+  @Column({ nullable: true })
+  name: string;
+
+  @Column({ nullable: true })
+  colorCode: string;
+
+  @Column({ nullable: true })
+  type: string;
+
+  @Column({ nullable: true })
+  shapeType: string;
 
   @ManyToOne(() => User, user => user.id, { onDelete: "SET NULL" })
   createdBy: User;
