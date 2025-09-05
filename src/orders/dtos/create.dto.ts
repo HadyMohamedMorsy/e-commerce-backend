@@ -12,15 +12,23 @@ import { User } from "src/users/user.entity";
 import { CreateOrderItemDto } from "./create-order-item.dto";
 
 export class OrderDto {
-  @IsNumber()
-  @IsOptional()
-  total: number;
-
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateOrderItemDto)
+  @IsNotEmpty()
+  products: CreateOrderItemDto[];
+
+  @IsNumber()
+  @IsNotEmpty()
+  payment_id: number;
+
+  @IsNumber()
   @IsOptional()
-  orderItems: CreateOrderItemDto[];
+  coupon_id?: number;
+
+  @IsNumber()
+  @IsOptional()
+  address_id?: number;
 
   @IsString()
   @IsNotEmpty()

@@ -20,10 +20,8 @@ export class OrderController
   public selectOptions(): Record<string, boolean> {
     return {
       id: true,
-      created_at: true,
-      updated_at: true,
-      orderNumber: true,
-      totalAmount: true,
+      createdAt: true,
+      updatedAt: true,
       status: true,
       createdBy: true,
     };
@@ -42,7 +40,7 @@ export class OrderController
   @Post("/store")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public create(@Body() createDto: OrderDto, @Req() req: Request) {
-    return this.service.create({
+    return this.service.storeOrder({
       ...createDto,
       createdBy: req["createdBy"],
     });
