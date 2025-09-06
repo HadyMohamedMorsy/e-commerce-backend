@@ -76,4 +76,9 @@ export class BookController
   public async finder(@Body() body: any) {
     return await this.service.finder(body);
   }
+
+  @Post("/pages")
+  public async pages(@Body() body: any) {
+    return await this.service.pages(body);
+  }
 }

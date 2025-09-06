@@ -1,7 +1,7 @@
 import { Answer } from "src/answers/answer.entity";
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { User } from "src/users/user.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { OrderCustom } from "../order-custom/order-custom.entity";
 
 @Entity("books")
@@ -21,7 +21,7 @@ export class Book extends BaseMemberEntity {
   @Column({ type: "text", nullable: true })
   svg: string;
 
-  @OneToMany(() => Answer, answer => answer.book)
+  @ManyToMany(() => Answer, answer => answer.books)
   answers: Answer[];
 
   @ManyToOne(() => OrderCustom, orderCustom => orderCustom.books)

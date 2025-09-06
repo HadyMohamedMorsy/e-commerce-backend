@@ -15,7 +15,6 @@ export class EmailConfigService {
 
         // Check if we have the minimum required settings
         if (emailSettings.smtp_host && emailSettings.smtp_username && emailSettings.smtp_password) {
-          this.logger.log("Using email configuration from database settings");
           const config = {
             transport: {
               host: emailSettings.smtp_host,
@@ -48,8 +47,6 @@ export class EmailConfigService {
         }
       }
 
-      // Fallback to environment variables if no settings found or incomplete
-      this.logger.log("Using email configuration from environment variables");
       return {
         transport: {
           host: process.env.EMAIL_HOST,

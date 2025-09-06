@@ -37,7 +37,7 @@ export class AnswerController
         id: true,
         question: true,
       },
-      book: {
+      books: {
         id: true,
         title: true,
       },
@@ -51,7 +51,7 @@ export class AnswerController
       {
         answerText: create.answerText,
         quiz: req["question"],
-        book: req["book"],
+        books: req["books"],
         createdBy: req["createdBy"],
       },
       this.selectOptions(),
@@ -66,7 +66,7 @@ export class AnswerController
       {
         id: update.id,
         quiz: req["question"],
-        book: req["book"],
+        books: req["books"],
         answerText: update.answerText,
         createdBy: req["createdBy"],
       },

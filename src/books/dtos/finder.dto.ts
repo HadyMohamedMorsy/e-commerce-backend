@@ -20,4 +20,6 @@ export interface Answer {
 export interface FinderRequest {
   answers: Answer[];
   characterSelection: CharacterSelection[];
+  page?: number;
+  limit?: number;
 }

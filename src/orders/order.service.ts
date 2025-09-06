@@ -8,7 +8,8 @@ import { ProductService } from "src/products/products.service";
 import { BaseService } from "src/shared/base/base";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
-import { Repository } from "typeorm";
+import { EmailService } from "src/shared/services/email.service";
+import { Repository, SelectQueryBuilder } from "typeorm";
 import { OrderDto } from "./dtos/create.dto";
 import { PatchOrderDto } from "./dtos/patch.dto";
 import { OrderItem } from "./order-item.entity";
@@ -29,6 +30,7 @@ export class OrderService
     private addressService: AddressesService,
     private couponService: CouponsService,
     private paymentMethodService: PaymentMethodService,
+    private emailService: EmailService,
   ) {
     super(repository, apiFeaturesService);
   }
@@ -84,6 +86,127 @@ export class OrderService
     }
 
     return 0;
+  }
+
+  private generateOrderSuccessEmailTemplate(
+    orderNumber: string,
+    customerName: string,
+    orderTotal: number,
+    orderItems: any[],
+    discountAmount: number = 0,
+    couponCode?: string,
+  ): string {
+    const orderDate = new Date().toLocaleDateString();
+    const subtotal = orderTotal + discountAmount;
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Order Confirmation</title>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; }
+          .container { max-width: 600px; margin: 0 auto; background: #fff; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; }
+          .header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+          .content { padding: 30px; }
+          .order-details { background: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0; }
+          .order-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
+          .order-item:last-child { border-bottom: none; }
+          .total-section { background: #e8f5e8; padding: 15px; border-radius: 5px; margin-top: 20px; }
+          .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
+          .success-icon { font-size: 48px; color: #27ae60; margin-bottom: 10px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <div class="success-icon">✓</div>
+            <h1>Order Confirmation</h1>
+            <p>Thank you for your order!</p>
+          </div>
+          
+          <div class="content">
+            <h2>Hello ${customerName},</h2>
+            <p>Your order has been successfully placed and is being processed. Here are your order details:</p>
+            
+            <div class="order-details">
+              <h3>Order Information</h3>
+              <p><strong>Order Number:</strong> #${orderNumber}</p>
+              <p><strong>Order Date:</strong> ${orderDate}</p>
+              <p><strong>Status:</strong> Confirmed</p>
+            </div>
+            
+            <div class="order-details">
+              <h3>Order Items</h3>
+              ${orderItems
+                .map(
+                  item => `
+                <div class="order-item">
+                  <div>
+                    <strong>${item.product.name}</strong><br>
+                    <small>Quantity: ${item.quantity}</small>
+                  </div>
+                  <div>$${item.price.toFixed(2)}</div>
+                </div>
+              `,
+                )
+                .join("")}
+            </div>
+            
+            <div class="total-section">
+              <div class="order-item">
+                <span><strong>Subtotal:</strong></span>
+                <span>$${subtotal.toFixed(2)}</span>
+              </div>
+              ${
+                discountAmount > 0
+                  ? `
+                <div class="order-item">
+                  <span><strong>Discount (${couponCode || "Coupon"}):</strong></span>
+                  <span style="color: #27ae60;">-$${discountAmount.toFixed(2)}</span>
+                </div>
+              `
+                  : ""
+              }
+              <div class="order-item" style="font-size: 18px; font-weight: bold; border-top: 2px solid #27ae60; padding-top: 15px;">
+                <span><strong>Total:</strong></span>
+                <span>$${orderTotal.toFixed(2)}</span>
+              </div>
+            </div>
+            
+            <p>We'll send you another email when your order ships. If you have any questions, please don't hesitate to contact us.</p>
+          </div>
+          
+          <div class="footer">
+            <p>Thank you for choosing us!</p>
+            <p>This is an automated message, please do not reply to this email.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  private formatOrderResponse(order: Order, total: number, discountAmount: number, coupon: any) {
+    return {
+      order_id: order.id.toString(),
+      order_number: order.id.toString(),
+      subtotal: total,
+      discount_amount: discountAmount,
+      total_amount: order.total,
+      status: order.status,
+      createdAt: order.createdAt,
+      coupon_applied: coupon
+        ? {
+            code: coupon.code,
+            discount_type: coupon.discountType,
+            discount_value: coupon.discount,
+            discount_amount: discountAmount,
+          }
+        : null,
+    };
   }
 
   async storeOrder(createDto: OrderDto): Promise<any> {
@@ -160,23 +283,66 @@ export class OrderService
       });
     }
 
-    // Step 9: Return formatted response
-    return {
-      order_id: order.id.toString(),
-      order_number: order.id.toString(),
-      subtotal: total,
-      discount_amount: discountAmount,
-      total_amount: order.total,
-      status: order.status,
-      createdAt: order.createdAt,
-      coupon_applied: coupon
-        ? {
-            code: coupon.code,
-            discount_type: coupon.discountType,
-            discount_value: coupon.discount,
-            discount_amount: discountAmount,
-          }
-        : null,
-    };
+    // Step 9: Send order confirmation email
+    try {
+      if (order.createdBy && order.createdBy.email) {
+        // Validate email format before sending
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(order.createdBy.email)) {
+          console.error(`Invalid email format: ${order.createdBy.email}`);
+          return this.formatOrderResponse(order, total, discountAmount, coupon);
+        }
+
+        // Get order items with product details for email
+        const orderItemsWithProducts = await this.orderItemRepository.find({
+          where: { order: { id: order.id } },
+          relations: ["product"],
+        });
+
+        const customerName = order.createdBy.firstName
+          ? `${order.createdBy.firstName} ${order.createdBy.lastName || ""}`.trim()
+          : order.createdBy.username || "Valued Customer";
+
+        const emailTemplate = this.generateOrderSuccessEmailTemplate(
+          order.id.toString(),
+          customerName,
+          order.total,
+          orderItemsWithProducts,
+          discountAmount,
+          coupon?.code,
+        );
+
+        await this.emailService.sendOrderConfirmationEmail(
+          order.createdBy.email,
+          `Order Confirmation #${order.id}`,
+          emailTemplate,
+        );
+      }
+    } catch (emailError) {
+      // Log email error but don't fail the order creation
+      console.error("Failed to send order confirmation email:", emailError);
+      console.error("Email error details:", {
+        message: emailError.message,
+        code: emailError.code,
+        errno: emailError.errno,
+        syscall: emailError.syscall,
+        hostname: emailError.hostname,
+      });
+    }
+
+    // Step 10: Return formatted response
+    return this.formatOrderResponse(order, total, discountAmount, coupon);
+  }
+
+  override queryRelationIndex(queryBuilder?: SelectQueryBuilder<any>, filteredRecord?: any) {
+    super.queryRelationIndex(queryBuilder, filteredRecord);
+
+    queryBuilder.leftJoinAndSelect("e.payment", "payment");
+    queryBuilder.leftJoinAndSelect("e.coupon", "coupon");
+    queryBuilder.leftJoinAndSelect("e.address", "address");
+    queryBuilder.leftJoinAndSelect("e.orderItems", "orderItems");
+    queryBuilder
+      .leftJoin("orderItems.product", "product")
+      .addSelect(["product.id", "product.name"]);
   }
 }

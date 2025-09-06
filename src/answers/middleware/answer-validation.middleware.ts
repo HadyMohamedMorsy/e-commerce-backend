@@ -2,7 +2,7 @@ import { Injectable, NestMiddleware, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { NextFunction, Request, Response } from "express";
 import { Repository } from "typeorm";
-import { Book } from "../../books/book.entity";
+import { BookService } from "../../books/book.service";
 import { Quiz } from "../../quiz/quiz.entity";
 
 @Injectable()
@@ -10,15 +10,14 @@ export class AnswerValidationMiddleware implements NestMiddleware {
   constructor(
     @InjectRepository(Quiz)
     private readonly quizRepository: Repository<Quiz>,
-    @InjectRepository(Book)
-    private readonly bookRepository: Repository<Book>,
+    private readonly bookService: BookService,
   ) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
-    const { questionId, bookId } = req.body;
+    const { questionId, bookIds } = req.body;
 
-    if (!questionId || !bookId) {
-      throw new NotFoundException("questionId and bookId are required");
+    if (!questionId || !bookIds || !Array.isArray(bookIds) || bookIds.length === 0) {
+      throw new NotFoundException("questionId and bookIds array are required");
     }
 
     try {
@@ -31,25 +30,29 @@ export class AnswerValidationMiddleware implements NestMiddleware {
         throw new NotFoundException(`Question with ID ${questionId} not found`);
       }
 
-      // Find the book
-      const book = await this.bookRepository.findOne({
-        where: { id: bookId },
-      });
+      // Find the books using service
+      const books = await this.bookService.findByIds(bookIds);
 
-      if (!book) {
-        throw new NotFoundException(`Book with ID ${bookId} not found`);
+      if (!books || books.length === 0) {
+        throw new NotFoundException(`No books found with the provided IDs`);
+      }
+
+      if (books.length !== bookIds.length) {
+        const foundIds = books.map(book => book.id);
+        const missingIds = bookIds.filter(id => !foundIds.includes(id));
+        throw new NotFoundException(`Books with IDs ${missingIds.join(", ")} not found`);
       }
 
       // Attach to request object
       req["question"] = question;
-      req["book"] = book;
+      req["books"] = books;
 
       next();
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
       }
-      throw new NotFoundException("Error validating question and book");
+      throw new NotFoundException("Error validating question and books");
     }
   }
 }

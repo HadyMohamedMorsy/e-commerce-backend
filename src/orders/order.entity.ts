@@ -20,7 +20,7 @@ export class Order extends BaseMemberEntity {
   })
   paymentStatus: PaymentStatus;
 
-  @OneToMany(() => OrderItem, orderItem => orderItem.order)
+  @OneToMany(() => OrderItem, orderItem => orderItem.order, { cascade: true, onDelete: "CASCADE" })
   orderItems: OrderItem[];
 
   @Column("enum", {

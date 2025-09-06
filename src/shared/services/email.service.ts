@@ -33,6 +33,33 @@ export class EmailService {
     });
   }
 
+  async sendOrderConfirmationEmail(
+    email: string,
+    subject: string,
+    htmlContent: string,
+  ): Promise<void> {
+    try {
+      const emailConfig = await this.emailConfigService.getEmailConfig();
+
+      await this.mailerService.sendMail({
+        to: email,
+        subject: subject,
+        html: htmlContent,
+        from: emailConfig.defaults.from,
+      });
+    } catch (error) {
+      console.error("EmailService sendOrderConfirmationEmail error:", {
+        message: error.message,
+        code: error.code,
+        errno: error.errno,
+        syscall: error.syscall,
+        hostname: error.hostname,
+        stack: error.stack,
+      });
+      throw error;
+    }
+  }
+
   async getEmailConfiguration() {
     return await this.emailConfigService.getEmailConfig();
   }

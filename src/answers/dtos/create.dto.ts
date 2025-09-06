@@ -10,7 +10,6 @@ export class AnswerDto {
   answerText?: string;
 
   quiz: Quiz;
-  book: Book;
-
+  books: Book[];
   createdBy: User;
 }
