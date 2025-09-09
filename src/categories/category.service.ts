@@ -33,4 +33,35 @@ export class CategoryService
       value: category.id,
     }));
   }
+
+  override async delete({ id }: any) {
+    const category = await this.repository.findOne({
+      where: { id },
+      relations: ["products", "blogs"],
+    });
+
+    if (!category) {
+      throw new Error("Category not found");
+    }
+
+    if (category.products && category.products.length > 0) {
+      await this.repository
+        .createQueryBuilder()
+        .relation(Category, "products")
+        .of(category)
+        .remove(category.products);
+    }
+
+    if (category.blogs && category.blogs.length > 0) {
+      await this.repository
+        .createQueryBuilder()
+        .relation(Category, "blogs")
+        .of(category)
+        .remove(category.blogs);
+    }
+
+    // مسح الـ category نهائياً
+    await this.repository.remove(category);
+    return { deleted: true, id };
+  }
 }

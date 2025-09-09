@@ -7,7 +7,7 @@ export class Address extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, user => user.addresses)
+  @ManyToOne(() => User, user => user.addresses, { onDelete: "CASCADE" })
   user: User;
 
   @Column()
@@ -19,16 +19,16 @@ export class Address extends BaseMemberEntity {
   @Column({ name: "address_line_2", nullable: true })
   addressLine2?: string;
 
-  @ManyToOne(() => Location)
+  @ManyToOne(() => Location, { onDelete: "CASCADE" })
   country: Location;
 
-  @ManyToOne(() => Location)
+  @ManyToOne(() => Location, { onDelete: "CASCADE" })
   region: Location;
 
-  @ManyToOne(() => Location)
+  @ManyToOne(() => Location, { onDelete: "CASCADE" })
   city: Location;
 
-  @ManyToOne(() => Location)
+  @ManyToOne(() => Location, { onDelete: "CASCADE" })
   area: Location;
 
   @Column({ name: "postal_code" })

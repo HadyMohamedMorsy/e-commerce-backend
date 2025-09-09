@@ -36,7 +36,7 @@ export class SubCategory extends BaseMemberEntity {
   })
   description: string;
 
-  @ManyToOne(() => Category, category => category.subCategories)
+  @ManyToOne(() => Category, category => category.subCategories, { onDelete: "CASCADE" })
   category: Category;
 
   @Column({ nullable: true })

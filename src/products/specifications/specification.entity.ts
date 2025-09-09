@@ -17,7 +17,7 @@ export class Specification extends BaseMemberEntity {
     value: string;
   }>;
 
-  @ManyToOne(() => Product, product => product.specifications)
+  @ManyToOne(() => Product, product => product.specifications, { onDelete: "CASCADE" })
   product: Product;
 
   @ManyToOne(() => User, user => user.id, { onDelete: "SET NULL" })

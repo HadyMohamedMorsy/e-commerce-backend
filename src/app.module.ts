@@ -29,6 +29,7 @@ import { GeneralSettingsModule } from "./general-settings/settings.module";
 import { LocationModule } from "./locations/location.module";
 import { OrderCustomModule } from "./order-custom/order-custom.module";
 import { OrderModule } from "./orders/order.module";
+import { PaperTypeModule } from "./paper-type/paper-type.module";
 import { PaymentMethodModule } from "./payment-methods/payment-method.module";
 import { AttributeModule } from "./products/attributes/attribute.module";
 import { ProductModule } from "./products/products.module";
@@ -79,6 +80,7 @@ const ENV = process.env.NODE_ENV;
     QuizModule,
     AnswerModule,
     OrderCustomModule,
+    PaperTypeModule,
     ShapeCategoryModule,
     CouponModule,
     BankModule,

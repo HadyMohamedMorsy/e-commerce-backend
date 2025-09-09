@@ -53,7 +53,7 @@ export class Product extends BaseMemberEntity {
   @Column({ type: "decimal", precision: 5, scale: 2, nullable: true })
   rating: number;
 
-  @ManyToMany(() => Category, category => category.products, { onDelete: "CASCADE" })
+  @ManyToMany(() => Category, category => category.products)
   @JoinTable({ name: "product_categories" })
   categories: Category[];
 

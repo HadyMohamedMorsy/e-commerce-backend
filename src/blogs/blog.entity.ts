@@ -62,7 +62,7 @@ export class Blog extends BaseMemberEntity {
   @Column({ name: "media_type", nullable: true })
   mediaType: string;
 
-  @ManyToMany(() => Category, category => category.blogs, { onDelete: "CASCADE" })
+  @ManyToMany(() => Category, category => category.blogs)
   @JoinTable({ name: "blog_categories" })
   categories: Category[];
 

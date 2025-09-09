@@ -4,7 +4,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -16,12 +15,10 @@ export class CartItem {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Cart)
-  @JoinColumn({ name: "cart_id" })
+  @ManyToOne(() => Cart, { onDelete: "CASCADE" })
   cart: Cart;
 
-  @ManyToOne(() => Product)
-  @JoinColumn({ name: "product_id" })
+  @ManyToOne(() => Product, { onDelete: "CASCADE" })
   product: Product;
 
   @Column("integer")

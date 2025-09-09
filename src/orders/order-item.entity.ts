@@ -1,5 +1,5 @@
 import { Product } from "src/products/products.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Order } from "./order.entity";
 
 @Entity("order_item")
@@ -8,11 +8,9 @@ export class OrderItem {
   id: number;
 
   @ManyToOne(() => Order, { onDelete: "CASCADE" })
-  @JoinColumn({ name: "order_id" })
   order: Order;
 
-  @ManyToOne(() => Product)
-  @JoinColumn({ name: "product_id" })
+  @ManyToOne(() => Product, { onDelete: "CASCADE" })
   product: Product;
 
   @Column("integer")

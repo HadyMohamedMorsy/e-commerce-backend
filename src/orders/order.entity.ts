@@ -32,13 +32,13 @@ export class Order extends BaseMemberEntity {
   @Column("integer")
   total: number;
 
-  @ManyToOne(() => PaymentMethod, { nullable: true })
+  @ManyToOne(() => PaymentMethod, { onDelete: "CASCADE" })
   payment: PaymentMethod;
 
-  @ManyToOne(() => Coupon, { nullable: true })
+  @ManyToOne(() => Coupon, { onDelete: "CASCADE" })
   coupon: Coupon;
 
-  @ManyToOne(() => Address, { nullable: true })
+  @ManyToOne(() => Address, { onDelete: "CASCADE" })
   address: Address;
 
   @ManyToOne(() => User, user => user.id, { onDelete: "SET NULL" })

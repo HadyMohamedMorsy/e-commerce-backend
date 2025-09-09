@@ -31,16 +31,16 @@ export class Bank extends BaseMemberEntity {
   @Column({ name: "is_active", type: "boolean", default: true })
   isActive: boolean;
 
-  @ManyToOne(() => Location)
+  @ManyToOne(() => Location, { onDelete: "CASCADE" })
   country: Location;
 
-  @ManyToOne(() => Location)
+  @ManyToOne(() => Location, { onDelete: "CASCADE" })
   region: Location;
 
-  @ManyToOne(() => Location)
+  @ManyToOne(() => Location, { onDelete: "CASCADE" })
   city: Location;
 
-  @ManyToOne(() => Location)
+  @ManyToOne(() => Location, { onDelete: "CASCADE" })
   area: Location;
 
   @ManyToOne(() => User, user => user.id, { onDelete: "SET NULL" })

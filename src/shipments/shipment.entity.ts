@@ -19,7 +19,7 @@ export class Shipment extends BaseMemberEntity {
   @Column({ name: "shipment_price", type: "decimal", precision: 10, scale: 2 })
   shipmentPrice: number;
 
-  @ManyToOne(() => Location, location => location.shipments)
+  @ManyToOne(() => Location, location => location.shipments, { onDelete: "CASCADE" })
   location: Location;
 
   @ManyToOne(() => User, user => user.id, { onDelete: "SET NULL" })

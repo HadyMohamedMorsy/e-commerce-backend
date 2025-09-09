@@ -2,19 +2,17 @@
 import { Product } from "src/products/products.entity";
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { User } from "src/users/user.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("wishlists")
 export class Wishlist extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Product)
-  @JoinColumn({ name: "product_id" })
+  @ManyToOne(() => Product, { onDelete: "CASCADE" })
   product: Product;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: "user_id" })
+  @ManyToOne(() => User, { onDelete: "CASCADE" })
   user: User;
 
   @Column({ type: "boolean", default: true })

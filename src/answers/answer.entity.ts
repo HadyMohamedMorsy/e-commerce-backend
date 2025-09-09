@@ -12,7 +12,7 @@ export class Answer extends BaseMemberEntity {
   @Column({ type: "text", nullable: false })
   answerText: string;
 
-  @ManyToOne(() => Quiz, quiz => quiz.answers)
+  @ManyToOne(() => Quiz, quiz => quiz.answers, { onDelete: "CASCADE" })
   quiz: Quiz;
 
   @ManyToMany(() => Book, book => book.answers)

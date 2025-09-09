@@ -1,6 +1,6 @@
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { User } from "src/users/user.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Location } from "../locations/location.entity";
 
 @Entity()
@@ -14,8 +14,7 @@ export class Taxes extends BaseMemberEntity {
   @Column({ type: "decimal", precision: 10, scale: 2 })
   rate: number;
 
-  @ManyToOne(() => Location)
-  @JoinColumn({ name: "locationId" })
+  @ManyToOne(() => Location, { onDelete: "CASCADE" })
   country: Location;
 
   @Column({ default: true })
