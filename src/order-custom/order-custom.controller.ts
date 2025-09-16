@@ -1,6 +1,10 @@
-import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Patch, Post, Req, UploadedFiles, UseInterceptors } from "@nestjs/common";
+import { AnyFilesInterceptor } from "@nestjs/platform-express";
+import { diskStorage } from "multer";
+import { extname } from "path";
 import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
+import { OrderStatus } from "src/shared/enum/global-enum";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { OrderCustomDto } from "./dtos/create.dto";
 import { PatchOrderCustomDto } from "./dtos/patch.dto";
@@ -19,11 +23,7 @@ export class OrderCustomController
   public selectOptions(): Record<string, boolean> {
     return {
       id: true,
-      created_at: true,
-      updated_at: true,
-      totalPrice: true,
       status: true,
-      createdBy: true,
     };
   }
 
@@ -34,28 +34,50 @@ export class OrderCustomController
         firstName: true,
         lastName: true,
       },
-      paymentMethod: {
-        id: true,
-        name: true,
-        icon: true,
-        slug: true,
-      },
-      books: {
-        id: true,
-        title: true,
-        description: true,
-        price: true,
-        svg: true,
-      },
     };
   }
 
   @Post("/store")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  public create(@Body() create: OrderCustomDto, @Req() req: Request) {
+  @UseInterceptors(
+    AnyFilesInterceptor({
+      limits: {
+        fileSize: 31457280, // 30MB
+        files: 10,
+      },
+      fileFilter: (req, file, cb) => {
+        const allowedMimeTypes = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
+        if (allowedMimeTypes.includes(file.mimetype)) {
+          cb(null, true);
+        } else {
+          cb(new Error("Invalid file type. Only images are allowed."), false);
+        }
+      },
+      storage: diskStorage({
+        destination: "./dist/uploads",
+        filename: (req, file, cb) => {
+          const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          const fieldName = file.fieldname || "image";
+          cb(null, `${fieldName}-${uniqueSuffix}${ext}`);
+        },
+      }),
+    }),
+  )
+  public async createWithImages(
+    @Body() create: OrderCustomDto,
+    @UploadedFiles() files: Express.Multer.File[],
+    @Req() req: Request,
+  ) {
+    // Process uploaded files
+    const imagePaths = files?.map(file => `uploads/${file.filename}`) || [];
     return this.service.create(
       {
-        status: create.status,
+        images: imagePaths,
+        couponId: create.couponId,
+        paperTypeId: create.paperTypeId,
+        booksIds: create.booksIds,
+        paymentMethodId: create.paymentMethodId,
         createdBy: req["createdBy"],
       },
       this.selectOptions(),
@@ -63,17 +85,12 @@ export class OrderCustomController
     );
   }
 
-  @Put("/update")
+  @Patch("/change-order-status")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  public async update(@Body() update: PatchOrderCustomDto, @Req() req: Request) {
-    return await this.service.update(
-      {
-        id: update.id,
-        status: update.status,
-        createdBy: req["createdBy"],
-      },
-      this.selectOptions(),
-      this.getRelationOptions(),
-    );
+  public changeOrderStatus(@Body() update: { id: number; status: OrderStatus }) {
+    return this.service.changeStatus(update.id, update.status, "status", {
+      id: true,
+      status: true,
+    });
   }
 }

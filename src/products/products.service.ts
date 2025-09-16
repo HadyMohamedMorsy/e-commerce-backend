@@ -187,6 +187,14 @@ export class ProductService
         : null;
   }
 
+  async findByIdsWithSku(ids: number[]): Promise<Product[]> {
+    return this.repository
+      .createQueryBuilder("product")
+      .leftJoinAndSelect("product.sku", "sku")
+      .where("product.id IN (:...ids)", { ids })
+      .getMany();
+  }
+
   protected override queryRelationIndex(
     queryBuilder?: SelectQueryBuilder<Product>,
     filteredRecord?: any,

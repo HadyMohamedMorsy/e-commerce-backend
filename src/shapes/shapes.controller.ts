@@ -25,6 +25,7 @@ export class ShapesController
       name: true,
       colorCode: true,
       shapeType: true,
+      part: true,
       image: true,
     };
   }
@@ -48,6 +49,7 @@ export class ShapesController
       colorCode: createDto.colorCode,
       image: createDto.image,
       shapeType: createDto.shapeType,
+      part: createDto.part,
       createdBy: req["createdBy"],
     } as CreateShapeDto);
   }
@@ -62,6 +64,7 @@ export class ShapesController
       colorCode: update.colorCode,
       image: update.image,
       shapeType: update.shapeType,
+      part: update.part,
       createdBy: req["createdBy"],
     });
   }
@@ -69,5 +72,10 @@ export class ShapesController
   @Get("/grouped")
   public async getGroupedShapes() {
     return await this.service.getGroupedShapes();
+  }
+
+  @Post("/parts")
+  public async getPartsByShapeAndPartType(@Body() body: { shapeId: string; partType: string }) {
+    return await this.service.getPartsByShapeAndPartType(body.shapeId, body.partType);
   }
 }

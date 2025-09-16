@@ -71,4 +71,14 @@ export class ShapeCategoryService
       value: category.name,
     }));
   }
+
+  async findShapesByName(name: string) {
+    const shapes = await this.repository.find({
+      where: {
+        name,
+      },
+      select: ["id", "name", "part", "shapeType", "type"],
+    });
+    return shapes[0];
+  }
 }

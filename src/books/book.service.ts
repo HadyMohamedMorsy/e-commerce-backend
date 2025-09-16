@@ -48,7 +48,7 @@ export class BookService
     try {
       // Pagination parameters
       const page = body.page || 1;
-      const limit = body.limit || 10;
+      const limit = body.limit || 5;
       const skip = (page - 1) * limit;
 
       // Step 1: Filter books based on answers (answerId only)

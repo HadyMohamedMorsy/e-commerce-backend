@@ -4,6 +4,7 @@ import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "ty
 import { Book } from "../books/book.entity";
 import { PaperType } from "../paper-type/paper-type.entity";
 import { PaymentMethod } from "../payment-methods/payment-method.entity";
+import { Coupon } from "../coupons/coupon.entity";
 
 @Entity("order_customs")
 export class OrderCustom extends BaseMemberEntity {
@@ -24,6 +25,12 @@ export class OrderCustom extends BaseMemberEntity {
 
   @ManyToOne(() => PaperType, { nullable: true, onDelete: "SET NULL" })
   paperType: PaperType;
+
+  @OneToMany(() => Coupon, coupon => coupon.orderCustom)
+  coupons: Coupon[];
+
+  @Column({ type: "simple-array", nullable: true })
+  images: string[];
 
   @ManyToOne(() => User, { nullable: true, onDelete: "SET NULL" })
   createdBy: User;

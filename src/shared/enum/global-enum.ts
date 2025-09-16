@@ -104,7 +104,6 @@ export enum FacialFeatureType {
 }
 
 export enum ShapeType {
-  BODY_TYPE = "body",
   NORMAL = "normal",
   GIRL_S_BODY = "Girl_s_body",
   WEIGHT_GAIN = "Weight_gain",
@@ -120,4 +119,20 @@ export enum QuestionType {
   INPUT = "input",
   SELECT = "select",
   CHECKBOX = "checkbox",
+}
+
+export enum ShapePartType {
+  SHOES = "shoes",
+  CRACKER = "Cracker",
+  MUSTACHE = "mustache",
+  GLASSES = "glasses",
+  HAT = "hat",
+  CHIN = "chin",
+  T_SHIRT = "T-shirt",
+  SHIRT = "shirt",
+  SHAMAKH = "Shamakh",
+  JALABIYA = "Jalabiya",
+  PANTS = "pants",
+  SHORT = "short",
+  LAYER = "Layer",
 }

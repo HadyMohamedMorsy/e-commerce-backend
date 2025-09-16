@@ -1,3 +1,4 @@
+import { OrderCustom } from "src/order-custom/order-custom.entity";
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { CouponType } from "src/shared/enum/global-enum";
 import { User } from "src/users/user.entity";
@@ -46,6 +47,9 @@ export class Coupon extends BaseMemberEntity {
 
   @Column({ name: "is_active", default: true })
   isActive: boolean;
+
+  @ManyToOne(() => OrderCustom, orderCustom => orderCustom.coupons)
+  orderCustom: OrderCustom;
 
   @ManyToOne(() => User, user => user.id, { onDelete: "SET NULL" })
   createdBy: User;

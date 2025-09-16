@@ -1,4 +1,5 @@
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { ShapePartType } from "src/shared/enum/global-enum";
 import { User } from "src/users/user.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
@@ -18,6 +19,9 @@ export class Shape extends BaseMemberEntity {
 
   @Column({ nullable: true })
   type: string;
+
+  @Column({ type: "varchar", length: 100, nullable: true })
+  part: ShapePartType;
 
   @Column({ nullable: true })
   shapeType: string;

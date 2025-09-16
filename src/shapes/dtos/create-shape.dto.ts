@@ -19,6 +19,10 @@ export class CreateShapeDto {
   colorCode: string;
 
   @IsString()
+  @IsNotEmpty()
+  part: string;
+
+  @IsString()
   @IsOptional()
   image?: string;
 

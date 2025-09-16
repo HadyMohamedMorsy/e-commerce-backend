@@ -75,4 +75,9 @@ export class PaperTypeController
       value: paperType.price,
     }));
   }
+
+  @Get("/label-value")
+  public async getPaperTypesWithLabelValue() {
+    return await this.service.getPaperTypesWithLabelValue();
+  }
 }

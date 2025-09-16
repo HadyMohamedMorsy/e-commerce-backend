@@ -10,6 +10,7 @@ import {
   PaymentStatus,
   QuestionType,
   Role,
+  ShapePartType,
   ShapeType,
   Status,
   UserStatus,
@@ -74,6 +75,10 @@ export function getShapeTypeList() {
 
 export function getQuestionTypeList() {
   return generateListFromEnum(QuestionType);
+}
+
+export function getShapePartTypeList() {
+  return generateListFromEnum(ShapePartType);
 }
 
 export function generateShapeTypeList() {

@@ -16,6 +16,7 @@ import {
   getNameTypeList,
   getQuestionTypeList,
   getRoleList,
+  getShapePartTypeList,
   getShapeTypeList,
   getWeight,
 } from "../utilties/get-flobal-list-from-enum.utils";
@@ -40,6 +41,7 @@ export class ListService {
     facialFeatureType: getFacialFeatureTypeList(),
     nameTypes: getNameTypeList(),
     shapeType: getShapeTypeList(),
+    shapePartType: getShapePartTypeList(),
     questionType: getQuestionTypeList(),
   };
 
@@ -66,6 +68,7 @@ export class ListService {
         return {
           shapeType: this.lists.shapeType,
           facialFeatureType: this.lists.facialFeatureType,
+          shapePartType: this.lists.shapePartType,
         };
 
       case "facialFeature":
@@ -73,6 +76,7 @@ export class ListService {
           shapeType: this.lists.shapeType,
           facialFeatureType: this.lists.facialFeatureType,
           shapeCategoryType: await this.shapeService.getShapeCategoriesWithNameValue(),
+          shapePartType: this.lists.shapePartType,
         };
       case "category":
         return {
@@ -102,6 +106,7 @@ export class ListService {
           quiez: await this.quizService.getQuestionsWithIdAndTitle(),
           books: await this.bookService.getBooksWithIdAndTitle(),
         };
+
       default:
         throw new Error(`Slug "${slug}" not supported`);
     }

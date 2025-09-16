@@ -5,11 +5,12 @@ import { CouponsService } from "src/coupons/coupon.service";
 import { PaymentMethodService } from "src/payment-methods/payment-method.service";
 import { Product } from "src/products/products.entity";
 import { ProductService } from "src/products/products.service";
+import { SkuService } from "src/products/skus/sku.service";
 import { BaseService } from "src/shared/base/base";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
 import { EmailService } from "src/shared/services/email.service";
-import { Repository, SelectQueryBuilder } from "typeorm";
+import { DataSource, Repository, SelectQueryBuilder } from "typeorm";
 import { OrderDto } from "./dtos/create.dto";
 import { PatchOrderDto } from "./dtos/patch.dto";
 import { OrderItem } from "./order-item.entity";
@@ -27,10 +28,12 @@ export class OrderService
     @InjectRepository(OrderItem)
     private orderItemRepository: Repository<OrderItem>,
     private productService: ProductService,
+    private skuService: SkuService,
     private addressService: AddressesService,
     private couponService: CouponsService,
     private paymentMethodService: PaymentMethodService,
     private emailService: EmailService,
+    private dataSource: DataSource,
   ) {
     super(repository, apiFeaturesService);
   }
@@ -189,6 +192,45 @@ export class OrderService
     `;
   }
 
+  private async validateAndUpdateSkuQuantities(
+    products: Map<number, Product>,
+    orderItems: OrderDto["products"],
+  ) {
+    // Validate quantities and prepare updates
+    const skuUpdates = [];
+
+    for (const item of orderItems) {
+      const product = products.get(item.productId);
+      if (!product || !product.sku) {
+        throw new Error(`Product with ID ${item.productId} or its SKU not found`);
+      }
+
+      const currentQuantity = product.sku.quantity;
+      if (currentQuantity < item.quantity) {
+        throw new Error(
+          `Insufficient quantity for product ${product.name}. Available: ${currentQuantity}, Requested: ${item.quantity}`,
+        );
+      }
+
+      // Prepare SKU update
+      skuUpdates.push({
+        id: product.sku.id,
+        newQuantity: currentQuantity - item.quantity,
+        isOutOfStock: currentQuantity - item.quantity <= 0,
+      });
+    }
+
+    // Update all SKUs using transaction
+    await this.dataSource.transaction(async manager => {
+      for (const update of skuUpdates) {
+        await manager.update("ProductSku", update.id, {
+          quantity: update.newQuantity,
+          isOutOfStock: update.isOutOfStock,
+        });
+      }
+    });
+  }
+
   private formatOrderResponse(order: Order, total: number, discountAmount: number, coupon: any) {
     return {
       order_id: order.id.toString(),
@@ -212,8 +254,13 @@ export class OrderService
   async storeOrder(createDto: OrderDto): Promise<any> {
     // Step 1: Calculate total amount from products
     const productIds = createDto.products.map(item => item.productId);
-    const products = await this.productService.findByIds(productIds);
-    const productMap = new Map(products.map(product => [product.id, product]));
+
+    // Load products with SKU relations
+    const productsWithSku = await this.productService.findByIdsWithSku(productIds);
+    const productMap = new Map(productsWithSku.map(product => [product.id, product]));
+
+    // Step 1.5: Validate and update SKU quantities
+    await this.validateAndUpdateSkuQuantities(productMap, createDto.products);
 
     const { orderItems, total } = await this.prepareOrderItems(
       null, // We'll set the order after creating it

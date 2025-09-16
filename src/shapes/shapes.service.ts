@@ -19,7 +19,7 @@ export class ShapesService extends BaseService<Shape, CreateShapeDto, PatchShape
 
   async getGroupedShapes() {
     const shapes = await this.repository.find({
-      select: ["id", "name", "type", "shapeType", "colorCode", "image"],
+      select: ["id", "name", "type", "shapeType", "colorCode", "image", "part"],
     });
 
     // Get unique shape types for bodyTypes
@@ -35,14 +35,21 @@ export class ShapesService extends BaseService<Shape, CreateShapeDto, PatchShape
     const bodyShapes = {};
     uniqueShapeTypes.forEach(shapeType => {
       const shapesOfType = shapes.filter(shape => shape.shapeType === shapeType);
-      bodyShapes[shapeType] = shapesOfType.map(shape => ({
-        id: shape.id.toString(),
-        label: shape.name,
-        type: shape.type,
-        bodyType: shape.shapeType,
-        colorCode: shape.colorCode,
-        svg: this.removeSvgTags(shape.image),
-      }));
+
+      // Get available parts for this shapeType (all unique parts shared across all shapes)
+      const availableParts = [
+        ...new Set(shapesOfType.map(shape => shape.part).filter(part => part)),
+      ];
+
+      // Get the type for this shapeType (take the first one since they should be the same)
+      const typeForShapeType = shapesOfType[0]?.type || "";
+
+      bodyShapes[shapeType] = [
+        {
+          type: typeForShapeType,
+          availableParts, // Single array with all shared parts
+        },
+      ];
     });
 
     // Get unique colors for bodyColors
@@ -64,6 +71,26 @@ export class ShapesService extends BaseService<Shape, CreateShapeDto, PatchShape
       .split("_")
       .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join(" ");
+  }
+
+  async getPartsByShapeAndPartType(shapeId: string, partType: string) {
+    const shapes = await this.repository.find({
+      where: {
+        shapeType: shapeId,
+        part: partType as any,
+      },
+      select: ["id", "name", "colorCode", `shapeType`, "image", "part", "type"],
+    });
+
+    return shapes.map(shape => ({
+      id: shape.id.toString(),
+      label: shape.name,
+      colorCode: shape.colorCode,
+      svg: this.removeSvgTags(shape.image),
+      part: shape.part,
+      type: shape.type,
+      bodyType: shape.shapeType,
+    }));
   }
 
   private removeSvgTags(svgString: string): string {

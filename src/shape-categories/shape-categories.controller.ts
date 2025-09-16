@@ -24,6 +24,7 @@ export class ShapeCategoryController
       updated_at: true,
       type: true,
       shapeType: true,
+      part: true,
       name: true,
       shapes: true,
       createdBy: true,
@@ -52,6 +53,7 @@ export class ShapeCategoryController
       type: createDto.type,
       shapeType: createDto.shapeType,
       name: createDto.name,
+      part: createDto.part,
       createdBy: req["createdBy"],
     } as CreateShapeCategoryDto);
   }
@@ -64,6 +66,7 @@ export class ShapeCategoryController
       type: update.type,
       shapeType: update.shapeType,
       name: update.name,
+      part: update.part,
       createdBy: req["createdBy"],
     });
   }
@@ -71,5 +74,10 @@ export class ShapeCategoryController
   @Get("/grouped")
   public async getGroupedShapeCategories(): Promise<GroupedShapeCategoryResponseDto[]> {
     return await this.service.getGroupedShapeCategories();
+  }
+
+  @Post("/find-by-name")
+  public async findShapeCategoriesByName(@Body() body: { name: string }) {
+    return await this.service.findShapesByName(body.name);
   }
 }

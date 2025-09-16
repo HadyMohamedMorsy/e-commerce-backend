@@ -20,4 +20,19 @@ export class PaperTypeService
   ) {
     super(repository, apiFeaturesService);
   }
+
+  async getPaperTypesWithLabelValue(): Promise<{ label: string; value: number }[]> {
+    const paperTypes = await this.repository.find({
+      select: ["paperName", "price", "id"],
+      order: {
+        paperName: "ASC",
+      },
+    });
+
+    return paperTypes.map(paperType => ({
+      id: paperType.id,
+      label: paperType.paperName,
+      value: paperType.price,
+    }));
+  }
 }
