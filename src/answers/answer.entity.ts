@@ -3,6 +3,7 @@ import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { User } from "src/users/user.entity";
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Book } from "../books/book.entity";
+import { OrderCustom } from "../order-custom/order-custom.entity";
 
 @Entity("answers")
 export class Answer extends BaseMemberEntity {
@@ -22,6 +23,12 @@ export class Answer extends BaseMemberEntity {
     inverseJoinColumn: { name: "book_id", referencedColumnName: "id" },
   })
   books: Book[];
+
+  @ManyToOne(() => OrderCustom, orderCustom => orderCustom.answers, {
+    nullable: true,
+    onDelete: "SET NULL",
+  })
+  orderCustom: OrderCustom;
 
   @ManyToOne(() => User, { nullable: true, onDelete: "SET NULL" })
   createdBy: User;

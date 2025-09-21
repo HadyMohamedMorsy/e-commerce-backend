@@ -81,8 +81,7 @@ export class AuthService {
   public async verifyToken(token: string) {
     const payload = await this.jwtService.verifyAsync<ActiveUserData>(token, {
       secret: this.jwtConfiguration.secret,
-      audience: this.jwtConfiguration.audience,
-      issuer: this.jwtConfiguration.issuer,
+      audience: "",
     });
 
     const user = await this.usersService.findOne(payload.sub, {

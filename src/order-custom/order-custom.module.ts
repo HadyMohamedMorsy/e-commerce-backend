@@ -1,6 +1,9 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { FilterDateModule } from "src/shared/filters/filter-date.module";
+import { EmailModule } from "src/shared/services/email.module";
+import { AddressModule } from "../address/address.module";
+import { AnswerModule } from "../answers/answer.module";
 import { BookModule } from "../books/book.module";
 import { CouponModule } from "../coupons/coupon.module";
 import { PaperTypeModule } from "../paper-type/paper-type.module";
@@ -13,6 +16,9 @@ import { OrderCustomService } from "./order-custom.service";
   imports: [
     FilterDateModule,
     TypeOrmModule.forFeature([OrderCustom]),
+    EmailModule,
+    AddressModule,
+    AnswerModule,
     BookModule,
     CouponModule,
     PaperTypeModule,

@@ -37,9 +37,9 @@ export class RefreshTokensProvider {
       const { sub } = await this.jwtService.verifyAsync<Pick<ActiveUserData, "sub">>(
         refreshTokenDto.refreshToken,
         {
-          secret: this.jwtConfiguration.secret,
-          audience: this.jwtConfiguration.audience,
-          issuer: this.jwtConfiguration.issuer,
+          // secret: this.jwtConfiguration.secret,
+          // audience: this.jwtConfiguration.audience,
+          // issuer: this.jwtConfiguration.issuer,
         },
       );
       // Fetch the user from the database

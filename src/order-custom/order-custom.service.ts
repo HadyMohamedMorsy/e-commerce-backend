@@ -1,9 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { AddressesService } from "src/address/address.service";
 import { BaseService } from "src/shared/base/base";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
+import { EmailService } from "src/shared/services/email.service";
 import { Repository, SelectQueryBuilder } from "typeorm";
+import { AnswerService } from "../answers/answer.service";
 import { BookService } from "../books/book.service";
 import { CouponsService } from "../coupons/coupon.service";
 import { PaperTypeService } from "../paper-type/paper-type.service";
@@ -25,6 +28,9 @@ export class OrderCustomService
     private couponService: CouponsService,
     private paperTypeService: PaperTypeService,
     private paymentMethodService: PaymentMethodService,
+    private addressService: AddressesService,
+    private answerService: AnswerService,
+    private emailService: EmailService,
   ) {
     super(repository, apiFeaturesService);
   }
@@ -87,7 +93,25 @@ export class OrderCustomService
       }
     }
 
-    // Step 5: Calculate total price
+    // Step 5: Find and validate address
+    let address = null;
+    if (createDto.addressId) {
+      address = await this.addressService.findOne(createDto.addressId);
+      if (!address) {
+        throw new Error("Address not found");
+      }
+    }
+
+    // Step 6: Find and validate answers
+    let answers = [];
+    if (createDto.answerIds && createDto.answerIds.length > 0) {
+      answers = await this.answerService.findByIds(createDto.answerIds);
+      if (answers.length !== createDto.answerIds.length) {
+        throw new Error("Some answers not found");
+      }
+    }
+
+    // Step 7: Calculate total price
     const subtotal = +booksTotalPrice + +paperPrice;
 
     // Apply coupon discount if valid
@@ -101,18 +125,80 @@ export class OrderCustomService
 
     const totalPrice = subtotal - +discountAmount;
 
-    // Step 6: Create order custom using parent create method
+    // Step 8: Create order custom using parent create method
     const orderData = {
       totalPrice,
       status: "pending",
       images: createDto.images || [],
+      addressId: createDto.addressId,
+      addresses: address,
+      answerIds: createDto.answerIds,
+      answers: answers,
       couponId: createDto.couponId,
+      coupons: coupon,
       paperTypeId: createDto.paperTypeId,
+      paperType: paperType,
       paymentMethodId: createDto.paymentMethodId,
+      paymentMethod: paymentMethod,
       createdBy: createDto.createdBy,
     };
 
     const result = await super.create(orderData, selectOptions, relationOptions);
+
+    // Step 9: Send welcome email to customer
+    try {
+      if (address && address.user && address.user.email) {
+        const orderEmailHtml = `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="text-align: center; background: linear-gradient(135deg, #B22947 0%, #3D2545 100%); color: white; padding: 30px; border-radius: 10px 10px 0 0;">
+              <h1 style="margin: 0; font-size: 28px;">تم استلام طلبك! 🎉</h1>
+            </div>
+            
+            <div style="background: #FFF5E9; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #E6A238;">
+              <p style="font-size: 16px; line-height: 1.6; color: #3D2545; margin-bottom: 20px;">
+                مرحباً ${address.user.firstName || "عزيزي العميل"}! 
+              </p>
+              
+              <p style="font-size: 16px; line-height: 1.6; color: #3D2545; margin-bottom: 20px;">
+                شكراً لك على طلبك المخصص! تم استلام طلبك بنجاح وسنقوم بمراجعته قريباً.
+              </p>
+              
+              <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #E6A238; margin: 20px 0; box-shadow: 0 2px 8px rgba(230, 162, 56, 0.1);">
+                <h3 style="color: #B22947; margin-top: 0;">تفاصيل الطلب:</h3>
+                <p style="color: #3D2545; margin: 5px 0;"><strong>رقم الطلب:</strong> #${result.id}</p>
+                <p style="color: #3D2545; margin: 5px 0;"><strong>المجموع:</strong> ${totalPrice} جنيه</p>
+                <p style="color: #3D2545; margin: 5px 0;"><strong>الحالة:</strong> ${result.status}</p>
+                ${books.length > 0 ? `<p style="color: #3D2545; margin: 5px 0;"><strong>الكتب:</strong> ${books.length} كتاب</p>` : ""}
+                ${paperType ? `<p style="color: #3D2545; margin: 5px 0;"><strong>نوع الورق:</strong> ${paperType.name}</p>` : ""}
+              </div>
+              
+              <p style="font-size: 16px; line-height: 1.6; color: #3D2545; margin-bottom: 20px;">
+                سنتواصل معك قريباً لتأكيد تفاصيل الطلب وتحديد موعد التسليم.
+              </p>
+              
+              <p style="font-size: 14px; color: #3D2545; margin-top: 30px;">
+                إذا كان لديك أي أسئلة، لا تتردد في التواصل معنا.
+              </p>
+              
+              <div style="text-align: center; margin-top: 30px;">
+                <p style="color: #B22947; font-weight: bold; font-size: 16px;">
+                  فريق العمل 🚀
+                </p>
+              </div>
+            </div>
+          </div>
+        `;
+
+        await this.emailService.sendOrderConfirmationEmail(
+          address.user.email,
+          "تم استلام طلبك المخصص! 🎉",
+          orderEmailHtml,
+        );
+      }
+    } catch (error) {
+      console.error("Failed to send order confirmation email:", error);
+      // لا نريد أن نفشل الطلب لو فشل إرسال الإيميل
+    }
 
     // Add calculation details to response
     if (result && typeof result === "object") {

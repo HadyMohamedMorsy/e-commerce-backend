@@ -27,10 +27,9 @@ export class GenerateTokensProvider {
         ...payload,
       },
       {
-        audience: this.jwtConfiguration.audience,
-        issuer: this.jwtConfiguration.issuer,
+        audience: "",
+        issuer: "",
         secret: this.jwtConfiguration.secret,
-        expiresIn: expiresIn,
       },
     );
   }
@@ -38,13 +37,13 @@ export class GenerateTokensProvider {
   public async generateTokens(user: User) {
     const [access_token, refreshToken] = await Promise.all([
       // Generate Access Token with Email
-      this.signToken<Partial<ActiveUserData>>(user.id, this.jwtConfiguration.accessTokenTtl, {
+      this.signToken<Partial<ActiveUserData>>(user.id, null, {
         email: user.email,
         id: user.id,
       }),
 
       // Generate Refresh token without email
-      this.signToken(user.id, this.jwtConfiguration.refreshTokenTtl),
+      this.signToken(user.id, null),
     ]);
 
     return {

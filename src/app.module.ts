@@ -53,6 +53,7 @@ import { EmailModule } from "./shared/services/email.module";
 import { SharedModule } from "./shared/shared.module";
 import enviromentValidation from "./shared/validations/env.validation";
 import { ShipmentModule } from "./shipments/shipment.module";
+import { SubscriptionModule } from "./subscription/subscription.module";
 import { TaxModule } from "./tax/tax.module";
 import { UserModule } from "./users/users.module";
 import { WishlistsModule } from "./wishlist/wishlists.module";
@@ -92,6 +93,7 @@ const ENV = process.env.NODE_ENV;
     WishlistsModule,
     CategoryModule,
     SubCategoryModule,
+    SubscriptionModule,
     AuthModule,
     AttributeModule,
     SkuModule,
@@ -159,6 +161,8 @@ export class AppModule {
       .exclude(
         { path: "auth/login", method: RequestMethod.ALL },
         { path: "contact/store", method: RequestMethod.ALL },
+        { path: "sub/create", method: RequestMethod.ALL },
+        { path: "sub/subscribe", method: RequestMethod.ALL },
       )
       .forRoutes(
         { path: "*/store", method: RequestMethod.POST },

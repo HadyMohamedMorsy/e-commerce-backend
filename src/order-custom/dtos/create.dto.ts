@@ -29,5 +29,16 @@ export class OrderCustomDto {
   @Type(() => Number)
   booksIds?: number[];
 
+  @IsNumber()
+  @IsOptional()
+  @Type(() => Number)
+  addressId?: number;
+
+  @IsArray()
+  @IsNumber({}, { each: true })
+  @IsOptional()
+  @Type(() => Number)
+  answerIds?: number[];
+
   createdBy: User;
 }
