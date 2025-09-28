@@ -28,7 +28,6 @@ export class CategoryController
       categoryType: true,
       image: true,
       slug: true,
-      icon: true,
     };
   }
 
@@ -52,7 +51,6 @@ export class CategoryController
         categoryType: create.categoryType,
         image: create.image,
         slug: create.slug,
-        icon: create.icon,
         createdBy: req["createdBy"],
       },
       this.selectOptions(),
@@ -71,7 +69,6 @@ export class CategoryController
         categoryType: update.categoryType,
         image: update.image,
         slug: update.slug,
-        icon: update.icon,
         createdBy: req["updatedBy"],
       },
       this.selectOptions(),
@@ -87,7 +84,7 @@ export class CategoryController
         filters: { categoryType: CategoryType.PRODUCT },
         relations: {
           subCategories: {
-            select: ["id", "name", "slug", "icon", "image", "description"],
+            select: ["id", "name", "slug", "image", "description"],
           },
         },
         isPagination: "false",
@@ -103,7 +100,7 @@ export class CategoryController
         filters: { categoryType: CategoryType.BLOG },
         relations: {
           subCategories: {
-            select: ["id", "name", "slug", "icon", "image", "description"],
+            select: ["id", "name", "slug", "image", "description"],
           },
         },
         isPagination: "false",

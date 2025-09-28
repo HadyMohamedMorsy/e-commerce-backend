@@ -21,7 +21,7 @@ export class UploadsController {
   @UseInterceptors(
     AnyFilesInterceptor({
       limits: {
-        fileSize: 307200, // 300KB
+        fileSize: 10485760, // 10MB (قبل الضغط)
         files: 10,
       },
       fileFilter: (req, file, cb) => {
@@ -29,6 +29,7 @@ export class UploadsController {
           "image/jpeg",
           "image/png",
           "image/jpg",
+          "image/webp",
           "application/pdf",
           "image/svg+xml",
         ];
@@ -61,10 +62,10 @@ export class UploadsController {
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addFileTypeValidator({
-          fileType: /^(image\/jpe?g|image\/png|application\/pdf|image\/svg\+xml)$/i,
+          fileType: /^(image\/jpe?g|image\/png|image\/webp|application\/pdf|image\/svg\+xml)$/i,
         })
         .addMaxSizeValidator({
-          maxSize: 307200,
+          maxSize: 10485760, // 10MB (قبل الضغط)
         })
         .build({
           errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,

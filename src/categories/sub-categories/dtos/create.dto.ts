@@ -17,10 +17,6 @@ export class SubCategoryDto {
   @IsNotEmpty()
   slug: string;
 
-  @IsString()
-  @IsOptional()
-  icon?: string;
-
   @IsEnum(CategoryType)
   @IsNotEmpty()
   categoryType: CategoryType;
